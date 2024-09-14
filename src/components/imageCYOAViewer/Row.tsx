@@ -34,26 +34,18 @@ export default function Row({
   const { width } = useWindowDimensions();
 
   const widthMap = {
-    "w-100": 100,
-    "w-50": 50,
-    "w-33": 33.33,
-    "w-25": 25,
-    "w-20": 20,
-    "w-16": 16.66,
-    "w-14": 14.28,
-    "w-12": 12.5,
-    "w-11": 11.11,
-    "w-10": 10,
-    "w-9": 9.09,
-    "w-8": 8.33,
-  };
-  const spanMap = {
-    1: "w-8",
-    2: "w-16",
-    3: "w-25",
-    4: "w-33",
-    6: "w-50",
-    12: "w-100",
+    "w-100": 100 / 1,
+    "w-50": 100 / 2,
+    "w-33": 100 / 3,
+    "w-25": 100 / 4,
+    "w-20": 100 / 5,
+    "w-16": 100 / 6,
+    "w-14": 100 / 7,
+    "w-12": 100 / 8,
+    "w-11": 100 / 9,
+    "w-10": 100 / 10,
+    "w-9": 100 / 11,
+    "w-8": 100 / 12,
   };
 
   const styling: typeof row.styling & Partial<typeof appStyling> =
@@ -565,12 +557,14 @@ export default function Row({
             >
               {/* If objectWidth in the object is empty, use the row.objectWidth */}
               {row.objects.map((object, index) => {
-                let widthClass = object.objectWidth || row.objectWidth;
+                const widthClass = object.objectWidth || row.objectWidth;
                 const span = parseColSpan(widthClass);
-                if (width <= 500) widthClass = "w-100";
-                else if (width <= 1000) widthClass = "w-50";
-                else if (span !== -1)
-                  widthClass = spanMap[span as keyof typeof spanMap];
+                let widthPercentage =
+                  span !== -1
+                    ? (100 / 12) * span
+                    : widthMap[widthClass as keyof typeof widthMap];
+                if (width <= 500) widthPercentage = 100;
+                else if (width <= 1000) widthPercentage = 50;
                 return (
                   (checkRequireds({ activated, pointTypes }, object) ||
                     (object.isPrivateStyling
@@ -578,8 +572,8 @@ export default function Row({
                       : !styling.reqFilterVisibleIsOn)) && (
                     <div
                       style={{
-                        flex: `0 0 ${widthMap[widthClass as keyof typeof widthMap]}%`,
-                        maxWidth: `${widthMap[widthClass as keyof typeof widthMap]}%`,
+                        flex: `0 0 ${widthPercentage}%`,
+                        maxWidth: `${widthPercentage}%`,
                       }}
                       className="w-full p-0"
                       key={index}
@@ -604,22 +598,24 @@ export default function Row({
             >
               {/* If objectWidth in the object is empty, use the row.objectWidth */}
               {resultArray.map((object, index) => {
-                let widthClass =
+                const widthClass =
                   object.objectWidth === "" || row.choicesShareTemplate
                     ? row.objectWidth
                     : object.objectWidth;
                 const span = parseColSpan(widthClass);
-                if (width <= 500) widthClass = "w-100";
-                else if (width <= 1000) widthClass = "w-50";
-                else if (span !== -1)
-                  widthClass = spanMap[span as keyof typeof spanMap];
+                let widthPercentage =
+                  span !== -1
+                    ? (100 / 12) * span
+                    : widthMap[widthClass as keyof typeof widthMap];
+                if (width <= 500) widthPercentage = 100;
+                else if (width <= 1000) widthPercentage = 50;
                 return (
                   <div
                     className="w-full p-0"
                     key={index}
                     style={{
-                      flex: `0 0 ${widthMap[widthClass as keyof typeof widthMap]}%`,
-                      maxWidth: `${widthMap[widthClass as keyof typeof widthMap]}%`,
+                      flex: `0 0 ${widthPercentage}%`,
+                      maxWidth: `${widthPercentage}%`,
                     }}
                   >
                     <AppObject

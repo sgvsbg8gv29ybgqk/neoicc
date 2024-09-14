@@ -23,6 +23,7 @@ import { Minus, Plus } from "lucide-react";
 import ObjectScore from "./ObjectScore";
 // The Addon under objects.
 import ObjectAddon from "./ObjectAddon";
+import { cn } from "@/lib/utils";
 
 export default function Object({
   className,
@@ -193,7 +194,7 @@ export default function Object({
         if (styling.reqFilterSepiaIsOn)
           style.filter += ` sepia(${styling.reqFilterSepia}%)`;
 
-        if (styling.objectGradientIsOn)
+        if (styling.reqBgColorIsOn)
           style.backgroundColor = styling.reqFilterBgColor;
         else style.backgroundColor = styling.objectBgColor;
 
@@ -376,7 +377,7 @@ export default function Object({
   })();
 
   return (
-    <div className={className}>
+    <div className={cn("flex", className)}>
       {/* Preview and templates */}
       {/* If the row is not an info row or is not selectable, make it clickable */}
       {checkRequireds({ activated, pointTypes }, row) && (
