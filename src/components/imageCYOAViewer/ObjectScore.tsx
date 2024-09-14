@@ -25,7 +25,14 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
         return pointType;
       }
     }
-    return null;
+    return {
+      id: "text",
+      name: "Points",
+      startingSum: 0,
+      activatedId: "",
+      afterText: "",
+      pointColorsIsOn: false,
+    } as (typeof pointTypes)[0];
   })();
 
   const scoreTextStyle: CSSProperties = {
@@ -45,7 +52,7 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
   };
 
   const scoreValue = (() => {
-    const value = posOrNeg ? pi(score.value) * -1 : pi(score.value);
+    const value = posOrNeg ? pi(score.value) * -1 : score.value;
 
     if (pointType?.plussOrMinusAdded) {
       if (
