@@ -357,14 +357,22 @@ export default function Row({
                 )}
                 {/* Title or text */}
                 {row.title !== "" && (
-                  <h2 style={rowTitleStyle} className="mb-0">
-                    {DOMPurify.sanitize(rowTitle)}
-                  </h2>
+                  <h2
+                    style={rowTitleStyle}
+                    className="mb-0"
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(rowTitle),
+                    }}
+                  />
                 )}
                 {row.titleText !== "" && (
-                  <p className="mb-0 whitespace-pre-line" style={rowTextStyle}>
-                    {DOMPurify.sanitize(row.titleText)}
-                  </p>
+                  <p
+                    className="mb-0 whitespace-pre-line"
+                    style={rowTextStyle}
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(row.titleText),
+                    }}
+                  ></p>
                 )}
               </div>
             )}
@@ -374,17 +382,22 @@ export default function Row({
                 {/* Text and title */}
                 <div className="p-0">
                   {row.title !== "" && (
-                    <h2 className="mb-0" style={rowTitleStyle}>
-                      {DOMPurify.sanitize(rowTitle)}
-                    </h2>
+                    <h2
+                      className="mb-0"
+                      style={rowTitleStyle}
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(rowTitle),
+                      }}
+                    />
                   )}
                   {row.titleText !== "" && (
                     <p
                       className="mb-0 whitespace-pre-line"
                       style={rowTextStyle}
-                    >
-                      {DOMPurify.sanitize(row.titleText)}
-                    </p>
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(row.titleText),
+                      }}
+                    />
                   )}
                 </div>
                 {/* Image or button */}
@@ -461,17 +474,22 @@ export default function Row({
                 </div>
                 <div className="p-0">
                   {row.title !== "" && (
-                    <h2 className="mb-0" style={rowTitleStyle}>
-                      {DOMPurify.sanitize(rowTitle)}
-                    </h2>
+                    <h2
+                      className="mb-0"
+                      style={rowTitleStyle}
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(rowTitle),
+                      }}
+                    />
                   )}
                   {row.titleText !== "" && (
                     <p
                       className="mb-0 whitespace-pre-line"
                       style={rowTextStyle}
-                    >
-                      {DOMPurify.sanitize(row.titleText)}
-                    </p>
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(row.titleText),
+                      }}
+                    />
                   )}
                 </div>
               </div>
@@ -480,14 +498,22 @@ export default function Row({
             {pi(row.template) === 4 && (
               <div className="p-0">
                 {row.title !== "" && (
-                  <h2 className="mb-0" style={rowTitleStyle}>
-                    {DOMPurify.sanitize(rowTitle)}
-                  </h2>
+                  <h2
+                    className="mb-0"
+                    style={rowTitleStyle}
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(rowTitle),
+                    }}
+                  />
                 )}
                 {row.titleText !== "" && (
-                  <p className="mb-0 whitespace-pre-line" style={rowTextStyle}>
-                    {DOMPurify.sanitize(row.titleText)}
-                  </p>
+                  <p
+                    className="mb-0 whitespace-pre-line"
+                    style={rowTextStyle}
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(row.titleText),
+                    }}
+                  />
                 )}
                 {/* If Image is activated */}
                 {!row.isButtonRow &&
