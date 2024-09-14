@@ -3,6 +3,7 @@ import { Button } from "./components/ui/button";
 import Information from "./components/Information";
 import ImageCYOAViewer from "./components/ImageCYOAViewer";
 import ImageCYOA from "./components/ImageCYOA";
+import { ScrollArea } from "./components/ui/scroll-area";
 
 function IndexComponent({
   setComponent,
@@ -34,7 +35,7 @@ function IndexComponent({
           <span>Update: 28.02.2021</span>
         </div>
         <span>TODO:</span>
-        <div className="not-prose text-xs">
+        <ScrollArea className="not-prose max-h-96 text-xs">
           <p>imageCYOA/row/ImageUpload</p>
           <p>imageCYOA/ActivatedViewer</p>
           <p>standardcyoa/BackpackPreview</p>
@@ -82,7 +83,7 @@ function IndexComponent({
           <p>imageCYOA/styleNew/RowImage</p>
           <p>imageCYOA/styleNew/Text</p>
           <p>imageCYOA/ConfirmDialog</p>
-        </div>
+        </ScrollArea>
       </div>
     </main>
   );
