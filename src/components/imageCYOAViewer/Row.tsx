@@ -47,6 +47,14 @@ export default function Row({
     "w-9": 9.09,
     "w-8": 8.33,
   };
+  const spanMap = {
+    1: "w-8",
+    2: "w-16",
+    3: "w-25",
+    4: "w-33",
+    6: "w-50",
+    12: "w-100",
+  };
 
   const styling: typeof row.styling & Partial<typeof appStyling> =
     row.isPrivateStyling ? row.styling : appStyling;
@@ -241,7 +249,7 @@ export default function Row({
                 }
               }
             } else if (object.isSelectableMultiple) {
-              console.log("Mul");
+              // console.log("Mul");
               if (typeof object.multipleUseVariable !== "undefined") {
                 if (object.multipleUseVariable > 0) {
                   // Move trough all groups...
@@ -552,24 +560,17 @@ export default function Row({
           {/* Where the object-components are created and listed. */}
           {!row.isResultRow ? (
             <div
-              className={cn(
-                "m-0 p-0",
-                row.objects.filter((x) =>
-                  (x.objectWidth || row.objectWidth).includes("col-"),
-                ).length > 0
-                  ? "grid grid-cols-12"
-                  : "flex flex-row flex-wrap",
-              )}
+              className="m-0 flex flex-row flex-wrap p-0"
               style={{ justifyContent: row.rowJustify }}
             >
               {/* If objectWidth in the object is empty, use the row.objectWidth */}
               {row.objects.map((object, index) => {
                 let widthClass = object.objectWidth || row.objectWidth;
-                let span = parseColSpan(widthClass);
-                if (width <= 500 && span !== -1) span = 12;
-                else if (width <= 500) widthClass = "w-100";
-                else if (width <= 1000 && span !== -1) span = 6;
+                const span = parseColSpan(widthClass);
+                if (width <= 500) widthClass = "w-100";
                 else if (width <= 1000) widthClass = "w-50";
+                else if (span !== -1)
+                  widthClass = spanMap[span as keyof typeof spanMap];
                 return (
                   (checkRequireds({ activated, pointTypes }, object) ||
                     (object.isPrivateStyling
@@ -577,18 +578,8 @@ export default function Row({
                       : !styling.reqFilterVisibleIsOn)) && (
                     <div
                       style={{
-                        gridColumn:
-                          span !== -1
-                            ? `span ${span} / span ${span}`
-                            : undefined,
-                        flex:
-                          span === -1
-                            ? `0 0 ${widthMap[widthClass as keyof typeof widthMap]}%`
-                            : undefined,
-                        maxWidth:
-                          span === -1
-                            ? `${widthMap[widthClass as keyof typeof widthMap]}%`
-                            : undefined,
+                        flex: `0 0 ${widthMap[widthClass as keyof typeof widthMap]}%`,
+                        maxWidth: `${widthMap[widthClass as keyof typeof widthMap]}%`,
                       }}
                       className="w-full p-0"
                       key={index}
@@ -608,16 +599,7 @@ export default function Row({
             // Where the object-components are created and listed.
             // If objectWidth in the object is empty, use the row.objectWidth
             <div
-              className={cn(
-                row.objects.filter((x) =>
-                  (x.objectWidth === "" || row.choicesShareTemplate
-                    ? row.objectWidth
-                    : x.objectWidth
-                  ).includes("col-"),
-                ).length > 0
-                  ? "grid grid-cols-12"
-                  : "flex flex-row flex-wrap",
-              )}
+              className="flex flex-row flex-wrap"
               style={{ justifyContent: row.rowJustify }}
             >
               {/* If objectWidth in the object is empty, use the row.objectWidth */}
@@ -626,26 +608,18 @@ export default function Row({
                   object.objectWidth === "" || row.choicesShareTemplate
                     ? row.objectWidth
                     : object.objectWidth;
-                let span = parseColSpan(widthClass);
-                if (width <= 500 && span !== -1) span = 12;
-                else if (width <= 500) widthClass = "w-100";
-                else if (width <= 1000 && span !== -1) span = 6;
+                const span = parseColSpan(widthClass);
+                if (width <= 500) widthClass = "w-100";
                 else if (width <= 1000) widthClass = "w-50";
+                else if (span !== -1)
+                  widthClass = spanMap[span as keyof typeof spanMap];
                 return (
                   <div
                     className="w-full p-0"
                     key={index}
                     style={{
-                      gridColumn:
-                        span !== -1 ? `span ${span} / span ${span}` : undefined,
-                      flex:
-                        span === -1
-                          ? `0 0 ${widthMap[widthClass as keyof typeof widthMap]}%`
-                          : undefined,
-                      maxWidth:
-                        span === -1
-                          ? `${widthMap[widthClass as keyof typeof widthMap]}%`
-                          : undefined,
+                      flex: `0 0 ${widthMap[widthClass as keyof typeof widthMap]}%`,
+                      maxWidth: `${widthMap[widthClass as keyof typeof widthMap]}%`,
                     }}
                   >
                     <AppObject

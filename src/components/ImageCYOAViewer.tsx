@@ -107,7 +107,7 @@ export default function ImageCYOAViewer({ onBack }: { onBack: () => void }) {
           <div>
             {importOpen && (
               <Button
-                variant="outline"
+                variant="ghost"
                 size="icon"
                 type="button"
                 onClick={() => setModal("appActivatedViewer")}
@@ -155,7 +155,7 @@ export default function ImageCYOAViewer({ onBack }: { onBack: () => void }) {
           <div>
             {backpack.length > 0 && (
               <Button
-                variant="outline"
+                variant="ghost"
                 size="icon"
                 type="button"
                 onClick={() => setModal("appBackpackPreview")}

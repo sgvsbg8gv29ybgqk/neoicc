@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -179,11 +180,9 @@ export default function Load({
             object.image.length - "data:image/png;base64,".length;
           const sizeInBytes =
             4 * Math.ceil(stringLength / 3) * 0.5624896334383812;
-          if (Math.floor(sizeInBytes / 1000) > 400) {
-            console.log(
-              Math.floor(sizeInBytes / 1000) + " KB, " + object.title,
-            );
-          }
+          // if (Math.floor(sizeInBytes / 1000) > 400) {
+          // console.log(Math.floor(sizeInBytes / 1000) + " KB, " + object.title);
+          // }
           if (biggestPicture < sizeInBytes) {
             biggestPicture = sizeInBytes;
             biggestPictureTitle = object.title;
@@ -224,6 +223,9 @@ export default function Load({
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Load/Save Project</DialogTitle>
+          <DialogDescription>
+            This is where you can load/save projects
+          </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div>
