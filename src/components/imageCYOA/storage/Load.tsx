@@ -11,7 +11,6 @@ import { Separator } from "@/components/ui/separator";
 import JSZip from "jszip";
 import { useAppStore } from "@/store";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { useMemo } from "react";
 
 function base64ToBlob(base64: string, mime: string) {
   mime = mime || "";
@@ -155,7 +154,7 @@ export default function Load({
     rows: rowsCount,
     biggestImage,
     smallestImage,
-  } = useMemo(() => {
+  } = (() => {
     let biggestPicture = 0;
     let biggestPictureTitle;
     let smallestPicture = 0;
@@ -218,7 +217,7 @@ export default function Load({
       biggestImage,
       smallestImage,
     };
-  }, [app.rows]);
+  })();
 
   return (
     <Dialog open={open} onOpenChange={(a) => !a && onClose()}>

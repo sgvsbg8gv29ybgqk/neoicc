@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Object, pi, useAppStore } from "@/store";
-import { CSSProperties, useMemo } from "react";
+import { CSSProperties } from "react";
 
 export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
   const pointTypes = useAppStore((state) => state.app.pointTypes);
@@ -10,22 +10,22 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
   const posOrNeg = pi(score.value) < 0 ? true : false;
 
   // Checks if the pointype has been avtivated if there is a activatedId in it.
-  const isPointtypeActivated = useMemo(() => {
+  const isPointtypeActivated = (() => {
     for (const pointType of pointTypes) {
       if (pointType.id == score.id && pointType.activatedId != "")
         return activated.includes(pointType.activatedId);
     }
     return true;
-  }, [activated, pointTypes, score.id]);
+  })();
 
-  const pointType = useMemo(() => {
+  const pointType = (() => {
     for (const pointType of pointTypes) {
       if (pointType.id === score.id) {
         return pointType;
       }
     }
     return null;
-  }, [pointTypes, score.id]);
+  })();
 
   const scoreTextStyle: CSSProperties = {
     fontFamily: styling.scoreText,
@@ -43,7 +43,7 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
       : undefined,
   };
 
-  const scoreValue = useMemo(() => {
+  const scoreValue = (() => {
     const value = posOrNeg ? pi(score.value) * -1 : pi(score.value);
 
     if (pointType?.plussOrMinusAdded) {
@@ -58,12 +58,7 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
     }
 
     return value.toString();
-  }, [
-    pointType?.plussOrMinusAdded,
-    pointType?.plussOrMinusInverted,
-    posOrNeg,
-    score.value,
-  ]);
+  })();
 
   return (
     <div className="p-0">

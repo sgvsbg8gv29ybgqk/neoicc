@@ -6,7 +6,7 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import DOMPurify from "dompurify";
-import { CSSProperties, useMemo } from "react";
+import { CSSProperties } from "react";
 
 export default function ObjectAddon({
   addon,
@@ -22,7 +22,7 @@ export default function ObjectAddon({
   const styling: typeof row.styling & Partial<typeof appStyling> =
     row.isPrivateStyling ? row.styling : appStyling;
 
-  const replaceAddonTitle = useMemo(() => {
+  const replaceAddonTitle = (() => {
     let newObjectText = addon.title;
     let isPointType = false;
 
@@ -52,9 +52,9 @@ export default function ObjectAddon({
       }
     }
     return newObjectText;
-  }, [addon.title, pointTypes, words]);
+  })();
 
-  const replaceAddonText = useMemo(() => {
+  const replaceAddonText = (() => {
     let newObjectText = addon.text;
     let isPointType = false;
 
@@ -84,7 +84,7 @@ export default function ObjectAddon({
       }
     }
     return newObjectText;
-  }, [addon.text, pointTypes, words]);
+  })();
 
   // Preview
   if (!checkRequireds({ activated, pointTypes }, addon)) return null;

@@ -6,7 +6,7 @@ import {
   useAppStore,
   type Object,
 } from "@/store";
-import { CSSProperties, useMemo, useState } from "react";
+import { CSSProperties, useState } from "react";
 // Image Upload
 import ImageUpload from "../imageCYOA/row/ImageUpload";
 import { useWindowDimensions } from "@/lib/resize";
@@ -58,7 +58,7 @@ export default function Object({
   const { width } = useWindowDimensions();
 
   // Used on the div that holds the preview of the object.
-  const objectBackground = useMemo(() => {
+  const objectBackground = (() => {
     const style: CSSProperties = {};
     // Styles the color of the background, margin and selected color if selected.
     if (!object.isActive) {
@@ -192,26 +192,10 @@ export default function Object({
     }
 
     return style;
-  }, [
-    activateObject,
-    activated,
-    multiplyOrDivide,
-    object,
-    pointTypes,
-    row,
-    rows,
-    selectedOneLess,
-    setObjectSelectable,
-    styling,
-    selectedThisManyTimesProp,
-  ]);
+  })();
 
-  const findRowTitle = useMemo(() => {
-    for (const row of rows) {
-      if (row.objects.includes(object)) return row.title;
-    }
-    return "";
-  }, [object, rows]);
+  const findRowTitle =
+    rows.find((row) => row.objects.includes(object))?.title ?? "";
 
   const scoreTextStyle: CSSProperties = {
     fontFamily: styling.scoreText,
@@ -221,7 +205,7 @@ export default function Object({
   };
 
   // Used on the img in the object.
-  const objectImageStyle = useMemo(() => {
+  const objectImageStyle = (() => {
     const style: CSSProperties = {};
     if (object.image === "") return style;
     style.width = styling.objectImageWidth + "%";
@@ -251,9 +235,9 @@ export default function Object({
       style.border = `${styling.objectImgBorderWidth}px ${styling.objectImgBorderStyle} ${styling.objectImgBorderColor}`;
 
     return style;
-  }, [object.image, object.template, row.choicesShareTemplate, styling]);
+  })();
 
-  const replaceObjectTitleText = useMemo(() => {
+  const replaceObjectTitleText = (() => {
     let newObjectText = object.title;
     let isPointType = false;
 
@@ -284,7 +268,7 @@ export default function Object({
     }
 
     return newObjectText;
-  }, [object.title, pointTypes, words]);
+  })();
 
   const objectTitleStyle: CSSProperties = {
     fontFamily: styling.objectTitle,
@@ -347,7 +331,7 @@ export default function Object({
     padding: styling.objectTextPadding + "px",
   };
 
-  const replaceObjectText = useMemo(() => {
+  const replaceObjectText = (() => {
     let newObjectText = object.text;
     let isPointType = false;
 
@@ -378,7 +362,7 @@ export default function Object({
       }
     }
     return newObjectText;
-  }, [object.text, pointTypes, words]);
+  })();
 
   return (
     <div className={className}>

@@ -1,7 +1,7 @@
 import { useWindowDimensions } from "@/lib/resize";
 import { cn } from "@/lib/utils";
 import { App, checkRequireds, Object, pi, useAppStore } from "@/store";
-import { CSSProperties, useCallback, useMemo } from "react";
+import { CSSProperties } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -77,7 +77,7 @@ export default function Row({
     color: "black",
   } satisfies CSSProperties;
 
-  const rowTitle = useMemo(() => {
+  const rowTitle = (() => {
     let newObjectText = row.title;
     let isPointType = false;
 
@@ -108,7 +108,7 @@ export default function Row({
       }
     }
     return newObjectText;
-  }, [row.title, pointTypes, words]);
+  })();
 
   const rowTitleStyle = {
     fontFamily: styling.rowTitle,
@@ -144,27 +144,27 @@ export default function Row({
   }
 
   // Used to find the backpack items in standard only.
-  const findAllActiveObjects = useCallback(
-    (obj: App["chapters"][0]["pages"][0], chapter: App["chapters"][0]) => {
-      const newObjectList: Object[] = [];
-      // If the id of child is equal to the redirect end-id.
-      for (const row of obj.app.rows) {
-        for (const object of row.objects) {
-          if (object.isActive) newObjectList.push(object);
-        }
+  function findAllActiveObjects(
+    obj: App["chapters"][0]["pages"][0],
+    chapter: App["chapters"][0],
+  ) {
+    const newObjectList: Object[] = [];
+    // If the id of child is equal to the redirect end-id.
+    for (const row of obj.app.rows) {
+      for (const object of row.objects) {
+        if (object.isActive) newObjectList.push(object);
       }
+    }
 
-      if (obj && obj.children && obj.children.length > 0) {
-        // For each child page.
-        for (const child of obj.children)
-          newObjectList.push(...findAllActiveObjects(child, chapter));
-      }
-      return newObjectList;
-    },
-    [],
-  );
+    if (obj && obj.children && obj.children.length > 0) {
+      // For each child page.
+      for (const child of obj.children)
+        newObjectList.push(...findAllActiveObjects(child, chapter));
+    }
+    return newObjectList;
+  }
 
-  const resultArray = useMemo(() => {
+  const resultArray = (() => {
     const objectArray: Object[] = [];
 
     if (type === "standard") {
@@ -271,7 +271,7 @@ export default function Row({
       }
     }
     return objectArray;
-  }, [chapters, row, rows, type, findAllActiveObjects]);
+  })();
 
   // The object height, checks if full object height is turned on and edit-mode is off.
   const objectHeight =
