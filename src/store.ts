@@ -851,7 +851,7 @@ export type Requireds = {
   // reqId3: { type: "string" };
   reqPoints: number | string;
   showRequired: boolean;
-  operator: number;
+  operator: number | string;
   afterText: string;
   beforeText: string;
   // orNum: { type: "integer" };
@@ -940,31 +940,31 @@ export function checkRequireds(
                 if (!isNaN(pi(required.reqPoints))) {
                   // Is there more points than required?
                   if (
-                    required.operator === 1 &&
+                    pi(required.operator) === 1 &&
                     pi(required.reqPoints) >= pi(pointType.startingSum)
                   ) {
                     return false;
                     // Is there more or equal points to required?
                   } else if (
-                    required.operator === 2 &&
+                    pi(required.operator) === 2 &&
                     pi(required.reqPoints) > pi(pointType.startingSum)
                   ) {
                     return false;
                     // Is there THIS many points?
                   } else if (
-                    required.operator === 3 &&
+                    pi(required.operator) === 3 &&
                     pi(required.reqPoints) !== pi(pointType.startingSum)
                   ) {
                     return false;
                     // Is there less or equal points to required?
                   } else if (
-                    required.operator === 4 &&
+                    pi(required.operator) === 4 &&
                     pi(required.reqPoints) < pi(pointType.startingSum)
                   ) {
                     return false;
                     // Is there less points than required?
                   } else if (
-                    required.operator === 5 &&
+                    pi(required.operator) === 5 &&
                     pi(required.reqPoints) <= pi(pointType.startingSum)
                   ) {
                     return false;
@@ -974,31 +974,31 @@ export function checkRequireds(
                     if (required.startingSum === pointType2.id) {
                       // Is there more points than required?
                       if (
-                        required.operator === 1 &&
+                        pi(required.operator) === 1 &&
                         pi(pointType.startingSum) >= pi(pointType2.startingSum)
                       ) {
                         return false;
                         // Is there more or equal points to required?
                       } else if (
-                        required.operator === 2 &&
+                        pi(required.operator) === 2 &&
                         pi(pointType.startingSum) > pi(pointType2.startingSum)
                       ) {
                         return false;
                         // Is there THIS many points?
                       } else if (
-                        required.operator === 3 &&
+                        pi(required.operator) === 3 &&
                         pi(pointType.startingSum) !== pi(pointType2.startingSum)
                       ) {
                         return false;
                         // Is there less or equal points to required?
                       } else if (
-                        required.operator === 4 &&
+                        pi(required.operator) === 4 &&
                         pi(pointType.startingSum) < pi(pointType2.startingSum)
                       ) {
                         return false;
                         // Is there less points than required?
                       } else if (
-                        required.operator === 5 &&
+                        pi(required.operator) === 5 &&
                         pi(pointType.startingSum) <= pi(pointType2.startingSum)
                       ) {
                         return false;
@@ -1039,19 +1039,20 @@ export function checkRequireds(
           }
 
           /*
-                  pointReqOperators: [
-                    { text: "+ More than", value: "1" },
-                    { text: "+= More or equal", value: "3" },
-                    { text: "= Equal to", value: "2" },
-                    { text: "-= Less or equal", value: "4" },
-                    { text: "- Less han", value: "5" }
-                  ],
-                  */
+            pointReqOperators: [
+              { text: "+ More than", value: "1" },
+              { text: "+= More or equal", value: "3" },
+              { text: "= Equal to", value: "2" },
+              { text: "-= Less or equal", value: "4" },
+              { text: "- Less han", value: "5" }
+            ],
+          */
 
-          if (pointtypeA <= pointtypeB && required.operator === 1) return false;
-          else if (pointtypeA != pointtypeB && required.operator === 2)
+          if (pointtypeA <= pointtypeB && pi(required.operator) === 1)
             return false;
-          else if (pointtypeA < pointtypeB && required.operator === 3)
+          else if (pointtypeA != pointtypeB && pi(required.operator) === 2)
+            return false;
+          else if (pointtypeA < pointtypeB && pi(required.operator) === 3)
             return false;
 
           // Checks if one of the requireds is selected.
@@ -1083,31 +1084,31 @@ export function checkRequireds(
                 if (!isNaN(pi(required.reqPoints))) {
                   // Is there more points than required?
                   if (
-                    required.operator === 1 &&
+                    pi(required.operator) === 1 &&
                     pi(required.reqPoints) >= pi(pointType.startingSum)
                   ) {
                     return false;
                     // Is there more or equal points to required?
                   } else if (
-                    required.operator === 2 &&
+                    pi(required.operator) === 2 &&
                     pi(required.reqPoints) > pi(pointType.startingSum)
                   ) {
                     return false;
                     // Is there THIS many points?
                   } else if (
-                    required.operator === 3 &&
+                    pi(required.operator) === 3 &&
                     pi(required.reqPoints) !== pi(pointType.startingSum)
                   ) {
                     return false;
                     // Is there less or equal points to required?
                   } else if (
-                    required.operator === 4 &&
+                    pi(required.operator) === 4 &&
                     pi(required.reqPoints) < pi(pointType.startingSum)
                   ) {
                     return false;
                     // Is there less points than required?
                   } else if (
-                    required.operator === 5 &&
+                    pi(required.operator) === 5 &&
                     pi(required.reqPoints) <= pi(pointType.startingSum)
                   ) {
                     return false;
@@ -1117,31 +1118,31 @@ export function checkRequireds(
                     if (required.reqPoints === pointType2.id) {
                       // Is there more points than required?
                       if (
-                        required.operator === 1 &&
+                        pi(required.operator) === 1 &&
                         pi(pointType.startingSum) >= pi(pointType2.startingSum)
                       ) {
                         return false;
                         // Is there more or equal points to required?
                       } else if (
-                        required.operator === 2 &&
+                        pi(required.operator) === 2 &&
                         pi(pointType.startingSum) > pi(pointType2.startingSum)
                       ) {
                         return false;
                         // Is there THIS many points?
                       } else if (
-                        required.operator === 3 &&
+                        pi(required.operator) === 3 &&
                         pi(pointType.startingSum) !== pi(pointType2.startingSum)
                       ) {
                         return false;
                         // Is there less or equal points to required?
                       } else if (
-                        required.operator === 4 &&
+                        pi(required.operator) === 4 &&
                         pi(pointType.startingSum) < pi(pointType2.startingSum)
                       ) {
                         return false;
                         // Is there less points than required?
                       } else if (
-                        required.operator === 5 &&
+                        pi(required.operator) === 5 &&
                         pi(pointType.startingSum) <= pi(pointType2.startingSum)
                       ) {
                         return false;
