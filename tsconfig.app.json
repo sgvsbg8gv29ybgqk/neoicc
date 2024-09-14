@@ -26,7 +26,8 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "outDir": "./dist"
   },
   "include": [
     "src"

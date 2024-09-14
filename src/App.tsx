@@ -34,7 +34,7 @@ function IndexComponent({
           <span>Update: 28.02.2021</span>
         </div>
         <span>TODO:</span>
-        <div>
+        <div className="not-prose text-xs">
           <p>imageCYOA/row/ImageUpload</p>
           <p>imageCYOA/ActivatedViewer</p>
           <p>standardcyoa/BackpackPreview</p>
