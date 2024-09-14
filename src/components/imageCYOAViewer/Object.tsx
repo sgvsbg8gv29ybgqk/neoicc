@@ -6,7 +6,7 @@ import {
   useAppStore,
   type Object,
 } from "@/store";
-import { CSSProperties, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 // Image Upload
 import ImageUpload from "../imageCYOA/row/ImageUpload";
 import { useWindowDimensions } from "@/lib/resize";
@@ -56,6 +56,51 @@ export default function Object({
         ? row.styling
         : appStyling;
   const { width } = useWindowDimensions();
+
+  useEffect(() => {
+    const hasRequireds = checkRequireds({ activated, pointTypes }, object);
+    if (hasRequireds) return;
+    // Turns the object inactive and removes the id from the activated-array.
+    if (object.isActive) {
+      activateObject(object, row);
+      // If the choice is tier-based with multiple.
+    } else if (object.isSelectableMultiple) {
+      // Will go trough all tiers left to lowest tier.
+      for (
+        let i = 0;
+        i < pi(object.numMultipleTimesPluss) - pi(object.numMultipleTimesMinus);
+        i++
+      )
+        setSelectedThisManyTimesProp(
+          selectedOneLess(object) ?? selectedThisManyTimesProp,
+        );
+    }
+
+    if (object.multiplyPointtypeIsOnCheck || object.dividePointtypeIsOnCheck) {
+      multiplyOrDivide(object);
+    }
+
+    // Is here to make the activated choice selectable.
+    if (object.activateOtherChoice) {
+      for (const row of rows) {
+        for (const object2 of row.objects) {
+          if (object2.id === object.activateThisChoice && object2.isActive)
+            setObjectSelectable(object2);
+        }
+      }
+    }
+  }, [
+    activateObject,
+    activated,
+    multiplyOrDivide,
+    object,
+    pointTypes,
+    row,
+    rows,
+    selectedOneLess,
+    selectedThisManyTimesProp,
+    setObjectSelectable,
+  ]);
 
   // Used on the div that holds the preview of the object.
   const objectBackground = (() => {
@@ -154,40 +199,6 @@ export default function Object({
 
         if (styling.objectGradientIsOn)
           style.backgroundImage = `linear-gradient(${styling.objectGradientOnReq})`;
-
-        // Turns the object inactive and removes the id from the activated-array.
-        if (object.isActive) {
-          activateObject(object, row);
-          // If the choice is tier-based with multiple.
-        } else if (object.isSelectableMultiple) {
-          // Will go trough all tiers left to lowest tier.
-          for (
-            let i = 0;
-            i <
-            pi(object.numMultipleTimesPluss) - pi(object.numMultipleTimesMinus);
-            i++
-          )
-            setSelectedThisManyTimesProp(
-              selectedOneLess(object) ?? selectedThisManyTimesProp,
-            );
-        }
-
-        if (
-          object.multiplyPointtypeIsOnCheck ||
-          object.dividePointtypeIsOnCheck
-        ) {
-          multiplyOrDivide(object);
-        }
-
-        // Is here to make the activated choice selectable.
-        if (object.activateOtherChoice) {
-          for (const row of rows) {
-            for (const object2 of row.objects) {
-              if (object2.id == object.activateThisChoice && object2.isActive)
-                setObjectSelectable(object2);
-            }
-          }
-        }
       }
     }
 

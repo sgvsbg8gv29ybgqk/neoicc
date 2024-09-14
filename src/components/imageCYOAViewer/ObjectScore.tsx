@@ -74,16 +74,18 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
                 : "pl-[1px] pr-[2px]",
             )}
           >
-            {pointType?.iconIsOn && !pointType.imageOnSide && (
-              <img
-                className="float-left"
-                style={{
-                  width: pointType.iconWidth + "px",
-                  height: pointType.iconHeight + "px",
-                }}
-                src={pointType.image}
-              />
-            )}
+            {pointType?.iconIsOn &&
+              !pointType.imageOnSide &&
+              pointType.image && (
+                <img
+                  className="float-left"
+                  style={{
+                    width: pointType.iconWidth + "px",
+                    height: pointType.iconHeight + "px",
+                  }}
+                  src={pointType.image}
+                />
+              )}
           </div>
           <div>
             <p
@@ -101,16 +103,18 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
                   : "pl-[1px] pr-[2px]",
               )}
             >
-              {pointType?.iconIsOn && pointType.imageOnSide && (
-                <img
-                  className="float-left"
-                  style={{
-                    width: pointType.iconWidth + "px",
-                    height: pointType.iconHeight + "px",
-                  }}
-                  src={pointType.image}
-                />
-              )}
+              {pointType?.iconIsOn &&
+                pointType.imageOnSide &&
+                pointType.image && (
+                  <img
+                    className="float-left"
+                    style={{
+                      width: pointType.iconWidth + "px",
+                      height: pointType.iconHeight + "px",
+                    }}
+                    src={pointType.image}
+                  />
+                )}
             </div>
           </div>
         </div>
@@ -135,16 +139,18 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
                     : "pl-[1px] pr-[2px]",
                 )}
               >
-                {pointType.iconIsOn && !pointType.imageOnSide && (
-                  <img
-                    className="float-left"
-                    style={{
-                      width: pointType.iconWidth + "px",
-                      height: pointType.iconHeight + "px",
-                    }}
-                    src={pointType.image}
-                  />
-                )}
+                {pointType.iconIsOn &&
+                  !pointType.imageOnSide &&
+                  pointType.image && (
+                    <img
+                      className="float-left"
+                      style={{
+                        width: pointType.iconWidth + "px",
+                        height: pointType.iconHeight + "px",
+                      }}
+                      src={pointType.image}
+                    />
+                  )}
               </div>
               <div>
                 <p
@@ -161,16 +167,18 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
                     : "pl-[1px] pr-[2px]",
                 )}
               >
-                {pointType.iconIsOn && pointType.imageOnSide && (
-                  <img
-                    className="float-left"
-                    style={{
-                      width: pointType.iconWidth + "px",
-                      height: pointType.iconHeight + "px",
-                    }}
-                    src={pointType.image}
-                  />
-                )}
+                {pointType.iconIsOn &&
+                  pointType.imageOnSide &&
+                  pointType.image && (
+                    <img
+                      className="float-left"
+                      style={{
+                        width: pointType.iconWidth + "px",
+                        height: pointType.iconHeight + "px",
+                      }}
+                      src={pointType.image}
+                    />
+                  )}
               </div>
               <div>
                 <p

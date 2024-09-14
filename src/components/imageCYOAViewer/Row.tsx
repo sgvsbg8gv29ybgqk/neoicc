@@ -330,7 +330,9 @@ export default function Row({
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <img style={rowImageStyle} src={row.image} />
+                        {row.image && (
+                          <img style={rowImageStyle} src={row.image} />
+                        )}
                       </TooltipTrigger>
                       <TooltipContent>
                         <span>{row.imageSourceTooltip}</span>
@@ -338,7 +340,7 @@ export default function Row({
                     </Tooltip>
                   </TooltipProvider>
                 ) : !row.isButtonRow ? (
-                  <img style={rowImageStyle} src={row.image} />
+                  row.image && <img style={rowImageStyle} src={row.image} />
                 ) : (
                   // If button is activated
                   <Button
@@ -393,7 +395,9 @@ export default function Row({
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <img style={rowImageStyle} src={row.image} />
+                          {row.image && (
+                            <img style={rowImageStyle} src={row.image} />
+                          )}
                         </TooltipTrigger>
                         <TooltipContent>
                           <span>{row.imageSourceTooltip}</span>
@@ -401,7 +405,7 @@ export default function Row({
                       </Tooltip>
                     </TooltipProvider>
                   ) : !row.isButtonRow ? (
-                    <img style={rowImageStyle} src={row.image} />
+                    row.image && <img style={rowImageStyle} src={row.image} />
                   ) : (
                     // If button is activated
                     <Button
@@ -429,7 +433,9 @@ export default function Row({
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <img style={rowImageStyle} src={row.image} />
+                          {row.image && (
+                            <img style={rowImageStyle} src={row.image} />
+                          )}
                         </TooltipTrigger>
                         <TooltipContent>
                           <span>{row.imageSourceTooltip}</span>
@@ -437,7 +443,7 @@ export default function Row({
                       </Tooltip>
                     </TooltipProvider>
                   ) : !row.isButtonRow ? (
-                    <img style={rowImageStyle} src={row.image} />
+                    row.image && <img style={rowImageStyle} src={row.image} />
                   ) : (
                     // If button is activated
                     <Button
@@ -490,7 +496,9 @@ export default function Row({
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <img style={rowImageStyle} src={row.image} />
+                        {row.image && (
+                          <img style={rowImageStyle} src={row.image} />
+                        )}
                       </TooltipTrigger>
                       <TooltipContent>
                         <span>{row.imageSourceTooltip}</span>
@@ -498,7 +506,7 @@ export default function Row({
                     </Tooltip>
                   </TooltipProvider>
                 ) : !row.isButtonRow ? (
-                  <img style={rowImageStyle} src={row.image} />
+                  row.image && <img style={rowImageStyle} src={row.image} />
                 ) : (
                   <Button
                     className="mb-[5px]"
