@@ -1,6 +1,13 @@
 import { useWindowDimensions } from "@/lib/resize";
 import { cn } from "@/lib/utils";
-import { App, checkRequireds, Object, pi, useAppStore } from "@/store";
+import {
+  App,
+  checkRequireds,
+  getImageURL,
+  Object,
+  pi,
+  useAppStore,
+} from "@/store";
 import { CSSProperties } from "react";
 import {
   Tooltip,
@@ -25,6 +32,7 @@ export default function Row({
   const words = useAppStore((state) => state.app.words);
   const appStyling = useAppStore((state) => state.app.styling);
   const chapters = useAppStore((state) => state.app.chapters);
+  const imagePrefix = useAppStore((state) => state.imagePrefix);
   const checkIfDeselect = useAppStore((state) => state.checkIfDeselect);
   const handleButtonActivate = useAppStore(
     (state) => state.handleButtonActivate,
@@ -52,7 +60,9 @@ export default function Row({
     row.isPrivateStyling ? row.styling : appStyling;
 
   const borderRadiusSuffix = styling.rowBorderRadiusIsPixels ? "px" : "%";
-  const rowImageBorderRadiusSuffix = styling.rowImgBorderRadiusIsPixels;
+  const rowImageBorderRadiusSuffix = styling.rowImgBorderRadiusIsPixels
+    ? "px"
+    : "%";
 
   const rowImageStyle = (
     row.image !== ""
@@ -330,8 +340,13 @@ export default function Row({
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        {row.image && (
-                          <img style={rowImageStyle} src={row.image} />
+                        {row.image ? (
+                          <img
+                            style={rowImageStyle}
+                            src={getImageURL(row.image, imagePrefix)}
+                          />
+                        ) : (
+                          <div className="inline-block" />
                         )}
                       </TooltipTrigger>
                       <TooltipContent>
@@ -340,7 +355,14 @@ export default function Row({
                     </Tooltip>
                   </TooltipProvider>
                 ) : !row.isButtonRow ? (
-                  row.image && <img style={rowImageStyle} src={row.image} />
+                  row.image ? (
+                    <img
+                      style={rowImageStyle}
+                      src={getImageURL(row.image, imagePrefix)}
+                    />
+                  ) : (
+                    <div className="inline-block" />
+                  )
                 ) : (
                   // If button is activated
                   <Button
@@ -408,8 +430,13 @@ export default function Row({
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          {row.image && (
-                            <img style={rowImageStyle} src={row.image} />
+                          {row.image ? (
+                            <img
+                              style={rowImageStyle}
+                              src={getImageURL(row.image, imagePrefix)}
+                            />
+                          ) : (
+                            <div className="inline-block" />
                           )}
                         </TooltipTrigger>
                         <TooltipContent>
@@ -418,7 +445,14 @@ export default function Row({
                       </Tooltip>
                     </TooltipProvider>
                   ) : !row.isButtonRow ? (
-                    row.image && <img style={rowImageStyle} src={row.image} />
+                    row.image ? (
+                      <img
+                        style={rowImageStyle}
+                        src={getImageURL(row.image, imagePrefix)}
+                      />
+                    ) : (
+                      <div className="inline-block" />
+                    )
                   ) : (
                     // If button is activated
                     <Button
@@ -446,8 +480,13 @@ export default function Row({
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          {row.image && (
-                            <img style={rowImageStyle} src={row.image} />
+                          {row.image ? (
+                            <img
+                              style={rowImageStyle}
+                              src={getImageURL(row.image, imagePrefix)}
+                            />
+                          ) : (
+                            <div className="inline-block" />
                           )}
                         </TooltipTrigger>
                         <TooltipContent>
@@ -456,7 +495,14 @@ export default function Row({
                       </Tooltip>
                     </TooltipProvider>
                   ) : !row.isButtonRow ? (
-                    row.image && <img style={rowImageStyle} src={row.image} />
+                    row.image ? (
+                      <img
+                        style={rowImageStyle}
+                        src={getImageURL(row.image, imagePrefix)}
+                      />
+                    ) : (
+                      <div className="inline-block" />
+                    )
                   ) : (
                     // If button is activated
                     <Button
@@ -522,8 +568,13 @@ export default function Row({
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        {row.image && (
-                          <img style={rowImageStyle} src={row.image} />
+                        {row.image ? (
+                          <img
+                            style={rowImageStyle}
+                            src={getImageURL(row.image, imagePrefix)}
+                          />
+                        ) : (
+                          <div className="inline-block" />
                         )}
                       </TooltipTrigger>
                       <TooltipContent>
@@ -532,7 +583,14 @@ export default function Row({
                     </Tooltip>
                   </TooltipProvider>
                 ) : !row.isButtonRow ? (
-                  row.image && <img style={rowImageStyle} src={row.image} />
+                  row.image ? (
+                    <img
+                      style={rowImageStyle}
+                      src={getImageURL(row.image, imagePrefix)}
+                    />
+                  ) : (
+                    <div className="inline-block" />
+                  )
                 ) : (
                   <Button
                     className="mb-[5px]"

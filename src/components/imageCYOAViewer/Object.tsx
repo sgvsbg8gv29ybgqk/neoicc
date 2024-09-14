@@ -1,6 +1,7 @@
 import {
   App,
   checkRequireds,
+  getImageURL,
   pi,
   Requireds,
   useAppStore,
@@ -45,6 +46,7 @@ export default function Object({
   const appStyling = useAppStore((state) => state.app.styling);
   const rows = useAppStore((state) => state.app.rows);
   const words = useAppStore((state) => state.app.words);
+  const imagePrefix = useAppStore((state) => state.imagePrefix);
   const activateObject = useAppStore((state) => state.activateObject);
   const selectedOneLess = useAppStore((state) => state.selectedOneLess);
   const selectedOneMore = useAppStore((state) => state.selectedOneMore);
@@ -234,11 +236,11 @@ export default function Object({
     const suffix = styling.objectImgBorderRadiusIsPixels ? "px" : "%";
 
     if (pi(object.template) === 1 || row.choicesShareTemplate) {
-      style.borderRadius = `${styling.objectImgBorderRadiusTopLeft}${suffix} ${styling.objectImgBorderRadiusTopRight}${suffix} ${styling.objectImgBorderRadiusBottomRight}${suffix} ${styling.objectImgBorderRadiusBottomLeft}${suffix}`;
+      style.borderRadius = `${styling.objectImgBorderRadiusTopLeft}0${suffix} ${styling.objectImgBorderRadiusTopRight}0${suffix} ${styling.objectImgBorderRadiusBottomRight}0${suffix} ${styling.objectImgBorderRadiusBottomLeft}0${suffix}`;
     } else if (pi(object.template) === 2) {
-      style.borderRadius = `${styling.objectImgBorderRadiusTopLeft}${suffix} ${styling.objectImgBorderRadiusBottomLeft}${suffix} ${styling.objectImgBorderRadiusBottomRight}${suffix} ${styling.objectImgBorderRadiusTopRight}${suffix}`;
+      style.borderRadius = `${styling.objectImgBorderRadiusTopLeft}0${suffix} ${styling.objectImgBorderRadiusBottomLeft}0${suffix} ${styling.objectImgBorderRadiusBottomRight}0${suffix} ${styling.objectImgBorderRadiusTopRight}0${suffix}`;
     } else {
-      style.borderRadius = `${styling.objectImgBorderRadiusBottomLeft}${suffix} ${styling.objectImgBorderRadiusTopLeft}${suffix} ${styling.objectImgBorderRadiusTopRight}${suffix} ${styling.objectImgBorderRadiusBottomRight}${suffix}`;
+      style.borderRadius = `${styling.objectImgBorderRadiusBottomLeft}0${suffix} ${styling.objectImgBorderRadiusTopLeft}0${suffix} ${styling.objectImgBorderRadiusTopRight}0${suffix} ${styling.objectImgBorderRadiusBottomRight}0${suffix}`;
     }
 
     if (styling.objectImgOverflowIsOn) style.overflow = "hidden";
@@ -432,7 +434,10 @@ export default function Object({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       {object.image.length > 0 && (
-                        <img style={objectImageStyle} src={object.image} />
+                        <img
+                          style={objectImageStyle}
+                          src={getImageURL(object.image, imagePrefix)}
+                        />
                       )}
                     </TooltipTrigger>
                     <TooltipContent>
@@ -443,7 +448,10 @@ export default function Object({
               ) : (
                 // If there is no tooltip
                 object.image.length > 0 && (
-                  <img style={objectImageStyle} src={object.image} />
+                  <img
+                    style={objectImageStyle}
+                    src={getImageURL(object.image, imagePrefix)}
+                  />
                 )
               )}
               <div>
@@ -539,30 +547,130 @@ export default function Object({
             </div>
           ) : pi(object.template) === 2 && width > 1000 ? (
             // Template 2 - Picture on left side.
-            <div className="m-0 grid w-full grid-cols-1 p-0">
+            <div className="m-0 grid w-full grid-cols-2 p-0">
               {/* The object choice in the preview. */}
-              <div>
-                <div className="m-0 p-0">
-                  {object.imageSourceTooltip !== "" &&
-                  typeof object.imageSourceTooltip !== "undefined" ? (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          {object.image.length > 0 && (
-                            <img style={objectImageStyle} src={object.image} />
-                          )}
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <span>{object.imageSourceTooltip}</span>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  ) : (
-                    object.image.length > 0 && (
-                      <img style={objectImageStyle} src={object.image} />
-                    )
-                  )}
+              <div className="m-0 p-0">
+                {object.imageSourceTooltip !== "" &&
+                typeof object.imageSourceTooltip !== "undefined" ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        {object.image.length > 0 && (
+                          <img
+                            style={objectImageStyle}
+                            src={getImageURL(object.image, imagePrefix)}
+                          />
+                        )}
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <span>{object.imageSourceTooltip}</span>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  object.image.length > 0 && (
+                    <img
+                      style={objectImageStyle}
+                      src={getImageURL(object.image, imagePrefix)}
+                    />
+                  )
+                )}
+              </div>
+              <div className="p-1">
+                <h3
+                  className="mb-0"
+                  style={objectTitleStyle}
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(replaceObjectTitleText),
+                  }}
+                />
+                {/* If the choice can be selected multiple times. */}
+                {object.isSelectableMultiple && (
+                  <div className="flex w-full flex-row items-center justify-evenly">
+                    <Button
+                      className="my-[5px]"
+                      disabled={
+                        !checkRequireds({ activated, pointTypes }, object)
+                      }
+                      variant="ghost"
+                      size="icon"
+                      type="button"
+                      onClick={() =>
+                        setSelectedThisManyTimesProp(
+                          selectedOneLess(object) ?? selectedThisManyTimesProp,
+                        )
+                      }
+                      style={multiChoiceButtonStype}
+                    >
+                      <Minus />
+                    </Button>
+                    <div className="p-0" style={multiChoiceTextStyle}>
+                      {selectedThisManyTimesProp}
+                    </div>
+                    <Button
+                      className="my-[5px]"
+                      disabled={
+                        !checkRequireds({ activated, pointTypes }, object)
+                      }
+                      variant="ghost"
+                      size="icon"
+                      type="button"
+                      onClick={() =>
+                        setSelectedThisManyTimesProp(
+                          selectedOneMore(object) ?? selectedThisManyTimesProp,
+                        )
+                      }
+                      style={multiChoiceButtonStype}
+                    >
+                      <Plus />
+                    </Button>
+                  </div>
+                )}
+                {/* Lists up all of the Scores added to the object. */}
+                {object.scores.map((score, index) => (
+                  <div key={index}>
+                    {score.showScore &&
+                      checkRequireds({ activated, pointTypes }, score) && (
+                        <ObjectScore score={score} />
+                      )}
+                  </div>
+                ))}
+                {object.requireds.map((required, index) => (
+                  <div key={index} className="p-0">
+                    {required.showRequired && (
+                      <div
+                        style={scoreTextStyle}
+                        className="p-0"
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(getChoiceTitle(required)),
+                        }}
+                      />
+                    )}
+                  </div>
+                ))}
+                {/* The text of the object. */}
+                {object.text !== "" && (
+                  <p
+                    className="whitespace-pre-line"
+                    style={objectTextStyle}
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(replaceObjectText),
+                    }}
+                  />
+                )}
+              </div>
+              {/* Lists up the addons that the object holds. */}
+              {object.addons.map((addon, index) => (
+                <div key={index} className="col-span-2 p-0">
+                  <ObjectAddon addon={addon} row={row} />
                 </div>
+              ))}
+            </div>
+          ) : (
+            pi(object.template) === 3 &&
+            width > 1000 && (
+              // Template 3 - Picture on right side.
+              <div className="m-0 grid w-full grid-cols-2 p-0">
                 <div className="p-1">
                   <h3
                     className="mb-0"
@@ -650,136 +758,37 @@ export default function Object({
                     />
                   )}
                 </div>
-              </div>
-              {/* Lists up the addons that the object holds. */}
-              {object.addons.map((addon, index) => (
-                <div key={index} className="p-0">
-                  <ObjectAddon addon={addon} row={row} />
-                </div>
-              ))}
-            </div>
-          ) : (
-            pi(object.template) === 3 &&
-            width > 1000 && (
-              // Template 3 - Picture on right side.
-              <div className="m-0 grid w-full grid-cols-1 p-0">
-                <div>
-                  <div className="p-1">
-                    <h3
-                      className="mb-0"
-                      style={objectTitleStyle}
-                      dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(replaceObjectTitleText),
-                      }}
-                    />
-                    {/* If the choice can be selected multiple times. */}
-                    {object.isSelectableMultiple && (
-                      <div className="flex w-full flex-row items-center justify-evenly">
-                        <Button
-                          className="my-[5px]"
-                          disabled={
-                            !checkRequireds({ activated, pointTypes }, object)
-                          }
-                          variant="ghost"
-                          size="icon"
-                          type="button"
-                          onClick={() =>
-                            setSelectedThisManyTimesProp(
-                              selectedOneLess(object) ??
-                                selectedThisManyTimesProp,
-                            )
-                          }
-                          style={multiChoiceButtonStype}
-                        >
-                          <Minus />
-                        </Button>
-                        <div className="p-0" style={multiChoiceTextStyle}>
-                          {selectedThisManyTimesProp}
-                        </div>
-                        <Button
-                          className="my-[5px]"
-                          disabled={
-                            !checkRequireds({ activated, pointTypes }, object)
-                          }
-                          variant="ghost"
-                          size="icon"
-                          type="button"
-                          onClick={() =>
-                            setSelectedThisManyTimesProp(
-                              selectedOneMore(object) ??
-                                selectedThisManyTimesProp,
-                            )
-                          }
-                          style={multiChoiceButtonStype}
-                        >
-                          <Plus />
-                        </Button>
-                      </div>
-                    )}
-                    {/* Lists up all of the Scores added to the object. */}
-                    {object.scores.map((score, index) => (
-                      <div key={index}>
-                        {score.showScore &&
-                          checkRequireds({ activated, pointTypes }, score) && (
-                            <ObjectScore score={score} />
+                {/* The object choice in the preview. */}
+                <div className="m-0 p-0">
+                  {object.imageSourceTooltip !== "" &&
+                  typeof object.imageSourceTooltip !== "undefined" ? (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          {object.image.length > 0 && (
+                            <img
+                              style={objectImageStyle}
+                              src={getImageURL(object.image, imagePrefix)}
+                            />
                           )}
-                      </div>
-                    ))}
-                    {object.requireds.map((required, index) => (
-                      <div key={index} className="p-0">
-                        {required.showRequired && (
-                          <div
-                            style={scoreTextStyle}
-                            className="p-0"
-                            dangerouslySetInnerHTML={{
-                              __html: DOMPurify.sanitize(
-                                getChoiceTitle(required),
-                              ),
-                            }}
-                          />
-                        )}
-                      </div>
-                    ))}
-                    {/* The text of the object. */}
-                    {object.text !== "" && (
-                      <p
-                        className="whitespace-pre-line"
-                        style={objectTextStyle}
-                        dangerouslySetInnerHTML={{
-                          __html: DOMPurify.sanitize(replaceObjectText),
-                        }}
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <span>{object.imageSourceTooltip}</span>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ) : (
+                    object.image.length > 0 && (
+                      <img
+                        style={objectImageStyle}
+                        src={getImageURL(object.image, imagePrefix)}
                       />
-                    )}
-                  </div>
-                  {/* The object choice in the preview. */}
-                  <div className="m-0 p-0">
-                    {object.imageSourceTooltip !== "" &&
-                    typeof object.imageSourceTooltip !== "undefined" ? (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            {object.image.length > 0 && (
-                              <img
-                                style={objectImageStyle}
-                                src={object.image}
-                              />
-                            )}
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <span>{object.imageSourceTooltip}</span>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    ) : (
-                      object.image.length > 0 && (
-                        <img style={objectImageStyle} src={object.image} />
-                      )
-                    )}
-                  </div>
+                    )
+                  )}
                 </div>
                 {/* Lists up the addons that the object holds. */}
                 {object.addons.map((addon, index) => (
-                  <div key={index} className="pt-0">
+                  <div key={index} className="col-span-2 pt-0">
                     <ObjectAddon addon={addon} row={row} />
                   </div>
                 ))}

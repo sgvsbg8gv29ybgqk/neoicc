@@ -2008,10 +2008,20 @@ function activateObject(object: Object, row: App["rows"][0], app: App) {
   }
 }
 
+export function getImageURL(image: string, imagePrefix: string): string {
+  if (image.length > 100) {
+    // most likely a base64 image
+    return image;
+  }
+  const res = `${imagePrefix}${image}`;
+  return res;
+}
+
 export type State = {
   currentDesignComponent: string;
   app: App;
   objectWidths: { text: string; value: string }[];
+  imagePrefix: string;
   loadApp: (n: App) => void;
   cleanActivated: () => void;
   addNewPointType: (pointType: {
@@ -2036,6 +2046,7 @@ export type State = {
   selectedOneLess: (object: Object) => number | null;
   setObjectSelectable: (object: Object) => void;
   multiplyOrDivide: (object: Object) => void;
+  setImagePrefix: (imagePrefix: string) => void;
 };
 
 export const useAppStore = create<State, [["zustand/immer", never]]>(
@@ -2065,6 +2076,7 @@ export const useAppStore = create<State, [["zustand/immer", never]]>(
       { text: "11 per Row ", value: "w-9" },
       { text: "12 per Row", value: "col-xl-1" }, //w-8
     ],
+    imagePrefix: "",
     // Saves the app, used in Load.vue to collect from json-files.
     loadApp: (n: App) => set((state: State) => ({ ...state, app: n }), true),
     // Sets the state as default, cleans all activated and refounds all used points.
@@ -2354,6 +2366,11 @@ export const useAppStore = create<State, [["zustand/immer", never]]>(
             }
           }
         }
+      });
+    },
+    setImagePrefix(prefix: string) {
+      set((state: State) => {
+        state.imagePrefix = prefix;
       });
     },
   })),

@@ -1,4 +1,4 @@
-import { App, checkRequireds, Object, useAppStore } from "@/store";
+import { App, checkRequireds, getImageURL, Object, useAppStore } from "@/store";
 import {
   Tooltip,
   TooltipContent,
@@ -19,6 +19,7 @@ export default function ObjectAddon({
   const pointTypes = useAppStore((state) => state.app.pointTypes);
   const appStyling = useAppStore((state) => state.app.styling);
   const words = useAppStore((state) => state.app.words);
+  const imagePrefix = useAppStore((state) => state.imagePrefix);
   const styling: typeof row.styling & Partial<typeof appStyling> =
     row.isPrivateStyling ? row.styling : appStyling;
 
@@ -110,7 +111,10 @@ export default function ObjectAddon({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <img style={objectImageStyle} src={addon.image} />
+              <img
+                style={objectImageStyle}
+                src={getImageURL(addon.image, imagePrefix)}
+              />
             </TooltipTrigger>
             <TooltipContent>
               <span>{addon.imageSourceTooltip}</span>
@@ -119,7 +123,10 @@ export default function ObjectAddon({
         </TooltipProvider>
       ) : (
         // If there is no tooltip
-        <img style={objectImageStyle} src={addon.image} />
+        <img
+          style={objectImageStyle}
+          src={getImageURL(addon.image, imagePrefix)}
+        />
       )}
 
       <div>

@@ -1,11 +1,12 @@
 import { cn } from "@/lib/utils";
-import { Object, pi, useAppStore } from "@/store";
+import { getImageURL, Object, pi, useAppStore } from "@/store";
 import { CSSProperties } from "react";
 
 export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
   const pointTypes = useAppStore((state) => state.app.pointTypes);
   const activated = useAppStore((state) => state.app.activated);
   const styling = useAppStore((state) => state.app.styling);
+  const imagePrefix = useAppStore((state) => state.imagePrefix);
 
   const posOrNeg = pi(score.value) < 0 ? true : false;
 
@@ -83,7 +84,7 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
                     width: pointType.iconWidth + "px",
                     height: pointType.iconHeight + "px",
                   }}
-                  src={pointType.image}
+                  src={getImageURL(pointType.image, imagePrefix)}
                 />
               )}
           </div>
@@ -112,7 +113,7 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
                       width: pointType.iconWidth + "px",
                       height: pointType.iconHeight + "px",
                     }}
-                    src={pointType.image}
+                    src={getImageURL(pointType.image, imagePrefix)}
                   />
                 )}
             </div>
@@ -148,7 +149,7 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
                         width: pointType.iconWidth + "px",
                         height: pointType.iconHeight + "px",
                       }}
-                      src={pointType.image}
+                      src={getImageURL(pointType.image, imagePrefix)}
                     />
                   )}
               </div>
@@ -176,7 +177,7 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
                         width: pointType.iconWidth + "px",
                         height: pointType.iconHeight + "px",
                       }}
-                      src={pointType.image}
+                      src={getImageURL(pointType.image, imagePrefix)}
                     />
                   )}
               </div>

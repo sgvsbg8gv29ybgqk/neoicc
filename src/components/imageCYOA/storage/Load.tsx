@@ -48,6 +48,8 @@ export default function Load({
 }) {
   const loadApp = useAppStore((state) => state.loadApp);
   const app = useAppStore((state) => state.app);
+  const imagePrefix = useAppStore((state) => state.imagePrefix);
+  const setImagePrefix = useAppStore((state) => state.setImagePrefix);
 
   // Loads the file when the file input is changed.
   function uploadFile(files: FileList | null) {
@@ -235,6 +237,16 @@ export default function Load({
               type="file"
               onChange={(e) => uploadFile(e.target.files)}
             />
+            <Label htmlFor="image-prefix">
+              Optional Image Prefix (Enter the full URL of the website,
+              including the slash at the end)
+            </Label>
+            <Input
+              id="image-prefix"
+              value={imagePrefix}
+              placeholder="https://example.com/"
+              onChange={(e) => setImagePrefix(e.target.value)}
+            />
           </div>
           <Button onClick={() => saveFile("project")}>Save Project</Button>
           <p className="text-sm">
@@ -261,46 +273,52 @@ export default function Load({
           <Table>
             <TableBody>
               <TableRow>
-                <TableCell className="text-nowrap w-max">
+                <TableCell className="text-nowrap w-max p-1">
                   Character Count
                 </TableCell>
-                <TableCell className="w-full">
+                <TableCell className="w-full p-1">
                   {characterCount} Characters
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="text-nowrap w-max">
+                <TableCell className="text-nowrap w-max p-1">
                   Choices Count
                 </TableCell>
-                <TableCell className="w-full">{choicesCount} Choices</TableCell>
+                <TableCell className="w-full p-1">
+                  {choicesCount} Choices
+                </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="text-nowrap w-max">
+                <TableCell className="text-nowrap w-max p-1">
                   Images Count
                 </TableCell>
-                <TableCell className="w-full">{imagesCount} Images</TableCell>
+                <TableCell className="w-full p-1">
+                  {imagesCount} Images
+                </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="text-nowrap w-max">Rows Count</TableCell>
-                <TableCell className="w-full">{rowsCount} Rows</TableCell>
+                <TableCell className="text-nowrap w-max p-1">
+                  Rows Count
+                </TableCell>
+                <TableCell className="w-full p-1">{rowsCount} Rows</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="text-nowrap w-max">
+                <TableCell className="text-nowrap w-max p-1">
                   Biggest Picture
                 </TableCell>
-                <TableCell className="w-full">{biggestImage}</TableCell>
+                <TableCell className="w-full p-1">{biggestImage}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="text-nowrap w-max">
+                <TableCell className="text-nowrap w-max p-1">
                   Smallest Picture
                 </TableCell>
-                <TableCell className="w-full">{smallestImage}</TableCell>
+                <TableCell className="w-full p-1">{smallestImage}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="text-nowrap w-max">
+                <TableCell className="text-nowrap w-max p-1">
                   Time Guesstimate
                 </TableCell>
-                <TableCell className="w-full">
+                <TableCell className="w-full p-1">
                   {Math.floor(imagesCount * 5 + characterCount / 175)} Minutes/
                   {Math.floor(
                     (imagesCount * 5 + characterCount / 175) / 60,
