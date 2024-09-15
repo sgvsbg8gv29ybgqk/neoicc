@@ -314,90 +314,46 @@ export type App = {
   isViewerVersion: boolean;
   backpack: {
     // "id": {"type": "string", "description": "Row Id"},
-    // "title": {"type": "string", "description": "Row Title"},
-    // "titleText": {"type": "string", "description": "Row Text"},
-    // "objectWidth": {
-    //     "type": "string",
-    //     "description": "Objects Per Row",
-    // },
-    // "image": {"type": "string", "description": "Change Image"},
-    // "template": {"type": "string", "description": "Template"},
-    // "isButtonRow": {"type": "boolean", "description": "Button?"},
-    // "buttonType": {"type": "boolean", "description": "Toggleable?"},
-    // "buttonId": {"type": "string", "description": "Variable"},
-    // "buttonText": {"type": "string", "description": "Button Text"},
-    // "buttonRandom": {
-    //     "type": "boolean",
-    //     "description": "Random or Variable?",
-    // },
-    // "buttonRandomNumber": {
-    //     "type": "integer",
-    //     "description": "Number of random choices that will be selected",
-    // },
-    // "isResultRow": {
-    //     "type": "boolean",
-    //     "description": "Selected Choices?",
-    // },
-    // "resultGroupId": {
-    //     "type": "string",
-    //     "description": "Selected Choices from Group Id",
-    // },
-    // "isInfoRow": {
-    //     "type": "boolean",
-    //     "description": "Non-activatable?",
-    // },
-    // "isPrivateStyling": {
-    //     "type": "boolean",
-    //     "description": "Use private styling?",
-    // },
-    // "defaultAspectWidth": float_string,
-    // "defaultAspectHeight": float_string,
-    // "allowedChoices": {
-    //     "type": "integer",
-    //     "description": "Allowed Choices",
-    // },
-    // "currentChoices": {
-    //     "type": "integer",
-    //     "description": "Selected Choices",
-    // },
-    // "requireds": {
-    //     "$ref": "#/$defs/requireds",
-    //     "description": "Create Requirement",
-    // },
-    // "isEditModeOn": {"type": "boolean", "description": "Edit Row"},
+    title: string;
+    titleText: string;
+    objectWidth: string;
+    image: string;
+    template: string;
+    isButtonRow: boolean;
+    buttonType: boolean;
+    buttonId: string;
+    buttonText: string;
+    buttonRandom: boolean;
+    buttonRandomNumber: number;
+    isResultRow: boolean;
+    resultGroupId: string;
+    isInfoRow: boolean;
+    isPrivateStyling: boolean;
+    defaultAspectWidth: number | string;
+    defaultAspectHeight: number | string;
+    allowedChoices: number;
+    currentChoices: number;
+    requireds: Requireds[];
+    isEditModeOn: boolean;
     // "isRequirementOpen": {
     //     "type": "boolean",
     //     "description": "doesnt seem to be used",
     // },
     objects: Object[];
-    // "styling": {
-    //     "$ref": "#/$defs/styling",
-    //     "description": "Modify Design",
-    // },
-    // "textIsRemoved": {
-    //     "type": "boolean",
-    //     "description": "Remove the of the choices. contents",
-    // },
-    // "rowJustify": {
-    //     "type": "string",
-    //     "description": "Choices Justify",
-    // },
-    // "resultShowRowTitle": {
-    //     "type": "boolean",
-    //     "description": "Show the title of the row in the choice.",
-    // },
-    // "choicesShareTemplate": {
-    //     "type": "boolean",
-    //     "description": "Choices will all be 'Template Top' and Row Width",
-    // },
-    // "deselectChoices": {
-    //     "type": "boolean",
-    //     "description": "Deselects choices when Row lack requirements?",
-    // },
+    styling: Styling;
+    textIsRemoved?: boolean;
+    rowJustify?: string;
+    resultShowRowTitle?: boolean;
+    choicesShareTemplate?: boolean;
+    deselectChoices?: boolean;
     // "width": {
     //     "type": "boolean",
     //     "description": "Half of the screen?",
     // },
+    imageSourceTooltip?: string;
+    onlyIfNoChoices?: boolean;
+    isWeightedRandom?: boolean;
+    onlyUnselectedChoices?: boolean;
     // "id",
     // "title",
     // "titleText",
@@ -1300,8 +1256,14 @@ function checkPoints(
   return check;
 }
 
-function findRow(row: App["rows"][0], app: App): App["rows"][0] {
+function findRow(
+  row: App["rows"][0] | App["backpack"][0],
+  app: App,
+): App["rows"][0] | App["backpack"][0] {
   for (const row2 of app.rows) {
+    if (draftOriginal(row) === draftOriginal(row2)) return row2;
+  }
+  for (const row2 of app.backpack) {
     if (draftOriginal(row) === draftOriginal(row2)) return row2;
   }
   return row;
@@ -1348,7 +1310,7 @@ function findObj(
 export function findObjRow(
   obj: App["rows"][0] | Object | Object["addons"][0],
   app: { rows: App["rows"]; backpack: App["backpack"] },
-): App["rows"][0] {
+): App["rows"][0] | App["backpack"][0] {
   const origObj = draftOriginal(obj);
   for (const row of app.rows) {
     if (draftOriginal(row) === origObj) return row;
@@ -1360,11 +1322,11 @@ export function findObjRow(
     }
   }
   for (const row of app.backpack) {
-    if (draftOriginal(row) === origObj) return row as App["rows"][0];
+    if (draftOriginal(row) === origObj) return row;
     for (const object of row.objects) {
-      if (draftOriginal(object) === origObj) return row as App["rows"][0];
+      if (draftOriginal(object) === origObj) return row;
       for (const addon of object.addons) {
-        if (draftOriginal(addon) === origObj) return row as App["rows"][0];
+        if (draftOriginal(addon) === origObj) return row;
       }
     }
   }
@@ -1452,7 +1414,11 @@ function selectedOneLess(object: Object, app: App) {
 }
 
 // When someone clicks on a object this process needs to happen.
-function activateObject(object: Object, row: App["rows"][0], app: App) {
+function activateObject(
+  object: Object,
+  row: App["rows"][0] | App["backpack"][0],
+  app: App,
+) {
   row = findRow(row, app);
   object = findObject(object, app);
 
@@ -2088,9 +2054,12 @@ export type State = {
   deleteGroup: (group: App["groups"][0]) => void;
   deleteVariable: (variable: App["variables"][0]) => void;
   deleteWord: (word: App["words"][0]) => void;
-  activateObject: (object: Object, row: App["rows"][0]) => void;
-  checkIfDeselect: (row: App["rows"][0]) => boolean;
-  handleButtonActivate: (row: App["rows"][0]) => void;
+  activateObject: (
+    object: Object,
+    row: App["rows"][0] | App["backpack"][0],
+  ) => void;
+  checkIfDeselect: (row: App["rows"][0] | App["backpack"][0]) => boolean;
+  handleButtonActivate: (row: App["rows"][0] | App["backpack"][0]) => void;
   selectedOneMore: (object: Object) => number | null;
   selectedOneLess: (object: Object) => number | null;
   setObjectSelectable: (object: Object) => void;
@@ -2220,12 +2189,12 @@ export const useAppStore = create<State, [["zustand/immer", never]]>(
         );
       });
     },
-    activateObject(object: Object, row: App["rows"][0]) {
+    activateObject(object: Object, row: App["rows"][0] | App["backpack"][0]) {
       set((state: State) => {
         activateObject(object, row, state.app);
       });
     },
-    checkIfDeselect(row: App["rows"][0]) {
+    checkIfDeselect(row: App["rows"][0] | App["backpack"][0]) {
       let res = false;
       set((state: State) => {
         const { activated, pointTypes } = state.app;
@@ -2247,7 +2216,7 @@ export const useAppStore = create<State, [["zustand/immer", never]]>(
         state.app.activated = activated;
       });
     },
-    handleButtonActivate(row: App["rows"][0]) {
+    handleButtonActivate(row: App["rows"][0] | App["backpack"][0]) {
       set((state: State) => {
         row = findRow(row, state.app);
         // If the button is the type that will select X random or add variable to activated-array.

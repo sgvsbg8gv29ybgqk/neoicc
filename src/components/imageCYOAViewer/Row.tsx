@@ -23,7 +23,7 @@ export default function Row({
   row,
   type,
 }: {
-  row: App["rows"][0];
+  row: App["rows"][0] | App["backpack"][0];
   type: string;
 }) {
   const pointTypes = useAppStore((state) => state.app.pointTypes);

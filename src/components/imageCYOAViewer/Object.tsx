@@ -35,7 +35,7 @@ export default function Object({
   className: string;
   activated: string[];
   object: Object;
-  row: App["rows"][0];
+  row: App["rows"][0] | App["backpack"][0];
 }) {
   const [selectedThisManyTimesProp, setSelectedThisManyTimesProp] = useState(
     object.multipleUseVariable ?? 0,

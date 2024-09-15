@@ -175,6 +175,7 @@ export default function ImageCYOAViewer({ onBack }: { onBack: () => void }) {
       <BackpackPreview
         open={modal === "appBackpackPreview"}
         onClose={() => setModal("none")}
+        type=""
       />
 
       <div className="grid-cols-2">

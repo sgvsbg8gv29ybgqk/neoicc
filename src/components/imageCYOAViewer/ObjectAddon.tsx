@@ -13,7 +13,7 @@ export default function ObjectAddon({
   row,
 }: {
   addon: Object["addons"][0];
-  row: App["rows"][0];
+  row: App["rows"][0] | App["backpack"][0];
 }) {
   const activated = useAppStore((state) => state.app.activated);
   const pointTypes = useAppStore((state) => state.app.pointTypes);
