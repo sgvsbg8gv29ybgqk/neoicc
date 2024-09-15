@@ -435,6 +435,7 @@ export default function Object({
                     <TooltipTrigger asChild>
                       {object.image.length > 0 && (
                         <img
+                          className="inline-block"
                           style={objectImageStyle}
                           src={getImageURL(object.image, imagePrefix)}
                         />
@@ -449,6 +450,7 @@ export default function Object({
                 // If there is no tooltip
                 object.image.length > 0 && (
                   <img
+                    className="inline-block"
                     style={objectImageStyle}
                     src={getImageURL(object.image, imagePrefix)}
                   />
@@ -557,6 +559,7 @@ export default function Object({
                       <TooltipTrigger asChild>
                         {object.image.length > 0 && (
                           <img
+                            className="inline-block"
                             style={objectImageStyle}
                             src={getImageURL(object.image, imagePrefix)}
                           />
@@ -570,6 +573,7 @@ export default function Object({
                 ) : (
                   object.image.length > 0 && (
                     <img
+                      className="inline-block"
                       style={objectImageStyle}
                       src={getImageURL(object.image, imagePrefix)}
                     />
@@ -767,6 +771,7 @@ export default function Object({
                         <TooltipTrigger asChild>
                           {object.image.length > 0 && (
                             <img
+                              className="inline-block"
                               style={objectImageStyle}
                               src={getImageURL(object.image, imagePrefix)}
                             />
@@ -780,6 +785,7 @@ export default function Object({
                   ) : (
                     object.image.length > 0 && (
                       <img
+                        className="inline-block"
                         style={objectImageStyle}
                         src={getImageURL(object.image, imagePrefix)}
                       />

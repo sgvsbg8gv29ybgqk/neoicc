@@ -342,6 +342,7 @@ export default function Row({
                       <TooltipTrigger asChild>
                         {row.image ? (
                           <img
+                            className="inline-block"
                             style={rowImageStyle}
                             src={getImageURL(row.image, imagePrefix)}
                           />
@@ -357,6 +358,7 @@ export default function Row({
                 ) : !row.isButtonRow ? (
                   row.image ? (
                     <img
+                      className="inline-block"
                       style={rowImageStyle}
                       src={getImageURL(row.image, imagePrefix)}
                     />
@@ -432,6 +434,7 @@ export default function Row({
                         <TooltipTrigger asChild>
                           {row.image ? (
                             <img
+                              className="inline-block"
                               style={rowImageStyle}
                               src={getImageURL(row.image, imagePrefix)}
                             />
@@ -447,6 +450,7 @@ export default function Row({
                   ) : !row.isButtonRow ? (
                     row.image ? (
                       <img
+                        className="inline-block"
                         style={rowImageStyle}
                         src={getImageURL(row.image, imagePrefix)}
                       />
@@ -482,6 +486,7 @@ export default function Row({
                         <TooltipTrigger asChild>
                           {row.image ? (
                             <img
+                              className="inline-block"
                               style={rowImageStyle}
                               src={getImageURL(row.image, imagePrefix)}
                             />
@@ -497,6 +502,7 @@ export default function Row({
                   ) : !row.isButtonRow ? (
                     row.image ? (
                       <img
+                        className="inline-block"
                         style={rowImageStyle}
                         src={getImageURL(row.image, imagePrefix)}
                       />
@@ -570,6 +576,7 @@ export default function Row({
                       <TooltipTrigger asChild>
                         {row.image ? (
                           <img
+                            className="inline-block"
                             style={rowImageStyle}
                             src={getImageURL(row.image, imagePrefix)}
                           />
@@ -585,6 +592,7 @@ export default function Row({
                 ) : !row.isButtonRow ? (
                   row.image ? (
                     <img
+                      className="inline-block"
                       style={rowImageStyle}
                       src={getImageURL(row.image, imagePrefix)}
                     />

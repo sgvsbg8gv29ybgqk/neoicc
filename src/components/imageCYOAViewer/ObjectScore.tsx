@@ -86,7 +86,7 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
               !pointType.imageOnSide &&
               pointType.image && (
                 <img
-                  className="float-left"
+                  className="float-left inline-block"
                   style={{
                     width: pointType.iconWidth + "px",
                     height: pointType.iconHeight + "px",
@@ -115,7 +115,7 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
                 pointType.imageOnSide &&
                 pointType.image && (
                   <img
-                    className="float-left"
+                    className="float-left inline-block"
                     style={{
                       width: pointType.iconWidth + "px",
                       height: pointType.iconHeight + "px",
@@ -151,7 +151,7 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
                   !pointType.imageOnSide &&
                   pointType.image && (
                     <img
-                      className="float-left"
+                      className="float-left inline-block"
                       style={{
                         width: pointType.iconWidth + "px",
                         height: pointType.iconHeight + "px",
@@ -179,7 +179,7 @@ export default function ObjectScore({ score }: { score: Object["scores"][0] }) {
                   pointType.imageOnSide &&
                   pointType.image && (
                     <img
-                      className="float-left"
+                      className="float-left inline-block"
                       style={{
                         width: pointType.iconWidth + "px",
                         height: pointType.iconHeight + "px",

@@ -112,6 +112,7 @@ export default function ObjectAddon({
           <Tooltip>
             <TooltipTrigger asChild>
               <img
+                className="inline-block"
                 style={objectImageStyle}
                 src={getImageURL(addon.image, imagePrefix)}
               />
@@ -124,6 +125,7 @@ export default function ObjectAddon({
       ) : (
         // If there is no tooltip
         <img
+          className="inline-block"
           style={objectImageStyle}
           src={getImageURL(addon.image, imagePrefix)}
         />
