@@ -7,508 +7,410 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Object } from "@/store";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { App, findObjRow, Object, useAppStore } from "@/store";
+import { useEffect, useRef, useState } from "react";
+import ReactCrop, { centerCrop, PixelCrop } from "react-image-crop";
+
+async function getDataURL(
+  image: HTMLImageElement,
+  crop: PixelCrop,
+  scale = 100,
+  quality = 100,
+) {
+  const scaleX = image.naturalWidth / image.width;
+  const scaleY = image.naturalHeight / image.height;
+
+  const offscreen = new OffscreenCanvas(
+    crop.width * scaleX * (scale / 100),
+    crop.height * scaleY * (scale / 100),
+  );
+  const ctx = offscreen.getContext("2d");
+  if (!ctx) throw new Error("No 2d context in offscreen canvas");
+
+  const cropX = crop.x * scaleX * 1;
+  const cropY = crop.y * scaleY * 1;
+
+  ctx.save();
+
+  ctx.scale(scale / 100, scale / 100);
+  ctx.translate(-cropX, -cropY);
+  ctx.drawImage(
+    image,
+    0,
+    0,
+    image.naturalWidth,
+    image.naturalHeight,
+    0,
+    0,
+    image.naturalWidth,
+    image.naturalHeight,
+  );
+
+  ctx.restore();
+
+  const blob = await offscreen.convertToBlob(
+    /*
+    quality === 100
+      ? { type: "image/png" }
+      : { type: "image/jpeg", quality: quality / 100 },
+      */
+    { type: "image/jpeg", quality: quality / 100 },
+  );
+  const url = await new Promise<string>((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = function () {
+      resolve(reader.result as string);
+    };
+  });
+  return {
+    url,
+    size: blob.size,
+    originalSize: 4 * Math.ceil(image.src.length / 3) * 0.5624896334383812,
+    width: crop.width * (scale / 100),
+    height: crop.height * (scale / 100),
+  };
+}
 
 export default function ImageUpload({
   open,
   onClose,
-  object,
+  obj,
 }: {
   open: boolean;
   onClose: () => void;
-  object: Object;
+  obj: App["rows"][0] | Object | Object["addons"][0];
 }) {
-  void object;
+  const [crop, setCrop] = useState<PixelCrop | undefined>();
+  const [imgSrc, setImgSrc] = useState<string>("");
+  const [aspect, setAspect] = useState<number | undefined>(1);
+  const [selectAspect, setSelectAspect] = useState<string>("1:1");
+  const [inputAspectWidth, setInputAspectWidth] = useState<string>("1");
+  const [inputAspectHeight, setInputAspectHeight] = useState<string>("1");
+  const [scale, setScale] = useState<number>(100);
+  const [quality, setQuality] = useState<number>(100);
+  const [tooltip, setTooltip] = useState<string>("");
+  const [resultImage, setResultImage] = useState<
+    | {
+        url: string;
+        size: number;
+        originalSize: number;
+        width: number;
+        height: number;
+      }
+    | undefined
+  >();
+  const [currentTab, setCurrentTab] = useState<"upload" | "external">("upload");
+  const app = useAppStore((state) => ({
+    rows: state.app.rows,
+    backpack: state.app.backpack,
+  }));
+  const setImage = useAppStore((state) => state.setImage);
+  const imageRef = useRef<HTMLImageElement | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>();
+
+  useEffect(() => {
+    const row = findObjRow(obj, app);
+    const w = row.defaultAspectWidth;
+    const h = row.defaultAspectHeight;
+    if (w && h) {
+      const parsedW = typeof w === "string" ? parseInt(w) : w;
+      const parsedH = typeof h === "string" ? parseInt(h) : h;
+      setAspect(parsedW / parsedH);
+      setInputAspectWidth(parsedW.toString());
+      setInputAspectHeight(parsedH.toString());
+      if (parsedW === parsedH) setSelectAspect("1:1");
+      else if (parsedW === 3 && parsedH === 2) setSelectAspect("3:2");
+      else if (parsedW === 4 && parsedH === 3) setSelectAspect("4:3");
+      else if (parsedW === 16 && parsedH === 9) setSelectAspect("16:9");
+      else if (parsedW === 9 && parsedH === 16) setSelectAspect("9:16");
+      else setSelectAspect("custom");
+    }
+    if (!imgSrc && obj.image) {
+      if (obj.image.length < 100) setCurrentTab("external");
+      setImgSrc(obj.image);
+    }
+    if (!tooltip && obj.imageSourceTooltip) setTooltip(obj.imageSourceTooltip);
+  }, [app, obj, imgSrc, tooltip]);
+
+  function handleSelectAspectChange(value: string) {
+    setSelectAspect(value);
+    if (value === "custom") {
+      setAspect(1);
+      setInputAspectWidth("1");
+      setInputAspectHeight("1");
+      return;
+    } else if (value === "unbound") {
+      setAspect(undefined);
+      setInputAspectWidth("");
+      setInputAspectHeight("");
+      return;
+    }
+    const [width, height] = value.split(":").map(Number);
+    setAspect(width / height);
+    setInputAspectWidth(width.toString());
+    setInputAspectHeight(height.toString());
+  }
+
+  function handleInputAspectWidthChange(value: string) {
+    setInputAspectWidth(value);
+    if (!inputAspectHeight || !value) {
+      setSelectAspect("unbound");
+      setAspect(undefined);
+      return;
+    }
+    if (selectAspect !== "custom") setSelectAspect("custom");
+    setAspect(Number(value) / Number(inputAspectHeight));
+  }
+
+  function handleInputAspectHeightChange(value: string) {
+    setInputAspectHeight(value);
+    if (!inputAspectWidth || !value) {
+      setSelectAspect("unbound");
+      setAspect(undefined);
+      return;
+    }
+    if (selectAspect !== "custom") setSelectAspect("custom");
+    setAspect(Number(inputAspectWidth) / Number(value));
+  }
+
+  function handleUploadImageChange(image: FileList | null) {
+    if (!image) {
+      setImgSrc("");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => setImgSrc(reader.result as string);
+    reader.readAsDataURL(image[0]);
+  }
+
+  function handleImageLoad(image: HTMLImageElement) {
+    const newAspect = aspect ?? 1;
+    const constrainedHeight = image.height * newAspect <= image.width;
+    setCrop(
+      centerCrop(
+        {
+          unit: "px",
+          width: constrainedHeight ? image.height * newAspect : image.width,
+          height: constrainedHeight ? image.height : image.width / newAspect,
+        },
+        image.width,
+        image.height,
+      ),
+    );
+  }
+
+  useEffect(() => {
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      (async () => {
+        if (currentTab === "external") return;
+        if (!crop || !imgSrc || !imageRef.current) {
+          setResultImage(undefined);
+          return;
+        }
+        const dataURL = await getDataURL(
+          imageRef.current,
+          crop,
+          scale,
+          quality,
+        );
+        setResultImage(dataURL);
+      })();
+    }, 100);
+  }, [crop, imgSrc, imageRef, quality, scale, currentTab]);
+
+  function handleSaveChanges() {
+    if (currentTab === "external") {
+      setImage(
+        obj,
+        imgSrc,
+        undefined,
+        undefined,
+        tooltip ? tooltip : undefined,
+      );
+      onClose();
+      return;
+    }
+    if (!resultImage) {
+      setImage(obj, "");
+      return;
+    } else if (resultImage.url) {
+      if (inputAspectWidth && inputAspectHeight)
+        setImage(
+          obj,
+          resultImage.url,
+          parseInt(inputAspectWidth),
+          parseInt(inputAspectHeight),
+          tooltip ? tooltip : undefined,
+        );
+      else
+        setImage(
+          obj,
+          resultImage.url,
+          undefined,
+          undefined,
+          tooltip ? tooltip : undefined,
+        );
+    }
+    onClose();
+  }
+
   return (
     <Dialog open={open} onOpenChange={(a) => !a && onClose()}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-h-screen max-w-max overflow-y-scroll">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
+          <DialogTitle>Image</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            Upload your image or provide an external URL.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div>Hi</div>
-        </div>
+        <Tabs
+          defaultValue="upload"
+          value={currentTab}
+          onValueChange={(v) => setCurrentTab(v as "upload" | "external")}
+        >
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="upload">Upload Image</TabsTrigger>
+            <TabsTrigger value="external">External URL</TabsTrigger>
+          </TabsList>
+          <TabsContent value="upload" className="flex flex-col gap-y-2">
+            <div className="flex flex-row gap-x-2">
+              <Input
+                type="file"
+                onChange={(e) => handleUploadImageChange(e.target.files)}
+              />
+              <Button onClick={() => setImgSrc("")}>Clear</Button>
+            </div>
+            {imgSrc && (
+              <ReactCrop
+                crop={crop}
+                onChange={setCrop}
+                aspect={aspect}
+                className="w-max"
+              >
+                <img
+                  src={imgSrc}
+                  onLoad={(e) => handleImageLoad(e.currentTarget)}
+                  ref={imageRef}
+                />
+              </ReactCrop>
+            )}
+            <div className="flex flex-col gap-y-1">
+              <Label className="">Aspect Ratio</Label>
+              <div className="grid grid-cols-2 gap-x-2">
+                <Select
+                  defaultValue="custom"
+                  value={selectAspect}
+                  onValueChange={handleSelectAspectChange}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select an Aspect Ratio" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Aspect Ratios</SelectLabel>
+                      <SelectItem value="custom">Custom</SelectItem>
+                      <SelectItem value="unbound">Unbound</SelectItem>
+                      <SelectItem value="1:1">1:1</SelectItem>
+                      <SelectItem value="3:2">3:2</SelectItem>
+                      <SelectItem value="4:3">4:3</SelectItem>
+                      <SelectItem value="16:9">16:9</SelectItem>
+                      <SelectItem value="9:16">9:16</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <div className="flex flex-row items-center gap-x-2">
+                  <Input
+                    type="number"
+                    className="rounded-r-none"
+                    value={inputAspectWidth}
+                    onChange={(e) =>
+                      handleInputAspectWidthChange(e.target.value)
+                    }
+                  />
+                  <span className="text-lg font-light text-neutral-300">/</span>
+                  <Input
+                    type="number"
+                    className="rounded-l-none"
+                    value={inputAspectHeight}
+                    onChange={(e) =>
+                      handleInputAspectHeightChange(e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-x-2">
+              <div className="flex flex-col gap-y-1">
+                <Label htmlFor="scale-input">Scale</Label>
+                <Input
+                  id="scale-input"
+                  type="number"
+                  value={scale}
+                  onChange={(e) => setScale(parseInt(e.target.value || "100"))}
+                />
+              </div>
+              <div className="flex flex-col gap-y-1">
+                <Label htmlFor="quality-input">Quality</Label>
+                <Input
+                  id="quality-input"
+                  type="number"
+                  value={quality}
+                  onChange={(e) =>
+                    setQuality(parseInt(e.target.value || "100"))
+                  }
+                />
+              </div>
+            </div>
+            <span>
+              Before: {Math.round((resultImage?.originalSize ?? 0) / 1000)}kB
+              After: {Math.round((resultImage?.size ?? 0) / 1000)}kB
+            </span>
+            {resultImage?.url && (
+              <img
+                src={resultImage?.url}
+                style={{
+                  width: crop?.width ?? resultImage.width,
+                  height: crop?.height ?? resultImage.height,
+                }}
+              />
+            )}
+          </TabsContent>
+          <TabsContent value="external" className="flex flex-col gap-y-2">
+            <Input
+              type="url"
+              placeholder="https://example.com/image.jpg"
+              value={imgSrc}
+              onChange={(e) => setImgSrc(e.target.value)}
+            />
+            {imgSrc && <img src={imgSrc} />}
+          </TabsContent>
+        </Tabs>
+        <Input
+          type="text"
+          placeholder="Tooltip that shows when hovering over it"
+          value={tooltip}
+          onChange={(e) => setTooltip(e.target.value)}
+        />
         <DialogFooter>
-          <Button type="submit">Save changes</Button>
+          <Button type="button" onClick={handleSaveChanges}>
+            Save changes
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
-
-// <template>
-//   <v-dialog v-model="dialog" max-width="1200px" @click:outside="cleanCurrentComponent">
-//     <v-card>
-//       <v-card-title class="headline">Image</v-card-title>
-//
-//       <v-card-text>
-//         <v-container>
-//           <v-switch v-model="row.imageIsUrl" label="Uploaded Image or External URL"></v-switch>
-//           <v-row>
-//             <v-col v-if="!row.imageIsUrl" class="col-lg-4">
-//               <picture-input ref="pictureInput" :hideChangeButton="true"
-//                 removeButtonClass="v-btn v-btn--contained theme--light v-size--default" :removable="true" :zIndex="0"
-//                 :crop="false" @change="onImageChange" @remove="onImageRemoval"
-//                 :prefill="row.image.length > 1000 ? row.image : ''" :custom-strings="{
-//                   upload: '<h1>Error!</h1>',
-//                   drag: 'Upload Image',
-//                 }"></picture-input>
-//
-//               <v-col style="text-align: center" cols="12" v-if="img">
-//                 <b>Before:</b>
-//                 <span>{{ original.size }}</span>
-//                 <span>|</span>
-//                 <b>After:</b>
-//                 <span>{{ compressed.size }}</span>
-//               </v-col>
-//
-//               <v-text-field filled label="Tooltip That Shows When Hovering over it"
-//                 v-model="row.imageSourceTooltip"></v-text-field>
-//               <span v-if="currentItem == 1">Compressing will remove transparency from images.</span>
-//             </v-col>
-//
-//             <v-col v-else class="col-lg-4">
-//               <v-text-field hide-details filled placeholder label="External Image URL"
-//                 v-model="row.imageLink"></v-text-field>
-//               <v-btn @click="row.image = row.imageLink" class="mb-2">Make This The Image</v-btn>
-//             </v-col>
-//
-//             <v-col v-if="!row.imageIsUrl" class="col-lg-8">
-//               <v-tabs grow v-model="currentItem">
-//                 <v-tab>Cropper</v-tab>
-//                 <v-tab>Compress</v-tab>
-//
-//                 <v-tab-item>
-//                   <v-card flat>
-//                     <v-card-text>
-//                       <v-row justify="center">
-//                         <v-col>
-//                           <v-text-field type="number" hide-details v-model="aspectHeight" filled
-//                             label="Width Aspect"></v-text-field>
-//                         </v-col>
-//
-//                         <v-col>
-//                           <v-text-field type="number" hide-details v-model="aspectWidth" filled
-//                             label="Height Aspect"></v-text-field>
-//                         </v-col>
-//
-//                         <v-col>
-//                           <v-btn height="100%" @click="ChangeAspect" class="mb-2">Change Aspect</v-btn>
-//                         </v-col>
-//
-//                         <v-btn @click="cropImage" class="mt-2">Crop Image</v-btn>
-//
-//                         <cropper v-if="currentItem == 0" class="cropper" ref="cropper" :src="row.image" :stencil-props="{
-//                           aspectRatio: aH / aW,
-//                         }"></cropper>
-//                       </v-row>
-//                     </v-card-text>
-//                   </v-card>
-//                 </v-tab-item>
-//
-//                 <v-tab-item>
-//                   <v-card flat class="pa-0">
-//                     <v-card-text>
-//                       <v-row justify="center">
-//                         <v-col>
-//                           <v-text-field type="number" hide-details v-model="scale" filled
-//                             label="Image Scale"></v-text-field>
-//                         </v-col>
-//
-//                         <v-col>
-//                           <v-text-field type="number" hide-details v-model="quality" filled
-//                             label="Image Quality"></v-text-field>
-//                         </v-col>
-//
-//                         <v-col>
-//                           <v-btn height="100%" @click="compressImage" class="mb-2">Compress Image</v-btn>
-//                         </v-col>
-//
-//                         <v-col cols="12" style="width: 100%" class="pt-0" v-if="img">
-//                           <img v-if="img" alt :src="img" />
-//                         </v-col>
-//                       </v-row>
-//                     </v-card-text>
-//                   </v-card>
-//                 </v-tab-item>
-//               </v-tabs>
-//             </v-col>
-//
-//             <v-col v-else class="col-lg-8">
-//               <clazy-load v-if="row.image.length > 0" :src="row.image">
-//                 <img v-on="on" :src="row.image" />
-//               </clazy-load>
-//             </v-col>
-//           </v-row>
-//         </v-container>
-//       </v-card-text>
-//
-//       <v-card-actions>
-//         <v-btn color="green darken-1" text @click="cleanCurrentComponent">Close</v-btn>
-//       </v-card-actions>
-//     </v-card>
-//   </v-dialog>
-// </template>
-//
-// <script lang="ts">
-// // The component used to upload and Blob-ify an image.
-// import PictureInput from "vue-picture-input";
-//
-// // Used to crop the image.
-// import { Cropper } from "vue-advanced-cropper";
-//
-// import base64toblob from "base64toblob";
-//
-// export default {
-//   props: {
-//     row: Object,
-//   },
-//   data: function () {
-//     return {
-//       dialog: true,
-//       aH: this.aspectHeight,
-//       aW: this.aspectWidth,
-//       currentItem: 0,
-//       img: "",
-//       scale: 100,
-//       quality: 90,
-//       originalSize: true,
-//       original: {},
-//       compressed: {},
-//       file: {},
-//       result: {},
-//       reader: {},
-//       imgSrc: "",
-//     };
-//   },
-//   mounted: function () {
-//     this.img = this.row.image;
-//     this.onChange();
-//   },
-//   watch: {
-//     scale() {
-//       return this.redraw();
-//     },
-//     quality() {
-//       return this.redraw();
-//     },
-//   },
-//   components: {
-//     PictureInput,
-//     Cropper,
-//   },
-//   computed: {
-//     styling() {
-//       return this.$store.state.app.styling;
-//     },
-//     rows() {
-//       return this.$store.state.app.rows;
-//     },
-//     // Gets and sets the aspect height of the image cropper.
-//     aspectHeight: {
-//       get: function () {
-//         for (let i = 0; i < this.rows.length; i++) {
-//           if (this.rows[i] == this.row) {
-//             return this.rows[i].defaultAspectHeight;
-//           }
-//           for (let x = 0; x < this.rows[i].objects.length; x++) {
-//             if (this.rows[i].objects[x] == this.row) {
-//               return this.rows[i].defaultAspectHeight;
-//             }
-//             for (let a = 0; a < this.rows[i].objects[x].addons.length; a++) {
-//               if (this.rows[i].objects[x].addons[a] == this.row) {
-//                 return this.rows[i].defaultAspectHeight;
-//               }
-//             }
-//           }
-//         }
-//         return 1;
-//       },
-//       set: function (height) {
-//         for (let i = 0; i < this.rows.length; i++) {
-//           if (this.rows[i] == this.row) {
-//             this.rows[i].defaultAspectHeight = height;
-//           }
-//           for (let x = 0; x < this.rows[i].objects.length; x++) {
-//             if (this.rows[i].objects[x] == this.row) {
-//               this.rows[i].defaultAspectHeight = height;
-//             }
-//             for (let a = 0; a < this.rows[i].objects[x].addons.length; a++) {
-//               if (this.rows[i].objects[x].addons[a] == this.row) {
-//                 this.rows[i].defaultAspectHeight = height;
-//               }
-//             }
-//           }
-//         }
-//       },
-//     },
-//     // Gets and sets the aspect weight of the image cropper.
-//     aspectWidth: {
-//       get: function () {
-//         for (let i = 0; i < this.rows.length; i++) {
-//           if (this.rows[i] == this.row) {
-//             return this.rows[i].defaultAspectWidth;
-//           }
-//           for (let x = 0; x < this.rows[i].objects.length; x++) {
-//             if (this.rows[i].objects[x] == this.row) {
-//               return this.rows[i].defaultAspectWidth;
-//             }
-//             for (let a = 0; a < this.rows[i].objects[x].addons.length; a++) {
-//               if (this.rows[i].objects[x].addons[a] == this.row) {
-//                 return this.rows[i].defaultAspectWidth;
-//               }
-//             }
-//           }
-//         }
-//         return 1;
-//       },
-//       set: function (width) {
-//         for (let i = 0; i < this.rows.length; i++) {
-//           if (this.rows[i] == this.row) {
-//             this.rows[i].defaultAspectWidth = width;
-//           }
-//           for (let x = 0; x < this.rows[i].objects.length; x++) {
-//             if (this.rows[i].objects[x] == this.row) {
-//               this.rows[i].defaultAspectWidth = width;
-//             }
-//             for (let a = 0; a < this.rows[i].objects[x].addons.length; a++) {
-//               if (this.rows[i].objects[x].addons[a] == this.row) {
-//                 this.rows[i].defaultAspectWidth = width;
-//               }
-//             }
-//           }
-//         }
-//       },
-//     },
-//   },
-//   methods: {
-//     onChange() {
-//       this.file = this.row.image;
-//       this.reader = new FileReader();
-//       this.reader.readAsDataURL(
-//         base64toblob(this.file.split(",")[1], "image/jpeg")
-//       );
-//       this.reader.onload = this.fileOnLoad;
-//     },
-//     drawImage(imgUrl) {
-//       let canvas = document.createElement("canvas");
-//       this.canvas = canvas;
-//       let ctx = this.canvas.getContext("2d");
-//       let img = new Image();
-//       img.src = imgUrl;
-//       let scale = this.scale / 100;
-//       let width = img.width * scale;
-//       let height = img.height * scale;
-//       this.canvas.setAttribute("width", width);
-//       this.canvas.setAttribute("height", height);
-//       ctx.drawImage(img, 0, 0, width, height);
-//       let quality = this.quality ? this.quality / 100 : 1;
-//       let base64 = this.canvas.toDataURL("image/jpeg", quality);
-//       let fileName = this.result.file.name;
-//       fileName = ".jpeg";
-//       var stringLength = base64.length - "data:image/png;base64,".length;
-//       var sizeInBytes = 4 * Math.ceil(stringLength / 3) * 0.5624896334383812;
-//       let objToPass = {
-//         canvas: this.canvas,
-//         original: this.result,
-//         compressed: {
-//           blob: base64,
-//           base64: base64,
-//           name: fileName,
-//           file: this.buildFile(this.toBlob(base64), fileName),
-//         },
-//       };
-//       objToPass.compressed.size = Math.round(sizeInBytes / 1000) + " kB";
-//       objToPass.compressed.type = "image/jpeg";
-//       this.getFiles(objToPass);
-//     },
-//     redraw() {
-//       if (this.result.base64) {
-//         this.drawImage(this.result.base64);
-//       }
-//     },
-//     fileOnLoad() {
-//       let { file } = this;
-//       var stringLength =
-//         this.reader.result.length - "data:image/png;base64,".length;
-//       var sizeInBytes = 4 * Math.ceil(stringLength / 3) * 0.5624896334383812;
-//       let fileInfo = {
-//         name: file.name,
-//         type: file.type,
-//         size: Math.round(sizeInBytes / 1000) + " kB",
-//         base64: this.reader.result,
-//         file: file,
-//       };
-//       this.result = fileInfo;
-//       this.drawImage(this.result.base64);
-//     },
-//     toBlob(imgUrl) {
-//       let blob = base64toblob(imgUrl.split(",")[1], "image/jpeg");
-//       let url = window.URL.createObjectURL(blob);
-//       return url;
-//     },
-//     buildFile(blob, name) {
-//       return new File([blob], name);
-//     },
-//     compressImage() {
-//       this.row.image = this.compressed.blob;
-//       this.rowWasChanged();
-//     },
-//     getFiles(obj) {
-//       this.img = obj.compressed.blob;
-//       this.original = obj.original;
-//       this.compressed = obj.compressed;
-//     },
-//     onImageChange(image) {
-//       console.log(image);
-//       this.row.image = image;
-//       this.onChange();
-//       this.rowWasChanged();
-//       if (this.$refs.pictureInput.image) {
-//         console.log("Picture loaded.");
-//       } else {
-//         console.log("FileReader API not supported: use the <form>, Luke!");
-//       }
-//     },
-//     onImageRemoval() {
-//       this.row.image = "";
-//       this.rowWasChanged();
-//     },
-//     cleanCurrentComponent() {
-//       this.$emit("cleanCurrentComponent", "");
-//     },
-//     // Updates the list of activateds.
-//     rowWasChanged() {
-//       this.$emit("rowWasChanged", this.row);
-//     },
-//     cropImage() {
-//       const { coordinates, canvas } = this.$refs.cropper.getResult();
-//       this.coordinates = coordinates;
-//       // You able to do different manipulations at a canvas
-//       // but there we just get a cropped image
-//       this.row.image = canvas.toDataURL("image/jpeg", 0.93);
-//       this.onChange();
-//     },
-//     ChangeAspect() {
-//       this.aH = this.aspectHeight;
-//       this.aW = this.aspectWidth;
-//       this.row.defaultAspectWidth = this.aspectWidth;
-//       this.row.defaultAspectHeight = this.aspectHeight;
-//     },
-//   },
-// };
-// </script>
-//
-// <style scoped>
-// body {
-//   font-family: Roboto;
-// }
-//
-// p {
-//   margin-bottom: 25px;
-// }
-//
-// .image-info {
-//   margin: 15px 0;
-// }
-//
-// .separator {
-//   margin: 0 5px;
-// }
-//
-// input {
-//   width: 75%;
-//   display: block;
-//   padding: 5px;
-//   text-align: center;
-//   margin-bottom: 10px;
-//   max-width: 250px;
-//   border: 2px solid #ddd;
-// }
-//
-// input:focus {
-//   border: 2px solid blue;
-// }
-//
-// .compressor {
-//   display: none;
-// }
-//
-// .button {
-//   display: inline-block;
-//   border-radius: 3px;
-//   background: #1a237e;
-//   color: white;
-//   padding: 7px 15px;
-//   border: 0;
-//   box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.4);
-//   margin-bottom: 10px;
-//   cursor: pointer;
-//   outline: none;
-//   text-decoration: none;
-// }
-//
-// label {
-//   margin-bottom: 10px;
-//   display: block;
-// }
-//
-// .input-group {
-//   margin: 25px 0;
-// }
-//
-// .checkbox {
-//   margin: 15px 0 20px;
-//   background: #eee;
-//   padding: 10px 0;
-// }
-//
-// .checkbox input {
-//   width: auto;
-//   display: inline-block;
-// }
-//
-// img {
-//   margin: 0 auto;
-//   display: block;
-// }
-//
-// a {
-//   margin: 25px 0 75px;
-// }
-//
-// .btn {
-//   margin: 5px;
-//   font-size: small;
-// }
-//
-// .cropper {
-//   width: 100%;
-//   background: #ddd;
-// }
-//
-// .row {
-//   padding: 10px;
-// }
-//
-// /* Important part */
-// .modal-dialog {
-//   overflow-y: initial !important;
-// }
-//
-// .modal-body {
-//   max-height: calc(100vh - 100px);
-//   overflow-y: auto;
-// }
-//
-// @media (min-width: 768px) {
-//   .modal-xl {
-//     width: 90%;
-//     max-width: 1200px;
-//   }
-// }
-// </style>
-//

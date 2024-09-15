@@ -801,7 +801,7 @@ export default function Object({
       <ImageUpload
         open={modal === "appImageUpload"}
         onClose={() => setModal("none")}
-        object={object}
+        obj={object}
       />
     </div>
   );

@@ -205,8 +205,8 @@ export type Object = {
   // "isVisible": {"type": "boolean"},
   multipleUseVariable?: number;
   // "selectedThisManyTimesProp": {"type": "integer"},
-  // "defaultAspectWidth": float_string,
-  // "defaultAspectHeight": float_string,
+  defaultAspectWidth: number | string;
+  defaultAspectHeight: number | string;
   requireds: Requireds[];
   addons: {
     // "id": {"type": "string"},
@@ -215,8 +215,8 @@ export type Object = {
     // "template": {"type": "string"},
     image: string;
     requireds: Requireds[];
-    // "defaultAspectWidth": float_string,
-    // "defaultAspectHeight": float_string,
+    defaultAspectWidth?: number | string;
+    defaultAspectHeight?: number | string;
     imageSourceTooltip?: string;
     // "id",
     // "title",
@@ -454,8 +454,8 @@ export type App = {
     resultGroupId: string | null;
     isInfoRow: boolean;
     isPrivateStyling: boolean;
-    // "defaultAspectWidth": float_string,
-    // "defaultAspectHeight": float_string,
+    defaultAspectWidth: number | string;
+    defaultAspectHeight: number | string;
     allowedChoices: number | string;
     currentChoices: number;
     requireds: Requireds[];
@@ -1319,6 +1319,58 @@ function findObject(obj: Object, app: App): Object {
   return obj;
 }
 
+function findObj(
+  obj: App["rows"][0] | Object | Object["addons"][0],
+  app: App,
+): App["rows"][0] | Object | Object["addons"][0] {
+  const origObj = draftOriginal(obj);
+  for (const row of app.rows) {
+    if (draftOriginal(row) === origObj) return row;
+    for (const object of row.objects) {
+      if (draftOriginal(object) === origObj) return object;
+      for (const addon of object.addons) {
+        if (draftOriginal(addon) === origObj) return addon;
+      }
+    }
+  }
+  for (const row of app.backpack) {
+    if (draftOriginal(row) === origObj) return row as App["rows"][0];
+    for (const object of row.objects) {
+      if (draftOriginal(object) === origObj) return object;
+      for (const addon of object.addons) {
+        if (draftOriginal(addon) === origObj) return addon;
+      }
+    }
+  }
+  return obj;
+}
+
+export function findObjRow(
+  obj: App["rows"][0] | Object | Object["addons"][0],
+  app: { rows: App["rows"]; backpack: App["backpack"] },
+): App["rows"][0] {
+  const origObj = draftOriginal(obj);
+  for (const row of app.rows) {
+    if (draftOriginal(row) === origObj) return row;
+    for (const object of row.objects) {
+      if (draftOriginal(object) === origObj) return row;
+      for (const addon of object.addons) {
+        if (draftOriginal(addon) === origObj) return row;
+      }
+    }
+  }
+  for (const row of app.backpack) {
+    if (draftOriginal(row) === origObj) return row as App["rows"][0];
+    for (const object of row.objects) {
+      if (draftOriginal(object) === origObj) return row as App["rows"][0];
+      for (const addon of object.addons) {
+        if (draftOriginal(addon) === origObj) return row as App["rows"][0];
+      }
+    }
+  }
+  return obj as App["rows"][0];
+}
+
 // used when the - in a multiple is pressed.
 function selectedOneMore(object: Object, app: App) {
   object = findObject(object, app);
@@ -2047,6 +2099,13 @@ export type State = {
   setObjectSelectable: (object: Object) => void;
   multiplyOrDivide: (object: Object) => void;
   setImagePrefix: (imagePrefix: string) => void;
+  setImage: (
+    obj: App["rows"][0] | Object | Object["addons"][0],
+    image: string,
+    aspectWidth?: number,
+    aspectHeight?: number,
+    tooltip?: string,
+  ) => void;
 };
 
 export const useAppStore = create<State, [["zustand/immer", never]]>(
@@ -2371,6 +2430,24 @@ export const useAppStore = create<State, [["zustand/immer", never]]>(
     setImagePrefix(prefix: string) {
       set((state: State) => {
         state.imagePrefix = prefix;
+      });
+    },
+    setImage(
+      obj: App["rows"][0] | Object | Object["addons"][0],
+      image: string,
+      aspectWidth?: number,
+      aspectHeight?: number,
+      tooltip?: string,
+    ) {
+      set((state: State) => {
+        obj = findObj(obj, state.app);
+        const objRow = findObjRow(obj, state.app);
+        if (aspectWidth && aspectHeight) {
+          objRow.defaultAspectWidth = aspectWidth;
+          objRow.defaultAspectHeight = aspectHeight;
+        }
+        obj.image = image;
+        obj.imageSourceTooltip = tooltip;
       });
     },
   })),
