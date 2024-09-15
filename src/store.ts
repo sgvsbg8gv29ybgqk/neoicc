@@ -1379,6 +1379,7 @@ function selectedOneMore(object: Object, app: App) {
 
   // If the multiple choice uses its own variable.
   if (object.isMultipleUseVariable) {
+    object.multipleUseVariable = object.multipleUseVariable ?? 0;
     if (pi(object.numMultipleTimesPluss) > pi(object.multipleUseVariable)) {
       object.multipleUseVariable = pi(object.multipleUseVariable) + 1;
       selectedThisManyTimesProp = object.multipleUseVariable;
@@ -1416,11 +1417,7 @@ function selectedOneLess(object: Object, app: App) {
   let isLessThanLimit = true;
   // If the multiple choice uses its own variable.
   if (object.isMultipleUseVariable) {
-    object.multipleUseVariable =
-      typeof object.multipleUseVariable === "undefined"
-        ? 0
-        : object.multipleUseVariable;
-
+    object.multipleUseVariable = object.multipleUseVariable ?? 0;
     if (pi(object.numMultipleTimesMinus) < object.multipleUseVariable) {
       object.multipleUseVariable--;
       selectedThisManyTimesProp = object.multipleUseVariable;
@@ -2106,6 +2103,7 @@ export type State = {
     aspectHeight?: number,
     tooltip?: string,
   ) => void;
+  setActivatedList: (activatedList: string) => void;
 };
 
 export const useAppStore = create<State, [["zustand/immer", never]]>(
@@ -2448,6 +2446,96 @@ export const useAppStore = create<State, [["zustand/immer", never]]>(
         }
         obj.image = image;
         obj.imageSourceTooltip = tooltip;
+      });
+    },
+    setActivatedList(activatedList: string) {
+      set((state: State) => {
+        const app = state.app;
+        const array = activatedList.split(",");
+        let number = 0;
+        app.activated = array;
+        // For each of the rows.
+        for (const row of app.rows) {
+          // Turns of edit-mode on all rows.
+          row.isEditModeOn = false;
+          // For each of the objects in a row.
+          for (const object of row.objects) {
+            if (app.activated.includes(object.id)) {
+              object.isActive = true;
+              row.currentChoices++;
+
+              // For each of the scores in an object.
+              for (const score of object.scores) {
+                for (const pointType of app.pointTypes) {
+                  // If the score is of this point-type.
+                  if (
+                    pointType.id === score.id &&
+                    score.requireds.length === 0
+                  ) {
+                    score.isActive = true;
+                    pointType.startingSum =
+                      pi(pointType.startingSum) - pi(score.value);
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        // Is needed to add points from scores with requirements after all other stuff has been done.
+        for (const row of app.rows) {
+          for (const object of row.objects) {
+            if (app.activated.includes(object.id)) {
+              for (const score of object.scores) {
+                for (const pointType of app.pointTypes) {
+                  if (
+                    pointType.id === score.id &&
+                    score.requireds.length > 0 &&
+                    checkRequireds(app, score)
+                  ) {
+                    score.isActive = true;
+                    pointType.startingSum =
+                      pi(pointType.startingSum) - pi(score.value);
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        // Cleans the array and imports a new one.
+        for (const row of app.rows) {
+          for (const object of row.objects) {
+            // Check if the object is a Multiple
+            if (object.isSelectableMultiple) {
+              // Then check if it is in the array
+              for (const el of array) {
+                if (object.id === el.split("/ON#")[0]) {
+                  // Increment/Decrement
+                  number = pi(el.split("/ON#")[1]);
+                  if (number > 0) {
+                    for (let nx = 0; nx < number; nx++) {
+                      selectedOneMore(object, app);
+                    }
+                  } else if (number < 0) {
+                    for (let nd = 0; nd < number * -1; nd++) {
+                      selectedOneLess(object, app);
+                    }
+                  }
+                }
+              }
+            } else if (object.isImageUpload) {
+              for (const el of array) {
+                if (object.id === el.split("/IMG#")[0]) {
+                  object.image = el.split("/IMG#")[1].replaceAll("/CHAR#", ",");
+                }
+              }
+            }
+          }
+        }
+        console.log(
+          array.filter((el) => !el.includes("/ON#") && !el.includes("/IMG#")),
+        );
       });
     },
   })),
