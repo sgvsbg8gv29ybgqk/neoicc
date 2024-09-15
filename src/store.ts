@@ -1533,13 +1533,13 @@ function activateObject(object: Object, row: App["rows"][0], app: App) {
                 if (required.reqId === object.id) {
                   if (allChanges.length === 19) allChanges += objects.title;
                   else allChanges += ", " + objects.title;
-                  activateObject(object, row, app);
+                  activateObject(objects, row, app);
                 } else if (
                   JSON.stringify(required).includes('"' + object.id + '"')
                 ) {
                   if (allChanges.length === 19) allChanges += objects.title;
                   else allChanges += ", " + objects.title;
-                  activateObject(object, row, app);
+                  activateObject(objects, row, app);
                 }
               } else if (objects.isSelectableMultiple) {
                 if (JSON.stringify(required).includes('"' + object.id + '"')) {
@@ -1751,7 +1751,7 @@ function activateObject(object: Object, row: App["rows"][0], app: App) {
                   } else {
                     allChanges += ", " + objects.title;
                   }
-                  activateObject(object, row, app);
+                  activateObject(objects, row, app);
                 } else if (
                   JSON.stringify(required).includes('"' + object.id + '"')
                 ) {
@@ -1760,7 +1760,7 @@ function activateObject(object: Object, row: App["rows"][0], app: App) {
                   } else {
                     allChanges += ", " + objects.title;
                   }
-                  activateObject(object, row, app);
+                  activateObject(objects, row, app);
                 }
               } else if (objects.isSelectableMultiple) {
                 if (JSON.stringify(required).includes('"' + object.id + '"')) {
@@ -1923,7 +1923,7 @@ function activateObject(object: Object, row: App["rows"][0], app: App) {
                 } else {
                   allChanges += ", " + objects.title;
                 }
-                activateObject(object, row, app);
+                activateObject(objects, row, app);
               } else if (
                 JSON.stringify(required).includes('"' + object.id + '"')
               ) {
@@ -1932,7 +1932,7 @@ function activateObject(object: Object, row: App["rows"][0], app: App) {
                 } else {
                   allChanges += ", " + objects.title;
                 }
-                activateObject(object, row, app);
+                activateObject(objects, row, app);
               }
             } else if (objects.isSelectableMultiple) {
               if (JSON.stringify(required).includes('"' + object.id + '"')) {

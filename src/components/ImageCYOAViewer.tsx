@@ -71,7 +71,7 @@ export default function ImageCYOAViewer({ onBack }: { onBack: () => void }) {
 
   return (
     <div
-      className="bg-repeat pb-12 text-center"
+      className="bg-repeat pb-16 text-center"
       ref={ref}
       style={{
         backgroundImage: bgImage,
@@ -96,7 +96,7 @@ export default function ImageCYOAViewer({ onBack }: { onBack: () => void }) {
       {/* Navbar that holds the pointtypes and backpack */}
       {(pointTypes.length > 0 || backpack.length > 0 || importOpen) && (
         <div
-          className="fixed bottom-0 left-0 right-0 z-10 flex flex-row items-center justify-around"
+          className="fixed bottom-0 left-0 right-0 z-10 flex h-14 flex-row items-center justify-around"
           data-html2canvas-ignore
           style={{
             backgroundColor: barBGCol,
