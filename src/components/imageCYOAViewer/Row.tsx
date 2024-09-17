@@ -22,9 +22,11 @@ import AppObject from "./Object";
 export default function Row({
   row,
   type,
+  isCreator,
 }: {
   row: App["rows"][0] | App["backpack"][0];
   type: string;
+  isCreator: boolean;
 }) {
   const pointTypes = useAppStore((state) => state.app.pointTypes);
   const activated = useAppStore((state) => state.app.activated);
@@ -300,7 +302,7 @@ export default function Row({
       }}
     >
       {/* Preview and editable objects */}
-      {checkIfDeselect(row) && (
+      {(isCreator || checkIfDeselect(row)) && (
         <div>
           {/* The templates of the preview, show if !isEditModeOn and all requireds is selected. */}
           <div
@@ -632,7 +634,8 @@ export default function Row({
                 if (width <= 500) widthPercentage = 100;
                 else if (width <= 1000) widthPercentage = 50;
                 return (
-                  (checkRequireds({ activated, pointTypes }, object) ||
+                  (isCreator ||
+                    checkRequireds({ activated, pointTypes }, object) ||
                     (object.isPrivateStyling
                       ? object.styling.reqFilterVisibleIsOn
                       : !styling.reqFilterVisibleIsOn)) && (
@@ -649,6 +652,7 @@ export default function Row({
                         activated={activated}
                         object={object}
                         row={row}
+                        isCreator={isCreator}
                       />
                     </div>
                   )
@@ -689,6 +693,7 @@ export default function Row({
                       activated={activated}
                       object={object}
                       row={row}
+                      isCreator={isCreator}
                     />
                   </div>
                 );

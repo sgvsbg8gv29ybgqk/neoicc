@@ -416,14 +416,14 @@ export type App = {
     currentChoices: number;
     requireds: Requireds[];
     isEditModeOn: boolean;
-    // "isRequirementOpen": {"type": "boolean"},
+    isRequirementOpen: boolean;
     objects: Object[];
     styling: Styling;
     rowJustify?: string;
     width?: boolean;
     deselectChoices?: boolean;
     resultShowRowTitle?: boolean;
-    allowedChoicesChange: number;
+    allowedChoicesChange?: number;
     // "buttonTypeRadio": {"type": "string"},
     onlyUnselectedChoices?: boolean;
     // "imageIsUrl": {"type": "boolean"},
@@ -1128,8 +1128,9 @@ function cleanActivated(app: App) {
   // For each of the rows.
   for (const row of app.rows) {
     row.isEditModeOn = false;
-    if (row.allowedChoicesChange > 0)
-      row.allowedChoices = pi(row.allowedChoices) - row.allowedChoicesChange;
+    if (pi(row.allowedChoicesChange) > 0)
+      row.allowedChoices =
+        pi(row.allowedChoices) - pi(row.allowedChoicesChange);
 
     // For each of the objects.
     for (const object of row.objects) {
@@ -1264,6 +1265,13 @@ function findRow(
     if (draftOriginal(row) === draftOriginal(row2)) return row2;
   }
   for (const row2 of app.backpack) {
+    if (draftOriginal(row) === draftOriginal(row2)) return row2;
+  }
+  return row;
+}
+
+function findRowNoBackpack(row: App["rows"][0], app: App): App["rows"][0] {
+  for (const row2 of app.rows) {
     if (draftOriginal(row) === draftOriginal(row2)) return row2;
   }
   return row;
@@ -1635,7 +1643,8 @@ function activateObject(
             row.allowedChoices =
               pi(row.allowedChoices) + pi(object.numbAddToAllowChoice);
 
-            if (isNaN(row.allowedChoicesChange)) row.allowedChoicesChange = 0;
+            if (isNaN(pi(row.allowedChoicesChange)))
+              row.allowedChoicesChange = 0;
 
             row.allowedChoicesChange =
               pi(row.allowedChoicesChange) + pi(object.numbAddToAllowChoice); // Added to keep record.
@@ -2032,6 +2041,14 @@ export function getImageURL(image: string, imagePrefix: string): string {
   return res;
 }
 
+function generateID(): string {
+  let id = "";
+  const charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+  for (let o = 0; o < 4; o++)
+    id += charset.charAt(Math.floor(Math.random() * charset.length));
+  return id;
+}
+
 export type State = {
   currentDesignComponent: string;
   app: App;
@@ -2073,6 +2090,11 @@ export type State = {
     tooltip?: string,
   ) => void;
   setActivatedList: (activatedList: string) => void;
+  toggleRowEdit: (row: App["rows"][0] | App["backpack"][0]) => void;
+  cloneRow: (row: App["rows"][0]) => void;
+  createNewRow: () => void;
+  moveRowUp: (row: App["rows"][0]) => void;
+  moveRowDown: (row: App["rows"][0]) => void;
 };
 
 export const useAppStore = create<State, [["zustand/immer", never]]>(
@@ -2104,7 +2126,21 @@ export const useAppStore = create<State, [["zustand/immer", never]]>(
     ],
     imagePrefix: "",
     // Saves the app, used in Load.vue to collect from json-files.
-    loadApp: (n: App) => set((state: State) => ({ ...state, app: n }), true),
+    loadApp: (n: App) => {
+      const ids = new Set();
+      for (const row of n.rows) {
+        for (const object of row.objects) {
+          if (ids.has(object.id)) {
+            console.log("Duplicate id", object.id);
+          }
+          ids.add(object.id);
+        }
+        if (ids.has(row.id)) {
+          console.log("Duplicate id", row.id);
+        }
+      }
+      set((state: State) => ({ ...state, app: n }), true);
+    },
     // Sets the state as default, cleans all activated and refounds all used points.
     cleanActivated() {
       set((state: State) => {
@@ -2505,6 +2541,85 @@ export const useAppStore = create<State, [["zustand/immer", never]]>(
         console.log(
           array.filter((el) => !el.includes("/ON#") && !el.includes("/IMG#")),
         );
+      });
+    },
+    toggleRowEdit(row: App["rows"][0] | App["backpack"][0]) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.isEditModeOn = !row.isEditModeOn;
+      });
+    },
+    cloneRow(row: App["rows"][0]) {
+      set((state: State) => {
+        const rows = state.app.rows;
+        row = findRow(row, state.app) as App["rows"][0];
+        const rowIdx = rows.map(draftOriginal).indexOf(draftOriginal(row));
+        rows.splice(rowIdx + 1, 0, JSON.parse(JSON.stringify(row)));
+        rows[rowIdx + 1].id = generateID();
+        for (const object of rows[rowIdx + 1].objects) {
+          object.id = generateID();
+        }
+      });
+    },
+    // The Method that will create a new row.
+    createNewRow() {
+      set((state: State) => {
+        const styling = JSON.parse(JSON.stringify(state.app.styling));
+        // Removes the images when a new row is created, to stop bloating.
+        styling.backgroundImage = "";
+        styling.rowBackgroundImage = "";
+        styling.objectBackgroundImage = "";
+        state.app.rows.push({
+          id: generateID(),
+          title: state.app.defaultRowTitle,
+          titleText: state.app.defaultRowText,
+          objectWidth: "col-md-3",
+          image: "",
+          template: "1",
+
+          // Button in row.
+          isButtonRow: false, // Does the row show an image(true) or an button(false)?
+          buttonType: true, // True if permanent, false if switch.
+          buttonId: "", // The id of the variable that the button uses.
+          buttonText: "Click",
+          buttonRandom: false,
+          buttonRandomNumber: 1,
+
+          isResultRow: false, // Is the row a result row?
+          resultGroupId: "",
+          isInfoRow: false, // Is the row a information row?
+          isPrivateStyling: false,
+
+          defaultAspectWidth: 1, // The default width and height for cropper aspect.
+          defaultAspectHeight: 1, // The default height for cropper aspect.
+          allowedChoices: 0, // Allowed choices in the array.
+          currentChoices: 0, // Current selected choices in the array.
+          requireds: [],
+          isEditModeOn: false,
+          isRequirementOpen: false,
+
+          objects: [],
+          // Styling is collected like this to make a copy, and not a pointer to the same object.
+          styling: styling,
+        });
+      });
+    },
+    moveRowUp(row: App["rows"][0]) {
+      set((state: State) => {
+        const rows = state.app.rows;
+        row = findRowNoBackpack(row, state.app);
+        const rowIdx = rows.map(draftOriginal).indexOf(draftOriginal(row));
+        if (rowIdx === 0) return;
+        rows.splice(rowIdx - 1, 0, rows.splice(rowIdx, 1)[0]);
+      });
+    },
+    moveRowDown(row: App["rows"][0]) {
+      set((state: State) => {
+        const rows = state.app.rows;
+        row = findRowNoBackpack(row, state.app);
+        const rowIdx = rows.map(draftOriginal).indexOf(draftOriginal(row));
+        if (rowIdx === rows.length - 1) return;
+        rows.splice(rowIdx + 1, 0, rows.splice(rowIdx, 1)[0]);
       });
     },
   })),

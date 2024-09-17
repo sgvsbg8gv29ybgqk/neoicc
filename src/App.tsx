@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button } from "./components/ui/button";
 import Information from "./components/Information";
-import ImageCYOAViewer from "./components/ImageCYOAViewer";
 import ImageCYOA from "./components/ImageCYOA";
 import { ScrollArea } from "./components/ui/scroll-area";
 
@@ -36,7 +35,6 @@ function IndexComponent({
         </div>
         <span>TODO:</span>
         <ScrollArea className="not-prose max-h-96 text-xs">
-          <p>ImageCYOA</p>
           <p>imageCYOA/Row</p>
           <p>imageCYOA/Object</p>
           <p>imageCYOA/object/ObjectAddon</p>
@@ -79,7 +77,6 @@ function IndexComponent({
           <p>imageCYOA/styleNew/RowDesign</p>
           <p>imageCYOA/styleNew/RowImage</p>
           <p>imageCYOA/styleNew/Text</p>
-          <p>imageCYOA/ConfirmDialog</p>
         </ScrollArea>
       </div>
     </main>
@@ -94,9 +91,14 @@ function App() {
   if (currentComponent === "index") {
     return <IndexComponent setComponent={setCurrentComponent} />;
   } else if (currentComponent === "appImageCyoa") {
-    return <ImageCYOA />;
+    return <ImageCYOA onBack={() => setCurrentComponent("index")} isCreator />;
   } else if (currentComponent === "appImageCyoaViewer") {
-    return <ImageCYOAViewer onBack={() => setCurrentComponent("index")} />;
+    return (
+      <ImageCYOA
+        onBack={() => setCurrentComponent("index")}
+        isCreator={false}
+      />
+    );
   } else if (currentComponent === "appInformation") {
     return <Information onBack={() => setCurrentComponent("index")} />;
   }

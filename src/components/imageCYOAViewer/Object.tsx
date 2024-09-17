@@ -31,11 +31,13 @@ export default function Object({
   activated,
   object,
   row,
+  isCreator,
 }: {
   className: string;
   activated: string[];
   object: Object;
   row: App["rows"][0] | App["backpack"][0];
+  isCreator: boolean;
 }) {
   const [selectedThisManyTimesProp, setSelectedThisManyTimesProp] = useState(
     object.multipleUseVariable ?? 0,
@@ -382,7 +384,7 @@ export default function Object({
     <div className={cn("flex", className)}>
       {/* Preview and templates */}
       {/* If the row is not an info row or is not selectable, make it clickable */}
-      {checkRequireds({ activated, pointTypes }, row) && (
+      {(isCreator || checkRequireds({ activated, pointTypes }, row)) && (
         <div
           className="w-full p-0"
           style={objectBackground}

@@ -72,7 +72,7 @@ export default function BackpackPreview({
           <div ref={printRef} className="flex flex-col">
             {backpack.map((row, index) => (
               <div key={index} className="p-0">
-                <Row row={row} type={type} />
+                <Row row={row} type={type} isCreator={false} />
               </div>
             ))}
           </div>
