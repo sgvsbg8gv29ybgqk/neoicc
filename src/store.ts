@@ -1793,6 +1793,8 @@ function activateObject(
           if (object.idOfAllowChoice === row.id) {
             row.allowedChoices =
               pi(row.allowedChoices) - pi(object.numbAddToAllowChoice);
+            row.allowedChoicesChange =
+              pi(row.allowedChoicesChange) - pi(object.numbAddToAllowChoice);
             let numActive = 0;
             for (const object of row.objects) {
               if (object.isActive) numActive++;
@@ -1938,6 +1940,8 @@ function activateObject(
         if (object.idOfAllowChoice === row.id) {
           row.allowedChoices =
             pi(row.allowedChoices) - pi(object.numbAddToAllowChoice);
+          row.allowedChoicesChange =
+            pi(row.allowedChoicesChange) - pi(object.numbAddToAllowChoice);
           let numActive = 0;
           for (const object of row.objects) {
             if (object.isActive) numActive++;

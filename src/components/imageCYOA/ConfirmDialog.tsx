@@ -11,17 +11,17 @@ import {
 
 export default function ConfirmDialog({
   open,
-  onBack,
+  onClose,
   onConfirm,
   text,
 }: {
   open: boolean;
-  onBack: () => void;
+  onClose: () => void;
   onConfirm: () => void;
   text: string;
 }) {
   return (
-    <AlertDialog open={open} onOpenChange={() => onBack()}>
+    <AlertDialog open={open} onOpenChange={() => onClose()}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>

@@ -100,13 +100,6 @@ export default function Row({
     | "appButtonSettings"
   >("none");
 
-  /* TODO: Add the following modals:
-     "appObjectList"
-     "appRequirement"
-     "appRowSettings"
-     "appImageUpload"
-     "appButtonSettings" */
-
   const { width } = useWindowDimensions();
 
   const widthMap = {
@@ -1132,6 +1125,7 @@ export default function Row({
                         object={object}
                         row={row}
                         isCreator={isCreator}
+                        isEditModeOn={isEditModeOn}
                       />
                     </div>
                   )
@@ -1173,6 +1167,7 @@ export default function Row({
                       object={object}
                       row={row}
                       isCreator={isCreator}
+                      isEditModeOn={isEditModeOn}
                     />
                   </div>
                 );

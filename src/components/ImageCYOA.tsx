@@ -35,6 +35,10 @@ import {
 import { Separator } from "./ui/separator";
 import DOMPurify from "dompurify";
 import ConfirmDialog from "./imageCYOA/ConfirmDialog";
+import RowList from "./RowList";
+import Feature from "./imageCYOA/Feature";
+import Design from "./imageCYOA/Design";
+import IDSearch from "./imageCYOA/features/IDSearch";
 
 export default function ImageCYOA({
   onBack,
@@ -43,11 +47,6 @@ export default function ImageCYOA({
   onBack: () => void;
   isCreator: boolean;
 }) {
-  // TODO: implement these modals
-  // "appRowList"
-  // "appFeatures"
-  // "appDesign"
-  // "appIDList"
   // TODO: implement design component somewhere
   const ref = useRef<HTMLDivElement>(null);
   const bgImage = useAppStore((state) => state.app.styling.backgroundImage);
@@ -86,7 +85,7 @@ export default function ImageCYOA({
     | "appRowList"
     | "appFeatures"
     | "appDesign"
-    | "appIDList"
+    | "appIDSearch"
     | "appConfirm"
   >("none");
   const { width } = useWindowDimensions();
@@ -217,7 +216,7 @@ export default function ImageCYOA({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    onClick={() => setModal("appIDList")}
+                    onClick={() => setModal("appIDSearch")}
                     size="icon"
                     variant="ghost"
                   >
@@ -365,7 +364,6 @@ export default function ImageCYOA({
             </div>
           </div>
         )}
-
         <Load open={modal === "appLoad"} onClose={() => setModal("none")} />
         <ActivatedViewer
           open={modal === "appActivatedViewer"}
@@ -378,7 +376,7 @@ export default function ImageCYOA({
         />
         <ConfirmDialog
           open={modal === "appConfirm"}
-          onBack={() => setModal("none")}
+          onClose={() => setModal("none")}
           onConfirm={() => {
             if (confirmDeleteRow) {
               deleteRow(confirmDeleteRow);
@@ -387,7 +385,19 @@ export default function ImageCYOA({
           }}
           text="Are you sure you want to delete this row?"
         />
-
+        <RowList
+          open={modal === "appRowList"}
+          onClose={() => setModal("none")}
+        />
+        <Feature
+          open={modal === "appFeatures"}
+          onClose={() => setModal("none")}
+        />
+        <Design open={modal === "appDesign"} onClose={() => setModal("none")} />
+        <IDSearch
+          open={modal === "appIDSearch"}
+          onClose={() => setModal("none")}
+        />
         <div
           className={cn(
             "grid grid-cols-2",
