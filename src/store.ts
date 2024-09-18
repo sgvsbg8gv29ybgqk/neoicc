@@ -202,9 +202,9 @@ export type Object = {
   template: number | string;
   objectWidth: string;
   isActive: boolean | number;
-  // "isVisible": {"type": "boolean"},
+  isVisible: boolean;
   multipleUseVariable?: number;
-  // "selectedThisManyTimesProp": {"type": "integer"},
+  // selectedThisManyTimesProp?: number;
   defaultAspectWidth: number | string;
   defaultAspectHeight: number | string;
   requireds: Requireds[];
@@ -248,7 +248,7 @@ export type Object = {
     // "showScore",
   }[];
   groups: { id: string }[];
-  // "imageIsUrl": {"type": "boolean"},
+  // imageIsUrl?: boolean;
   deactivateOtherChoice?: boolean;
   deactivateThisChoice?: string;
   activateOtherChoice?: boolean;
@@ -272,37 +272,23 @@ export type Object = {
   dividePointtypeIsOnCheck?: boolean;
   pointTypeToDivide?: string;
   divideWithThis?: number | string;
-  // "selectFunctions": {"type": "boolean"},
-  // "selectOnce": {"type": "boolean"},
+  // selectFunctions?: boolean;
+  // selectOnce?: boolean;
   isSelectableMultiple?: boolean;
   isMultipleUseVariable?: boolean;
   cleanACtivatedOnSelect?: boolean;
   isPrivateStyling?: boolean;
-  styling: Styling;
-  // "currentChoices": {"type": ["integer", "null"]},
-  // "forcedActivated": {"type": "boolean"},
-  // "initMultipleTimesMinus": int_string,
-  // "imageLink": {"type": "string"},
+  styling?: Styling;
+  // currentChoices?: number | null;
+  // forcedActivated?: boolean;
+  // initMultipleTimesMinus?: number | string;
+  // imageLink?: string;
   idOfTheTextfieldWord?: string;
   wordChangeSelect?: string;
   wordChangeDeselect?: string;
   randomWeight?: number | string;
   isButtonObject?: boolean;
   imageSourceTooltip?: string;
-  // "id",
-  // "title",
-  // "text",
-  // "image",
-  // "template",
-  // "objectWidth",
-  // "isActive",
-  // "isVisible",
-  // "defaultAspectWidth",
-  // "defaultAspectHeight",
-  // "requireds",
-  // "addons",
-  // "scores",
-  // "groups",
 };
 
 export type App = {
@@ -313,7 +299,7 @@ export type App = {
   isDesignOpen: boolean;
   isViewerVersion: boolean;
   backpack: {
-    // "id": {"type": "string", "description": "Row Id"},
+    id: string;
     title: string;
     titleText: string;
     objectWidth: string;
@@ -335,10 +321,7 @@ export type App = {
     currentChoices: number;
     requireds: Requireds[];
     isEditModeOn: boolean;
-    // "isRequirementOpen": {
-    //     "type": "boolean",
-    //     "description": "doesnt seem to be used",
-    // },
+    isRequirementOpen: boolean;
     objects: Object[];
     styling: Styling;
     textIsRemoved?: boolean;
@@ -346,39 +329,16 @@ export type App = {
     resultShowRowTitle?: boolean;
     choicesShareTemplate?: boolean;
     deselectChoices?: boolean;
-    // "width": {
-    //     "type": "boolean",
-    //     "description": "Half of the screen?",
-    // },
+    width?: boolean;
     imageSourceTooltip?: string;
     onlyIfNoChoices?: boolean;
     isWeightedRandom?: boolean;
     onlyUnselectedChoices?: boolean;
-    // "id",
-    // "title",
-    // "titleText",
-    // "objectWidth",
-    // "image",
-    // "template",
-    // "isButtonRow",
-    // "buttonType",
-    // "buttonId",
-    // "buttonText",
-    // "buttonRandom",
-    // "buttonRandomNumber",
-    // "isResultRow",
-    // "resultGroupId",
-    // "isInfoRow",
-    // "isPrivateStyling",
-    // "defaultAspectWidth",
-    // "defaultAspectHeight",
-    // "allowedChoices",
-    // "currentChoices",
-    // "requireds",
-    // "isEditModeOn",
-    // "isRequirementOpen",
-    // "objects",
-    // "styling",
+    btnPointAddon?: boolean;
+    buttonTypeRadio?: string;
+    randomMin?: number;
+    randomMax?: number;
+    pointTypeRandom?: string;
   }[];
   words: { id: string; replaceText: string }[];
   groups: {
@@ -424,39 +384,18 @@ export type App = {
     deselectChoices?: boolean;
     resultShowRowTitle?: boolean;
     allowedChoicesChange?: number;
-    // "buttonTypeRadio": {"type": "string"},
+    buttonTypeRadio?: string;
     onlyUnselectedChoices?: boolean;
-    // "imageIsUrl": {"type": "boolean"},
     imageSourceTooltip?: string;
     onlyIfNoChoices?: boolean;
     isWeightedRandom?: boolean;
     choicesShareTemplate?: boolean;
     textIsRemoved?: boolean;
-    // "id",
-    // "title",
-    // "titleText",
-    // "objectWidth",
-    // "image",
-    // "template",
-    // "isButtonRow",
-    // "buttonType",
-    // "buttonId",
-    // "buttonText",
-    // "buttonRandom",
-    // "buttonRandomNumber",
-    // "isResultRow",
-    // "resultGroupId",
-    // "isInfoRow",
-    // "isPrivateStyling",
-    // "defaultAspectWidth",
-    // "defaultAspectHeight",
-    // "allowedChoices",
-    // "currentChoices",
-    // "requireds",
-    // "isEditModeOn",
-    // "isRequirementOpen",
-    // "objects",
-    // "styling",
+    btnPointAddon?: boolean;
+    randomMin?: number;
+    randomMax?: number;
+    pointTypeRandom?: string;
+    // imageIsUrl?: boolean;
   }[]; // The rows that the user have been created.
   pointTypes: {
     id: string;
@@ -473,17 +412,11 @@ export type App = {
     plussOrMinusAdded?: boolean;
     plussOrMinusInverted?: boolean;
     image?: string;
-    // "initValue": {"type": "integer"},
     imageSidePlacement?: boolean;
     imageOnSide?: boolean;
     iconWidth?: number | string;
     iconHeight?: number | string;
-    // "id",
-    // "name",
-    // "startingSum",
-    // "activatedId",
-    // "afterText",
-    // "beforeText",
+    // initValue?: number;
   }[]; // The pointtypes that the user have created.
   variables: { id: string; isTrue: boolean }[]; // The variables that the user have created.
 
@@ -2095,6 +2028,76 @@ export type State = {
   createNewRow: () => void;
   moveRowUp: (row: App["rows"][0]) => void;
   moveRowDown: (row: App["rows"][0]) => void;
+  createNewObject: (row: App["rows"][0] | App["backpack"][0]) => void;
+  setRowButtonRow: (
+    row: App["rows"][0] | App["backpack"][0],
+    checked: boolean,
+  ) => void;
+  setRowInfoRow: (
+    row: App["rows"][0] | App["backpack"][0],
+    checked: boolean,
+  ) => void;
+  setRowResultRow: (
+    row: App["rows"][0] | App["backpack"][0],
+    checked: boolean,
+  ) => void;
+  setRowWidth: (
+    row: App["rows"][0] | App["backpack"][0],
+    checked: boolean,
+  ) => void;
+  setRowResultGroupID: (
+    row: App["rows"][0] | App["backpack"][0],
+    groupID: string | null,
+  ) => void;
+  setRowTemplate: (
+    row: App["rows"][0] | App["backpack"][0],
+    template: string,
+  ) => void;
+  setRowTitle: (
+    row: App["rows"][0] | App["backpack"][0],
+    title: string,
+  ) => void;
+  setRowAllowedChoices: (
+    row: App["rows"][0] | App["backpack"][0],
+    allowedChoices: string,
+  ) => void;
+  setRowObjectWidth: (
+    row: App["rows"][0] | App["backpack"][0],
+    width: string,
+  ) => void;
+  setRowRowJustify: (
+    row: App["rows"][0] | App["backpack"][0],
+    justify: string | null,
+  ) => void;
+  setRowID: (row: App["rows"][0] | App["backpack"][0], id: string) => void;
+  setRowCurrentChoices: (
+    row: App["rows"][0] | App["backpack"][0],
+    currentChoices: number,
+  ) => void;
+  setRowTitleText: (
+    row: App["rows"][0] | App["backpack"][0],
+    titleText: string,
+  ) => void;
+  setRowDeselectChoices: (
+    row: App["rows"][0] | App["backpack"][0],
+    checked: boolean,
+  ) => void;
+  setRowChoicesShareTemplate: (
+    row: App["rows"][0] | App["backpack"][0],
+    checked: boolean,
+  ) => void;
+  setRowTextIsRemoved: (
+    row: App["rows"][0] | App["backpack"][0],
+    checked: boolean,
+  ) => void;
+  setRowResultShowRowTitle: (
+    row: App["rows"][0] | App["backpack"][0],
+    checked: boolean,
+  ) => void;
+  deleteRowRequireds: (
+    row: App["rows"][0] | App["backpack"][0],
+    required: Requireds,
+  ) => void;
 };
 
 export const useAppStore = create<State, [["zustand/immer", never]]>(
@@ -2256,124 +2259,138 @@ export const useAppStore = create<State, [["zustand/immer", never]]>(
       set((state: State) => {
         row = findRow(row, state.app);
         // If the button is the type that will select X random or add variable to activated-array.
-        if (row.buttonRandom) {
-          const randomArray: number[] = [];
+        if (row.btnPointAddon && row.buttonTypeRadio === "sumaddon") {
+          //If Random
+          const random = Math.floor(
+            Math.random() * (pi(row.randomMax) - pi(row.randomMin)) +
+              pi(row.randomMin),
+          );
 
-          // Is it uniform random or weighted random.
-          if (
-            !row.isWeightedRandom ||
-            typeof row.isWeightedRandom === "undefined"
-          ) {
-            // For each of the random choices that will be selected.
-            for (let i = 0; i < row.buttonRandomNumber; i++) {
-              let random = Math.floor(Math.random() * row.objects.length);
-              let randomObject = row.objects[random];
+          for (const pointType of state.app.pointTypes) {
+            if (pointType.id == row.pointTypeRandom)
+              pointType.startingSum = pi(pointType.startingSum) + random;
+          }
+        } else {
+          // If the button is the type that will select X random or add variable to activated-array.
+          if (row.buttonRandom) {
+            const randomArray: number[] = [];
 
-              // To stop an unending while loop.
-              const maxTries = 100;
-              let tryNumber = 0;
-              let foundOne = true;
+            // Is it uniform random or weighted random.
+            if (
+              !row.isWeightedRandom ||
+              typeof row.isWeightedRandom === "undefined"
+            ) {
+              // For each of the random choices that will be selected.
+              for (let i = 0; i < row.buttonRandomNumber; i++) {
+                let random = Math.floor(Math.random() * row.objects.length);
+                let randomObject = row.objects[random];
 
-              // If only unselected choices is allowed to be selected.
-              if (row.onlyUnselectedChoices) {
-                // While the random is not unique and the elements requireds does not fit.
-                while (
-                  randomArray.includes(random) ||
-                  state.app.activated.includes(randomObject.id) ||
-                  !checkRequireds(state.app, randomObject) ||
-                  randomObject.isNotSelectable
-                ) {
-                  tryNumber++;
-                  random = Math.floor(Math.random() * row.objects.length);
-                  randomObject = row.objects[random];
+                // To stop an unending while loop.
+                const maxTries = 100;
+                let tryNumber = 0;
+                let foundOne = true;
 
-                  // Breaks the loop if the number of objects if fewer or equal to the randomNumber.
-                  // Or if max tries have been surpassed.
-                  if (row.objects.length <= i || maxTries <= tryNumber) {
-                    foundOne = false;
-                    break;
+                // If only unselected choices is allowed to be selected.
+                if (row.onlyUnselectedChoices) {
+                  // While the random is not unique and the elements requireds does not fit.
+                  while (
+                    randomArray.includes(random) ||
+                    state.app.activated.includes(randomObject.id) ||
+                    !checkRequireds(state.app, randomObject) ||
+                    randomObject.isNotSelectable
+                  ) {
+                    tryNumber++;
+                    random = Math.floor(Math.random() * row.objects.length);
+                    randomObject = row.objects[random];
+
+                    // Breaks the loop if the number of objects if fewer or equal to the randomNumber.
+                    // Or if max tries have been surpassed.
+                    if (row.objects.length <= i || maxTries <= tryNumber) {
+                      foundOne = false;
+                      break;
+                    }
+                  }
+                } else {
+                  // While the random is not unique and the elements requireds does not fit.
+                  while (
+                    randomArray.includes(random) ||
+                    !checkRequireds(state.app, randomObject) ||
+                    randomObject.isNotSelectable
+                  ) {
+                    tryNumber++;
+                    random = Math.floor(Math.random() * row.objects.length);
+                    randomObject = row.objects[random];
+
+                    // Breaks the loop if the number of objects if fewer or equal to the randomNumber.
+                    // Or if max tries have been surpassed.
+                    if (row.objects.length <= i || maxTries <= tryNumber) {
+                      break;
+                    }
                   }
                 }
-              } else {
-                // While the random is not unique and the elements requireds does not fit.
-                while (
-                  randomArray.includes(random) ||
-                  !checkRequireds(state.app, randomObject) ||
-                  randomObject.isNotSelectable
-                ) {
-                  tryNumber++;
-                  random = Math.floor(Math.random() * row.objects.length);
-                  randomObject = row.objects[random];
 
-                  // Breaks the loop if the number of objects if fewer or equal to the randomNumber.
-                  // Or if max tries have been surpassed.
-                  if (row.objects.length <= i || maxTries <= tryNumber) {
-                    break;
-                  }
+                if (foundOne) {
+                  // Push random into random-array.
+                  randomArray.push(random);
+
+                  // Checks if the objects have all requireds.
+                  activateObject(randomObject, row, state.app);
                 }
               }
 
-              if (foundOne) {
-                // Push random into random-array.
-                randomArray.push(random);
-
-                // Checks if the objects have all requireds.
-                activateObject(randomObject, row, state.app);
-              }
-            }
-
-            // The random is weighted.
-          } else {
-            let randomTotalWeight = 0;
-            let randomCumuWeight = 0;
-            // sum up the weights
-            for (const object of row.objects) {
-              // If the number is default, not yet set
-              if (
-                typeof object.randomWeight === "undefined" ||
-                object.randomWeight === ""
-              ) {
-                randomTotalWeight += 100;
-              } else {
-                randomTotalWeight += pi(object.randomWeight);
-              }
-            }
-
-            // Use a while to ensure that things has required and is only selected once.
-            for (let x = 0; x < row.buttonRandomNumber; x++) {
-              const random = Math.floor(Math.random() * randomTotalWeight);
-              console.log(random);
-
-              // For each of the rows check if the choice is unique.
+              // The random is weighted.
+            } else {
+              let randomTotalWeight = 0;
+              let randomCumuWeight = 0;
+              // sum up the weights
               for (const object of row.objects) {
+                // If the number is default, not yet set
                 if (
                   typeof object.randomWeight === "undefined" ||
                   object.randomWeight === ""
                 ) {
-                  randomCumuWeight += 100;
+                  randomTotalWeight += 100;
                 } else {
-                  randomCumuWeight += pi(object.randomWeight);
+                  randomTotalWeight += pi(object.randomWeight);
                 }
-                if (random < randomCumuWeight) {
-                  // Checks if the objects have all requireds.
-                  activateObject(object, row, state.app);
+              }
 
-                  break;
+              // Use a while to ensure that things has required and is only selected once.
+              for (let x = 0; x < row.buttonRandomNumber; x++) {
+                const random = Math.floor(Math.random() * randomTotalWeight);
+                console.log(random);
+
+                // For each of the rows check if the choice is unique.
+                for (const object of row.objects) {
+                  if (
+                    typeof object.randomWeight === "undefined" ||
+                    object.randomWeight === ""
+                  ) {
+                    randomCumuWeight += 100;
+                  } else {
+                    randomCumuWeight += pi(object.randomWeight);
+                  }
+                  if (random < randomCumuWeight) {
+                    // Checks if the objects have all requireds.
+                    activateObject(object, row, state.app);
+
+                    break;
+                  }
                 }
               }
             }
-          }
-        } else {
-          // Checks if the choice should be permanent or not.
-          if (row.buttonType) {
-            if (state.app.activated.includes(row.buttonId))
-              state.app.activated.splice(
-                state.app.activated.indexOf(row.buttonId),
-                1,
-              );
-            else state.app.activated.push(row.buttonId);
-          } else {
-            state.app.activated.push(row.buttonId);
+          } else if (!row.buttonRandom) {
+            // Checks if the choice should be permanent or not.
+            if (row.buttonType) {
+              if (state.app.activated.includes(row.buttonId))
+                state.app.activated.splice(
+                  state.app.activated.indexOf(row.buttonId),
+                  1,
+                );
+              else state.app.activated.push(row.buttonId);
+            } else {
+              state.app.activated.push(row.buttonId);
+            }
           }
         }
       });
@@ -2620,6 +2637,174 @@ export const useAppStore = create<State, [["zustand/immer", never]]>(
         const rowIdx = rows.map(draftOriginal).indexOf(draftOriginal(row));
         if (rowIdx === rows.length - 1) return;
         rows.splice(rowIdx + 1, 0, rows.splice(rowIdx, 1)[0]);
+      });
+    },
+    createNewObject(row: App["rows"][0] | App["backpack"][0]) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.objects.push({
+          id: generateID(),
+          title: this.app.defaultChoiceTitle,
+          text: this.app.defaultChoiceText,
+          image: "",
+          template: 1,
+          objectWidth: "",
+          isActive: false,
+          isVisible: true,
+          multipleUseVariable: 0,
+          defaultAspectWidth: row.defaultAspectWidth,
+          defaultAspectHeight: row.defaultAspectHeight,
+          requireds: [], // Holds the required's.
+          addons: [], // Holds the created addons.
+          scores: [], // Holds the created scores.
+          groups: [],
+        });
+      });
+    },
+    setRowButtonRow(
+      row: App["rows"][0] | App["backpack"][0],
+      checked: boolean,
+    ) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.isButtonRow = checked;
+      });
+    },
+    setRowInfoRow(row: App["rows"][0] | App["backpack"][0], checked: boolean) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.isInfoRow = checked;
+      });
+    },
+    setRowResultRow(
+      row: App["rows"][0] | App["backpack"][0],
+      checked: boolean,
+    ) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.isResultRow = checked;
+      });
+    },
+    setRowWidth(row: App["rows"][0] | App["backpack"][0], checked: boolean) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.width = checked;
+      });
+    },
+    setRowResultGroupID(
+      row: App["rows"][0] | App["backpack"][0],
+      groupID: string | null,
+    ) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.resultGroupId = groupID;
+      });
+    },
+    setRowTemplate(row: App["rows"][0] | App["backpack"][0], template: string) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.template = template;
+      });
+    },
+    setRowTitle(row: App["rows"][0] | App["backpack"][0], title: string) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.title = title;
+      });
+    },
+    setRowAllowedChoices(
+      row: App["rows"][0] | App["backpack"][0],
+      allowedChoices: string,
+    ) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.allowedChoices = pi(allowedChoices);
+      });
+    },
+    setRowObjectWidth(row: App["rows"][0] | App["backpack"][0], width: string) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.objectWidth = width;
+      });
+    },
+    setRowRowJustify(
+      row: App["rows"][0] | App["backpack"][0],
+      justify: string | null,
+    ) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.rowJustify = justify ?? undefined;
+      });
+    },
+    setRowID(row: App["rows"][0] | App["backpack"][0], id: string) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.id = id;
+      });
+    },
+    setRowCurrentChoices(
+      row: App["rows"][0] | App["backpack"][0],
+      currentChoices: number,
+    ) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.currentChoices = currentChoices;
+      });
+    },
+    setRowTitleText(
+      row: App["rows"][0] | App["backpack"][0],
+      titleText: string,
+    ) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.titleText = titleText;
+      });
+    },
+    setRowDeselectChoices(
+      row: App["rows"][0] | App["backpack"][0],
+      checked: boolean,
+    ) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.deselectChoices = checked;
+      });
+    },
+    setRowChoicesShareTemplate(
+      row: App["rows"][0] | App["backpack"][0],
+      checked: boolean,
+    ) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.choicesShareTemplate = checked;
+      });
+    },
+    setRowTextIsRemoved(
+      row: App["rows"][0] | App["backpack"][0],
+      checked: boolean,
+    ) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.textIsRemoved = checked;
+      });
+    },
+    setRowResultShowRowTitle(
+      row: App["rows"][0] | App["backpack"][0],
+      checked: boolean,
+    ) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.resultShowRowTitle = checked;
+      });
+    },
+    deleteRowRequireds(
+      row: App["rows"][0] | App["backpack"][0],
+      required: Requireds,
+    ) {
+      set((state: State) => {
+        row = findRow(row, state.app);
+        row.requireds = row.requireds.filter(
+          (r) => draftOriginal(r) !== draftOriginal(required),
+        );
       });
     },
   })),

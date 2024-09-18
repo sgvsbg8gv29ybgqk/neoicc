@@ -8,7 +8,7 @@ import {
   pi,
   useAppStore,
 } from "@/store";
-import { CSSProperties } from "react";
+import { CSSProperties, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -18,6 +18,26 @@ import {
 import { Button } from "../ui/button";
 import DOMPurify from "dompurify";
 import AppObject from "./Object";
+import { FilePlus2, KeyRound, List, Settings } from "lucide-react";
+import { Switch } from "../ui/switch";
+import { Label } from "../ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import ObjectRequirement from "../imageCYOA/object/ObjectRequirement";
+import ObjectList from "../imageCYOA/row/ObjectList";
+import Requirement from "../imageCYOA/row/Requirement";
+import ImageUpload from "../imageCYOA/row/ImageUpload";
+import RowSettings from "../imageCYOA/row/RowSettings";
+import ButtonSettings from "../imageCYOA/row/ButtonSettings";
 
 export default function Row({
   row,
@@ -35,11 +55,57 @@ export default function Row({
   const appStyling = useAppStore((state) => state.app.styling);
   const chapters = useAppStore((state) => state.app.chapters);
   const imagePrefix = useAppStore((state) => state.imagePrefix);
+  const groups = useAppStore((state) => state.app.groups);
+  const objectWidths = useAppStore((state) => state.objectWidths);
   const checkIfDeselect = useAppStore((state) => state.checkIfDeselect);
   const handleButtonActivate = useAppStore(
     (state) => state.handleButtonActivate,
   );
+  const createNewObject = useAppStore((state) => state.createNewObject);
+  const setRowButtonRow = useAppStore((state) => state.setRowButtonRow);
+  const setRowInfoRow = useAppStore((state) => state.setRowInfoRow);
+  const setRowResultRow = useAppStore((state) => state.setRowResultRow);
+  const setRowWidth = useAppStore((state) => state.setRowWidth);
+  const setRowResultGroupID = useAppStore((state) => state.setRowResultGroupID);
+  const setRowTemplate = useAppStore((state) => state.setRowTemplate);
+  const setRowTitle = useAppStore((state) => state.setRowTitle);
+  const setRowAllowedChoices = useAppStore(
+    (state) => state.setRowAllowedChoices,
+  );
+  const setRowObjectWidth = useAppStore((state) => state.setRowObjectWidth);
+  const setRowRowJustify = useAppStore((state) => state.setRowRowJustify);
+  const setRowID = useAppStore((state) => state.setRowID);
+  const setRowCurrentChoices = useAppStore(
+    (state) => state.setRowCurrentChoices,
+  );
+  const setRowTitleText = useAppStore((state) => state.setRowTitleText);
+  const setRowDeselectChoices = useAppStore(
+    (state) => state.setRowDeselectChoices,
+  );
+  const setRowChoicesShareTemplate = useAppStore(
+    (state) => state.setRowChoicesShareTemplate,
+  );
+  const setRowTextIsRemoved = useAppStore((state) => state.setRowTextIsRemoved);
+  const setRowResultShowRowTitle = useAppStore(
+    (state) => state.setRowResultShowRowTitle,
+  );
+  const deleteRowRequireds = useAppStore((state) => state.deleteRowRequireds);
   const isEditModeOn = row.isEditModeOn;
+  const [modal, setModal] = useState<
+    | "none"
+    | "appObjectList"
+    | "appRequirement"
+    | "appRowSettings"
+    | "appImageUpload"
+    | "appButtonSettings"
+  >("none");
+
+  /* TODO: Add the following modals:
+     "appObjectList"
+     "appRequirement"
+     "appRowSettings"
+     "appImageUpload"
+     "appButtonSettings" */
 
   const { width } = useWindowDimensions();
 
@@ -289,6 +355,22 @@ export default function Row({
   const objectHeight =
     styling.objectHeight && !isEditModeOn ? "flex h-full" : "";
 
+  // The select that decides the template of the row.
+  const templates = [
+    { text: "Image Top", value: "1" },
+    { text: "Image Right", value: "2" },
+    { text: "Image Left", value: "3" }, // 5 per row.
+    { text: "Image Bottom", value: "4" },
+  ];
+
+  const justify = [
+    { value: "start" },
+    { value: "center" },
+    { value: "end" },
+    { value: "space-around" },
+    { value: "space-between" },
+  ];
+
   return (
     <div
       className="bg-repeat text-center"
@@ -301,133 +383,434 @@ export default function Row({
         marginRight: !isEditModeOn ? styling.rowBodyMarginSides + "%" : "1%",
       }}
     >
+      {isEditModeOn && (
+        <div>
+          <div className="flex flex-row justify-end rounded-t border p-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => createNewObject(row)}
+                    size="icon"
+                    variant="ghost"
+                  >
+                    <FilePlus2 />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span>Create New Object</span>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => setModal("appObjectList")}
+                    size="icon"
+                    variant="ghost"
+                  >
+                    <List />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span>List of objects</span>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => setModal("appRequirement")}
+                    size="icon"
+                    variant="ghost"
+                  >
+                    <KeyRound />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span>Create Requirement</span>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => setModal("appRowSettings")}
+                    size="icon"
+                    variant="ghost"
+                  >
+                    <Settings />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span>Open Row Settings</span>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          <div className="flex flex-row flex-wrap justify-around gap-4 rounded-b border-x border-b p-2">
+            <div>
+              {/* The upload of Image */}
+              {!row.isButtonRow ? (
+                <div className="flex flex-col items-center gap-y-2">
+                  {row.image && (
+                    <img
+                      className="max-w-80 inline-block h-max max-h-36 w-max"
+                      src={getImageURL(row.image, imagePrefix)}
+                      onClick={() => setModal("appImageUpload")}
+                    />
+                  )}
+                  <Button
+                    onClick={() => setModal("appImageUpload")}
+                    className="min-w-48 w-full"
+                  >
+                    Change Image
+                  </Button>
+                </div>
+              ) : (
+                // The button that opens button settings
+                <Button
+                  onClick={() => setModal("appButtonSettings")}
+                  className="min-w-48"
+                >
+                  Open Button Settings
+                </Button>
+              )}
+            </div>
+            <div className="flex flex-col gap-y-2">
+              {/* switch that let the user change between an image and button */}
+              <div className="flex flex-row items-center gap-x-1">
+                <Switch
+                  id="button-row-switch"
+                  checked={row.isButtonRow}
+                  onCheckedChange={(checked) => setRowButtonRow(row, checked)}
+                />
+                <Label htmlFor="button-row-switch">Button?</Label>
+              </div>
+              <div className="flex flex-row items-center gap-x-1">
+                <Switch
+                  id="row-info-switch"
+                  checked={row.isInfoRow}
+                  onCheckedChange={(checked) => setRowInfoRow(row, checked)}
+                />
+                <Label htmlFor="row-info-switch">Non-activatable?</Label>
+              </div>
+              <div className="flex flex-row items-center gap-x-1">
+                <Switch
+                  id="row-result-switch"
+                  checked={row.isResultRow}
+                  onCheckedChange={(checked) => setRowResultRow(row, checked)}
+                />
+                <Label htmlFor="row-result-switch">Selected Choices?</Label>
+              </div>
+              <div className="flex flex-row items-center gap-x-1">
+                <Switch
+                  id="width-switch"
+                  checked={row.width ?? false}
+                  onCheckedChange={(checked) => setRowWidth(row, checked)}
+                />
+                <Label htmlFor="width-switch">Half of the screen?</Label>
+              </div>
+              {row.isResultRow && (
+                <div className="flex flex-col items-start gap-y-1">
+                  <Label htmlFor="group-select">
+                    Select Choices From Group ID
+                  </Label>
+                  <Select
+                    value={row.resultGroupId || "none"}
+                    onValueChange={(value) => {
+                      const res = value === "none" ? null : value;
+                      setRowResultGroupID(row, res);
+                    }}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue
+                        id="group-select"
+                        placeholder="All Rows and Objects"
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Groups</SelectLabel>
+                        <SelectItem value="none">None</SelectItem>
+                        {groups.map((group) => (
+                          <SelectItem value={group.id} key={group.id}>
+                            {group.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col gap-y-2">
+              <div className="flex flex-col items-start gap-y-1">
+                <Label htmlFor="template-select">Template</Label>
+                <Select
+                  value={row.template}
+                  onValueChange={(value) => setRowTemplate(row, value)}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue id="template-select" placeholder="Templates" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Templates</SelectLabel>
+                      {templates.map((template) => (
+                        <SelectItem value={template.value} key={template.value}>
+                          {template.text}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-col items-start gap-y-1">
+                <Label htmlFor="row-title-input">Row Title</Label>
+                <Input
+                  id="row-title-input"
+                  placeholder="Placeholder"
+                  value={row.title}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setRowTitle(row, value);
+                  }}
+                />
+              </div>
+              <div className="flex flex-col items-start gap-y-1">
+                <Label htmlFor="allowed-choices-input">Allowed Choices</Label>
+                <Input
+                  id="allowed-choices-input"
+                  type="number"
+                  value={row.allowedChoices}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setRowAllowedChoices(row, value);
+                  }}
+                  placeholder="Placeholder"
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-y-2">
+              <div className="flex flex-col items-start gap-y-1">
+                <Label htmlFor="object-width-select">Objects Per Row</Label>
+                <Select
+                  value={row.objectWidth}
+                  onValueChange={(value) => {
+                    const res = value === "none" ? "" : value;
+                    setRowObjectWidth(row, res);
+                  }}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue
+                      id="object-width-select"
+                      placeholder="Templates"
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Object Widths</SelectLabel>
+                      {objectWidths.map((width) => (
+                        <SelectItem
+                          value={width.value || "none"}
+                          key={width.value || "none"}
+                        >
+                          {width.text}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-col items-start gap-y-1">
+                <Label htmlFor="justify-select">Choices Justify</Label>
+                <Select
+                  value={row.rowJustify ?? "none"}
+                  onValueChange={(value) => {
+                    const res = value === "none" ? null : value;
+                    setRowRowJustify(row, res);
+                  }}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue id="justify-select" placeholder="Templates" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Justifies</SelectLabel>
+                      <SelectItem value="none">none</SelectItem>
+                      {justify.map((just) => (
+                        <SelectItem value={just.value} key={just.value}>
+                          {just.value}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-col items-start gap-y-1">
+                <Label htmlFor="row-id-input">Row ID</Label>
+                <Input
+                  id="row-id-input"
+                  value={row.id}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setRowID(row, value);
+                  }}
+                  placeholder="Placeholder"
+                />
+              </div>
+              <div className="flex flex-col items-start gap-y-1">
+                <Label htmlFor="selected-choices-input">Selected Choices</Label>
+                <Input
+                  id="selected-choices-input"
+                  type="number"
+                  value={row.currentChoices}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setRowCurrentChoices(row, parseInt(value));
+                  }}
+                  placeholder="Placeholder"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="flex flex-col items-start gap-y-1">
+                <Label htmlFor="row-text-textarea">Row Text</Label>
+                <Textarea
+                  id="row-text-textarea"
+                  value={row.titleText}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setRowTitleText(row, value);
+                  }}
+                  rows={8}
+                  className="min-w-96"
+                />
+              </div>
+            </div>
+            <div className="flex w-full flex-row justify-around gap-x-2">
+              <div className="flex flex-row items-center gap-x-1">
+                <Switch
+                  id="deselect-choices-switch"
+                  checked={row.deselectChoices ?? false}
+                  onCheckedChange={(checked) =>
+                    setRowDeselectChoices(row, checked)
+                  }
+                />
+                <Label htmlFor="deselect-choices-switch" className="text-left">
+                  Deselects choices when Row lack requirements?
+                </Label>
+              </div>
+              {row.isResultRow && (
+                <>
+                  <div className="flex flex-row items-center gap-x-1">
+                    <Switch
+                      id="choices-share-template-switch"
+                      checked={row.choicesShareTemplate ?? false}
+                      onCheckedChange={(checked) =>
+                        setRowChoicesShareTemplate(row, checked)
+                      }
+                    />
+                    <Label
+                      htmlFor="choices-share-template-switch"
+                      className="text-left"
+                    >
+                      Choices will all be 'Template Top' and Row Width
+                    </Label>
+                  </div>
+                  <div className="flex flex-row items-center gap-x-1">
+                    <Switch
+                      id="text-is-removed-switch"
+                      checked={row.textIsRemoved ?? false}
+                      onCheckedChange={(checked) =>
+                        setRowTextIsRemoved(row, checked)
+                      }
+                    />
+                    <Label
+                      htmlFor="text-is-removed-switch"
+                      className="text-left"
+                    >
+                      Remove the text of the choices.
+                    </Label>
+                  </div>
+                  <div className="flex flex-row items-center gap-x-1">
+                    <Switch
+                      id="result-show-row-title-switch"
+                      checked={row.resultShowRowTitle ?? false}
+                      onCheckedChange={(checked) =>
+                        setRowResultShowRowTitle(row, checked)
+                      }
+                    />
+                    <Label
+                      htmlFor="result-show-row-title-switch"
+                      className="text-left"
+                    >
+                      Show the title of the row in the choice.
+                    </Label>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-row flex-wrap justify-around">
+            {/* Shows the requirements, allows the user to delete or change its id */}
+            {row.requireds.map((required, index) => (
+              <div>
+                <ObjectRequirement
+                  isEditModeOn={isEditModeOn}
+                  required={required}
+                  key={index}
+                />
+                <Button onClick={() => deleteRowRequireds(row, required)}>
+                  Delete
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       {/* Preview and editable objects */}
       {(isCreator || checkIfDeselect(row)) && (
         <div>
           {/* The templates of the preview, show if !isEditModeOn and all requireds is selected. */}
-          <div
-            className={cn(
-              row.title !== "" && "bg-repeat",
-              row.title !== "" && styling.rowOverflowIsOn && "overflow-hidden",
-            )}
-            style={
-              row.title !== ""
-                ? {
-                    backgroundImage: styling.rowGradientIsOn
-                      ? `linear-gradient("${styling.rowGradient}")`
-                      : `url("${styling.rowBackgroundImage}")`,
-                    backgroundColor: styling.rowBgColorIsOn
-                      ? styling.rowBgColor
-                      : undefined,
-                    marginLeft: styling.rowMargin + "%",
-                    marginRight: styling.rowMargin + "%",
-                    borderRadius: `${styling.rowBorderRadiusTopLeft}0${borderRadiusSuffix} ${styling.rowBorderRadiusTopRight}0${borderRadiusSuffix} ${styling.rowBorderRadiusBottomRight}0${borderRadiusSuffix} ${styling.rowBorderRadiusBottomLeft}0${borderRadiusSuffix}`,
-                    border: styling.rowBorderIsOn
-                      ? `${styling.rowBorderWidth}px ${styling.rowBorderStyle} ${styling.rowBorderColor}`
-                      : undefined,
-                    filter: styling.rowDropShadowIsOn
-                      ? `drop-shadow(${styling.rowDropShadowH}px ${styling.rowDropShadowV}px ${styling.rowDropShadowBlur}px ${styling.rowDropShadowColor})`
-                      : undefined,
-                  }
-                : {}
-            }
-          >
-            {/* The div that will show of the preview */}
-            {(pi(row.template) === 1 || width < 1000) && (
-              <div>
-                {/* If Image is activated */}
-                {!row.isButtonRow &&
-                row.imageSourceTooltip !== "" &&
-                typeof row.imageSourceTooltip !== "undefined" ? (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        {row.image ? (
-                          <img
-                            className="inline-block"
-                            style={rowImageStyle}
-                            src={getImageURL(row.image, imagePrefix)}
-                          />
-                        ) : (
-                          <div className="inline-block" />
-                        )}
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <span>{row.imageSourceTooltip}</span>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ) : !row.isButtonRow ? (
-                  row.image ? (
-                    <img
-                      className="inline-block"
-                      style={rowImageStyle}
-                      src={getImageURL(row.image, imagePrefix)}
-                    />
-                  ) : (
-                    <div className="inline-block" />
-                  )
-                ) : (
-                  // If button is activated
-                  <Button
-                    className="mb-[5px]"
-                    disabled={
-                      (!row.buttonType && activated.includes(row.buttonId)) ||
-                      (row.onlyIfNoChoices && row.currentChoices !== 0)
+          {(!isCreator || (!isEditModeOn && checkIfDeselect(row))) && (
+            <div
+              className={cn(
+                row.title !== "" && "bg-repeat",
+                row.title !== "" &&
+                  styling.rowOverflowIsOn &&
+                  "overflow-hidden",
+              )}
+              style={
+                row.title !== ""
+                  ? {
+                      backgroundImage: styling.rowGradientIsOn
+                        ? `linear-gradient("${styling.rowGradient}")`
+                        : `url("${styling.rowBackgroundImage}")`,
+                      backgroundColor: styling.rowBgColorIsOn
+                        ? styling.rowBgColor
+                        : undefined,
+                      marginLeft: styling.rowMargin + "%",
+                      marginRight: styling.rowMargin + "%",
+                      borderRadius: `${styling.rowBorderRadiusTopLeft}0${borderRadiusSuffix} ${styling.rowBorderRadiusTopRight}0${borderRadiusSuffix} ${styling.rowBorderRadiusBottomRight}0${borderRadiusSuffix} ${styling.rowBorderRadiusBottomLeft}0${borderRadiusSuffix}`,
+                      border: styling.rowBorderIsOn
+                        ? `${styling.rowBorderWidth}px ${styling.rowBorderStyle} ${styling.rowBorderColor}`
+                        : undefined,
+                      filter: styling.rowDropShadowIsOn
+                        ? `drop-shadow(${styling.rowDropShadowH}px ${styling.rowDropShadowV}px ${styling.rowDropShadowBlur}px ${styling.rowDropShadowColor})`
+                        : undefined,
                     }
-                    onClick={() => handleButtonActivate(row)}
-                    style={rowButtonStyle}
-                  >
-                    {row.buttonText}
-                  </Button>
-                )}
-                {/* Title or text */}
-                {row.title !== "" && (
-                  <h2
-                    style={rowTitleStyle}
-                    className="mb-0"
-                    dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(rowTitle),
-                    }}
-                  />
-                )}
-                {row.titleText !== "" && (
-                  <p
-                    className="mb-0 whitespace-pre-line"
-                    style={rowTextStyle}
-                    dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(row.titleText),
-                    }}
-                  ></p>
-                )}
-              </div>
-            )}
-            {/* The div that will show of the preview */}
-            {pi(row.template) === 2 && width > 1000 && (
-              <div className="grid grid-cols-2 p-0">
-                {/* Text and title */}
-                <div className="p-0">
-                  {row.title !== "" && (
-                    <h2
-                      className="mb-0"
-                      style={rowTitleStyle}
-                      dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(rowTitle),
-                      }}
-                    />
-                  )}
-                  {row.titleText !== "" && (
-                    <p
-                      className="mb-0 whitespace-pre-line"
-                      style={rowTextStyle}
-                      dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(row.titleText),
-                      }}
-                    />
-                  )}
-                </div>
-                {/* Image or button */}
-                <div className="p-0">
+                  : {}
+              }
+            >
+              {/* The div that will show of the preview */}
+              {(pi(row.template) === 1 || width < 1000) && (
+                <div>
+                  {/* If Image is activated */}
                   {!row.isButtonRow &&
                   row.imageSourceTooltip !== "" &&
                   typeof row.imageSourceTooltip !== "undefined" ? (
@@ -473,13 +856,197 @@ export default function Row({
                       {row.buttonText}
                     </Button>
                   )}
+                  {/* Title or text */}
+                  {row.title !== "" && (
+                    <h2
+                      style={rowTitleStyle}
+                      className="mb-0"
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(rowTitle),
+                      }}
+                    />
+                  )}
+                  {row.titleText !== "" && (
+                    <p
+                      className="mb-0 whitespace-pre-line"
+                      style={rowTextStyle}
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(row.titleText),
+                      }}
+                    ></p>
+                  )}
                 </div>
-              </div>
-            )}
-            {/* The div that will show of the preview */}
-            {pi(row.template) === 3 && (
-              <div className="grid grid-cols-2 p-0">
+              )}
+              {/* The div that will show of the preview */}
+              {pi(row.template) === 2 && width > 1000 && (
+                <div className="grid grid-cols-2 p-0">
+                  {/* Text and title */}
+                  <div className="p-0">
+                    {row.title !== "" && (
+                      <h2
+                        className="mb-0"
+                        style={rowTitleStyle}
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(rowTitle),
+                        }}
+                      />
+                    )}
+                    {row.titleText !== "" && (
+                      <p
+                        className="mb-0 whitespace-pre-line"
+                        style={rowTextStyle}
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(row.titleText),
+                        }}
+                      />
+                    )}
+                  </div>
+                  {/* Image or button */}
+                  <div className="p-0">
+                    {!row.isButtonRow &&
+                    row.imageSourceTooltip !== "" &&
+                    typeof row.imageSourceTooltip !== "undefined" ? (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            {row.image ? (
+                              <img
+                                className="inline-block"
+                                style={rowImageStyle}
+                                src={getImageURL(row.image, imagePrefix)}
+                              />
+                            ) : (
+                              <div className="inline-block" />
+                            )}
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <span>{row.imageSourceTooltip}</span>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ) : !row.isButtonRow ? (
+                      row.image ? (
+                        <img
+                          className="inline-block"
+                          style={rowImageStyle}
+                          src={getImageURL(row.image, imagePrefix)}
+                        />
+                      ) : (
+                        <div className="inline-block" />
+                      )
+                    ) : (
+                      // If button is activated
+                      <Button
+                        className="mb-[5px]"
+                        disabled={
+                          (!row.buttonType &&
+                            activated.includes(row.buttonId)) ||
+                          (row.onlyIfNoChoices && row.currentChoices !== 0)
+                        }
+                        onClick={() => handleButtonActivate(row)}
+                        style={rowButtonStyle}
+                      >
+                        {row.buttonText}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              )}
+              {/* The div that will show of the preview */}
+              {pi(row.template) === 3 && (
+                <div className="grid grid-cols-2 p-0">
+                  <div className="p-0">
+                    {!row.isButtonRow &&
+                    row.imageSourceTooltip !== "" &&
+                    typeof row.imageSourceTooltip !== "undefined" ? (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            {row.image ? (
+                              <img
+                                className="inline-block"
+                                style={rowImageStyle}
+                                src={getImageURL(row.image, imagePrefix)}
+                              />
+                            ) : (
+                              <div className="inline-block" />
+                            )}
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <span>{row.imageSourceTooltip}</span>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ) : !row.isButtonRow ? (
+                      row.image ? (
+                        <img
+                          className="inline-block"
+                          style={rowImageStyle}
+                          src={getImageURL(row.image, imagePrefix)}
+                        />
+                      ) : (
+                        <div className="inline-block" />
+                      )
+                    ) : (
+                      // If button is activated
+                      <Button
+                        className="mb-[5px]"
+                        disabled={
+                          (!row.buttonType &&
+                            activated.includes(row.buttonId)) ||
+                          (row.onlyIfNoChoices && row.currentChoices !== 0)
+                        }
+                        onClick={() => handleButtonActivate(row)}
+                        style={rowButtonStyle}
+                      >
+                        {row.buttonText}
+                      </Button>
+                    )}
+                  </div>
+                  <div className="p-0">
+                    {row.title !== "" && (
+                      <h2
+                        className="mb-0"
+                        style={rowTitleStyle}
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(rowTitle),
+                        }}
+                      />
+                    )}
+                    {row.titleText !== "" && (
+                      <p
+                        className="mb-0 whitespace-pre-line"
+                        style={rowTextStyle}
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(row.titleText),
+                        }}
+                      />
+                    )}
+                  </div>
+                </div>
+              )}
+              {/* The div that will show of the preview */}
+              {pi(row.template) === 4 && (
                 <div className="p-0">
+                  {row.title !== "" && (
+                    <h2
+                      className="mb-0"
+                      style={rowTitleStyle}
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(rowTitle),
+                      }}
+                    />
+                  )}
+                  {row.titleText !== "" && (
+                    <p
+                      className="mb-0 whitespace-pre-line"
+                      style={rowTextStyle}
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(row.titleText),
+                      }}
+                    />
+                  )}
+                  {/* If Image is activated */}
                   {!row.isButtonRow &&
                   row.imageSourceTooltip !== "" &&
                   typeof row.imageSourceTooltip !== "undefined" ? (
@@ -512,7 +1079,6 @@ export default function Row({
                       <div className="inline-block" />
                     )
                   ) : (
-                    // If button is activated
                     <Button
                       className="mb-[5px]"
                       disabled={
@@ -526,97 +1092,9 @@ export default function Row({
                     </Button>
                   )}
                 </div>
-                <div className="p-0">
-                  {row.title !== "" && (
-                    <h2
-                      className="mb-0"
-                      style={rowTitleStyle}
-                      dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(rowTitle),
-                      }}
-                    />
-                  )}
-                  {row.titleText !== "" && (
-                    <p
-                      className="mb-0 whitespace-pre-line"
-                      style={rowTextStyle}
-                      dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(row.titleText),
-                      }}
-                    />
-                  )}
-                </div>
-              </div>
-            )}
-            {/* The div that will show of the preview */}
-            {pi(row.template) === 4 && (
-              <div className="p-0">
-                {row.title !== "" && (
-                  <h2
-                    className="mb-0"
-                    style={rowTitleStyle}
-                    dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(rowTitle),
-                    }}
-                  />
-                )}
-                {row.titleText !== "" && (
-                  <p
-                    className="mb-0 whitespace-pre-line"
-                    style={rowTextStyle}
-                    dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(row.titleText),
-                    }}
-                  />
-                )}
-                {/* If Image is activated */}
-                {!row.isButtonRow &&
-                row.imageSourceTooltip !== "" &&
-                typeof row.imageSourceTooltip !== "undefined" ? (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        {row.image ? (
-                          <img
-                            className="inline-block"
-                            style={rowImageStyle}
-                            src={getImageURL(row.image, imagePrefix)}
-                          />
-                        ) : (
-                          <div className="inline-block" />
-                        )}
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <span>{row.imageSourceTooltip}</span>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ) : !row.isButtonRow ? (
-                  row.image ? (
-                    <img
-                      className="inline-block"
-                      style={rowImageStyle}
-                      src={getImageURL(row.image, imagePrefix)}
-                    />
-                  ) : (
-                    <div className="inline-block" />
-                  )
-                ) : (
-                  <Button
-                    className="mb-[5px]"
-                    disabled={
-                      (!row.buttonType && activated.includes(row.buttonId)) ||
-                      (row.onlyIfNoChoices && row.currentChoices !== 0)
-                    }
-                    onClick={() => handleButtonActivate(row)}
-                    style={rowButtonStyle}
-                  >
-                    {row.buttonText}
-                  </Button>
-                )}
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
           {/* Where the object-components are created and listed. */}
           {!row.isResultRow ? (
             <div
@@ -634,9 +1112,10 @@ export default function Row({
                 if (width <= 500) widthPercentage = 100;
                 else if (width <= 1000) widthPercentage = 50;
                 return (
-                  (isCreator ||
+                  ((isCreator && isEditModeOn) ||
                     checkRequireds({ activated, pointTypes }, object) ||
-                    (object.isPrivateStyling
+                    (object.isPrivateStyling &&
+                    object.styling?.reqFilterVisibleIsOn
                       ? object.styling.reqFilterVisibleIsOn
                       : !styling.reqFilterVisibleIsOn)) && (
                     <div
@@ -702,6 +1181,31 @@ export default function Row({
           )}
         </div>
       )}
+      <ObjectList
+        open={modal === "appObjectList"}
+        onClose={() => setModal("none")}
+        row={row}
+      />
+      <Requirement
+        open={modal === "appRequirement"}
+        onClose={() => setModal("none")}
+        row={row}
+      />
+      <RowSettings
+        open={modal === "appRowSettings"}
+        onClose={() => setModal("none")}
+        row={row}
+      />
+      <ImageUpload
+        open={modal === "appImageUpload"}
+        onClose={() => setModal("none")}
+        obj={row}
+      />
+      <ButtonSettings
+        open={modal === "appButtonSettings"}
+        onClose={() => setModal("none")}
+        row={row}
+      />
     </div>
   );
 }

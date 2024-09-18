@@ -120,10 +120,12 @@ export default function ImageCYOA({
   }
 
   useEffect(() => {
+    /*
     fetch("/project.json")
       .then((r) => r.json())
       .then(loadApp)
       .catch((e) => console.info(`No local project.json found: ${e}`));
+      */
   }, [loadApp]);
 
   const navButtons = [
@@ -386,7 +388,12 @@ export default function ImageCYOA({
           text="Are you sure you want to delete this row?"
         />
 
-        <div className="grid-cols-2">
+        <div
+          className={cn(
+            "grid grid-cols-2",
+            isCreator && !topNav ? "w-[calc(100vw-3.5rem)]" : "w-screen",
+          )}
+        >
           {/* This is where the rows is shown */}
           {rows.map((row, index) => (
             <div
@@ -396,107 +403,109 @@ export default function ImageCYOA({
                 width > 1200 && row.width ? "col-span-1" : "col-span-2",
               )}
             >
-              {isCreator && (
-                <div className="mx-2 mt-2 flex flex-row items-center justify-between rounded bg-white px-4 py-4 shadow">
-                  <div>
-                    <b
-                      className="text-xl"
-                      dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(row.title),
-                      }}
-                    />
+              <div>
+                {isCreator && (
+                  <div className="mx-2 mt-2 flex flex-row items-center justify-between rounded border bg-white px-4 py-4">
+                    <div>
+                      <b
+                        className="text-xl"
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(row.title),
+                        }}
+                      />
+                    </div>
+                    <div className="flex flex-row gap-x-2">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              onClick={() => toggleRowEdit(row)}
+                              size="icon"
+                              variant="ghost"
+                            >
+                              <Wrench />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <span>Edit Row</span>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              onClick={() => {
+                                setConfirmDeleteRow(row);
+                                setModal("appConfirm");
+                              }}
+                              size="icon"
+                              variant="ghost"
+                            >
+                              <Trash2 />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <span>Delete Row</span>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              onClick={() => cloneRow(row)}
+                              size="icon"
+                              variant="ghost"
+                            >
+                              <Copy />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <span>Clone Row</span>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              onClick={() => moveRowUp(row)}
+                              size="icon"
+                              variant="ghost"
+                            >
+                              <ChevronUp />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <span>Move Row Up</span>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              onClick={() => moveRowDown(row)}
+                              size="icon"
+                              variant="ghost"
+                            >
+                              <ChevronDown />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <span>Move Row Down</span>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
                   </div>
-                  <div className="flex flex-row gap-x-2">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            onClick={() => toggleRowEdit(row)}
-                            size="icon"
-                            variant="ghost"
-                          >
-                            <Wrench />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <span>Edit Row</span>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            onClick={() => {
-                              setConfirmDeleteRow(row);
-                              setModal("appConfirm");
-                            }}
-                            size="icon"
-                            variant="ghost"
-                          >
-                            <Trash2 />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <span>Delete Row</span>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            onClick={() => cloneRow(row)}
-                            size="icon"
-                            variant="ghost"
-                          >
-                            <Copy />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <span>Clone Row</span>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            onClick={() => moveRowUp(row)}
-                            size="icon"
-                            variant="ghost"
-                          >
-                            <ChevronUp />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <span>Move Row Up</span>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            onClick={() => moveRowDown(row)}
-                            size="icon"
-                            variant="ghost"
-                          >
-                            <ChevronDown />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <span>Move Row Down</span>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                </div>
-              )}
-              {(isCreator ||
-                checkRequireds({ activated, pointTypes }, row)) && (
-                <Row row={row} type="" isCreator={isCreator} />
-              )}
+                )}
+                {(isCreator ||
+                  checkRequireds({ activated, pointTypes }, row)) && (
+                  <Row row={row} type="" isCreator={isCreator} />
+                )}
+              </div>
             </div>
           ))}
         </div>

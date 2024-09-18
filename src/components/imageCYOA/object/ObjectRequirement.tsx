@@ -1,4 +1,14 @@
-export default function ObjectRequirement() {
+import { Requireds } from "@/store";
+
+export default function ObjectRequirement({
+  isEditModeOn,
+  required,
+}: {
+  isEditModeOn: boolean;
+  required: Requireds;
+}) {
+  void isEditModeOn;
+  void required;
   return <></>;
 }
 // <template>

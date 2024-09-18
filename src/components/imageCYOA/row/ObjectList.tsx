@@ -1,5 +1,42 @@
-export default function ObjectList() {
-  return <></>;
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { App } from "@/store";
+
+export default function ObjectList({
+  open,
+  onClose,
+  row,
+}: {
+  open: boolean;
+  onClose: () => void;
+  row: App["rows"][0];
+}) {
+  void row;
+  return (
+    <Dialog open={open} onOpenChange={(a) => !a && onClose()}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div>Hi</div>
+        </div>
+        <DialogFooter>
+          <Button type="submit">Save changes</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 }
 // <template>
 //   <v-row justify="center">

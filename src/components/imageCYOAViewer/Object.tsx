@@ -54,12 +54,12 @@ export default function Object({
   const selectedOneMore = useAppStore((state) => state.selectedOneMore);
   const setObjectSelectable = useAppStore((state) => state.setObjectSelectable);
   const multiplyOrDivide = useAppStore((state) => state.multiplyOrDivide);
-  const styling: typeof object.styling & Partial<typeof appStyling> =
-    object.isPrivateStyling
-      ? object.styling
-      : row.isPrivateStyling
-        ? row.styling
-        : appStyling;
+  const styling: NonNullable<typeof object.styling> &
+    Partial<typeof appStyling> = object.isPrivateStyling
+    ? (object.styling ?? (row.isPrivateStyling ? row.styling : appStyling))
+    : row.isPrivateStyling
+      ? row.styling
+      : appStyling;
   const { width } = useWindowDimensions();
 
   useEffect(() => {

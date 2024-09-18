@@ -35,7 +35,6 @@ function IndexComponent({
         </div>
         <span>TODO:</span>
         <ScrollArea className="not-prose max-h-96 text-xs">
-          <p>imageCYOA/Row</p>
           <p>imageCYOA/Object</p>
           <p>imageCYOA/object/ObjectAddon</p>
           <p>imageCYOA/row/Requirement</p>
