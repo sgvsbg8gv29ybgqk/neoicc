@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import html2canvas from "html2canvas";
 import { cn } from "@/lib/utils";
-import Row from "./imageCYOAViewer/Row";
+import Row from "./imageCYOA/Row";
 import { useWindowDimensions } from "@/lib/resize";
 import Load from "./imageCYOA/storage/Load";
 import ActivatedViewer from "./imageCYOA/ActivatedViewer";

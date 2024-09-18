@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { useAppStore } from "@/store";
 import { useRef } from "react";
-import Row from "../imageCYOAViewer/Row";
+import Row from "../imageCYOA/Row";
 import html2canvas from "html2canvas";
 
 export default function BackpackPreview({
