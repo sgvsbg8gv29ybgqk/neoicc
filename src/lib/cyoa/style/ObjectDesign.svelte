@@ -44,281 +44,239 @@
 		{ value: 'hidden' }
 	];
 </script>
-
 <WrappedStyle title="Choice Design" {open} {onclose} {embedded} class="sm:max-w-[1200px]">
-	<div class="grid gap-4 py-4">
-		{#if styling.objectDesignIsAdvanced}
-			<div class="grid grid-cols-3 gap-4">
-				<div class="flex flex-col gap-y-2">
-					<h6>Margin and Padding of the choices</h6>
-					<WrappedInput
-						id="object-margin"
-						label="Margin"
-						type="number"
-						suffix="px"
-						bind:value={styling.objectMargin}
-					/>
-					<WrappedInput
-						id="object-text-padding"
-						label="Padding"
-						type="number"
-						suffix="px"
-						bind:value={styling.objectTextPadding}
-					/>
-					<h6>Style and Width of the border</h6>
-					<WrappedSelect
-						id="object-border-style"
-						label="Border Styles"
-						items={borderStyles.map((e) => ({ value: e.value, name: e.value }))}
-						bind:value={styling.objectBorderStyle}
-						placeholder="Select Style"
-					/>
-					<WrappedInput
-						id="object-border-width"
-						label="Border Width"
-						type="number"
-						suffix="px"
-						bind:value={styling.objectBorderWidth}
-					/>
-					<div class="flex flex-row items-center gap-x-1">
-						<Checkbox id="object-overflow-is-on" bind:checked={styling.objectOverflowIsOn} />
-						<Label for="object-overflow-is-on">Border-Radius Cuts off overflow</Label>
-					</div>
-				</div>
-				<div class="flex flex-col gap-y-2">
-					<h6>Shadow that the choice makes</h6>
-					<WrappedInput
-						id="object-drop-shadow-h"
-						label="Horizontal Shadow"
-						type="number"
-						suffix="px"
-						bind:value={styling.objectDropShadowH}
-					/>
-					<WrappedInput
-						id="object-drop-shadow-v"
-						label="Vertical Shadow"
-						type="number"
-						suffix="px"
-						bind:value={styling.objectDropShadowV}
-					/>
-					<WrappedInput
-						id="object-drop-shadow-blur"
-						label="Shadow Blur"
-						type="number"
-						suffix="px"
-						bind:value={styling.objectDropShadowBlur}
-					/>
-					<WrappedInput
-						id="object-drop-shadow-spread"
-						label="Shadow Spread"
-						type="number"
-						suffix="px"
-						bind:value={styling.objectDropShadowSpread}
-					/>
-					<div class="flex flex-row items-center gap-x-1">
-						<Checkbox id="object-drop-shadow-is-on" bind:checked={styling.objectDropShadowIsOn} />
-						<Label for="object-drop-shadow-is-on">Drop Shadow is turned on</Label>
-					</div>
-				</div>
-				<div class="flex flex-col gap-y-2">
-					<h6>Rounded corners on the choices</h6>
-					<WrappedInput
-						id="object-border-radius-top-left"
-						label="Top Left"
-						placeholder="0"
-						type="number"
-						suffix={borderRadiusSuffix}
-						bind:value={styling.objectBorderRadiusTopLeft}
-					/>
-					<WrappedInput
-						id="object-border-radius-top-right"
-						label="Top Right"
-						placeholder="0"
-						type="number"
-						suffix={borderRadiusSuffix}
-						bind:value={styling.objectBorderRadiusTopRight}
-					/>
-					<WrappedInput
-						id="object-border-radius-bottom-right"
-						label="Bottom Right"
-						placeholder="0"
-						type="number"
-						suffix={borderRadiusSuffix}
-						bind:value={styling.objectBorderRadiusBottomRight}
-					/>
-					<WrappedInput
-						id="object-border-radius-bottom-left"
-						label="Bottom Left"
-						placeholder="0"
-						type="number"
-						suffix={borderRadiusSuffix}
-						bind:value={styling.objectBorderRadiusBottomLeft}
-					/>
-					<div class="flex flex-row items-center gap-x-1">
-						<Switch
-							id="object-border-radius-is-pixels"
-							bind:checked={styling.objectBorderRadiusIsPixels}
-						/>
-						<Label for="object-border-radius-is-pixels">Border-Radius Percent or Pixels?</Label>
-					</div>
-				</div>
-			</div>
-		{:else}
-			<div class="grid grid-cols-4 gap-4">
-				<div class="flex flex-col gap-y-2">
-					<h6>Margin and Padding of the choices</h6>
-					<WrappedInput
-						id="object-margin"
-						label="Space between the choices"
-						type="number"
-						suffix="px"
-						bind:value={styling.objectMargin}
-					/>
-					<WrappedInput
-						id="object-text-padding"
-						label="Space between the text in the choices and its border"
-						type="number"
-						suffix="px"
-						bind:value={styling.objectTextPadding}
-					/>
-				</div>
-				<div class="flex flex-col gap-y-2">
-					<h6>Shadow that the choice makes</h6>
-					<WrappedInput
-						id="object-drop-shadow-h"
-						label="The Higher the number the bigger the shadow will be."
-						type="number"
-						suffix="px"
-						bind:value={() => styling.objectDropShadowH,
-						(v) => {
-							styling.objectDropShadowH = v;
-							styling.objectDropShadowV = v;
-							styling.objectDropShadowSpread = v;
-							styling.objectDropShadowBlur = v;
-						}}
-					/>
-					<div class="flex flex-row items-center gap-x-1">
-						<Checkbox id="object-drop-shadow-is-on" bind:checked={styling.objectDropShadowIsOn} />
-						<Label for="object-drop-shadow-is-on">Drop Shadow Is turned on</Label>
-					</div>
-					<div class="flex flex-row items-center gap-x-1">
-						<Checkbox id="object-border-is-on" bind:checked={styling.objectBorderIsOn} />
-						<Label for="object-border-is-on">Border is turned on</Label>
-					</div>
-				</div>
-				<div class="flex flex-col gap-y-2">
-					<h6>Style and Width of the border</h6>
-					<WrappedSelect
-						id="object-border-style"
-						label="Border Styles"
-						items={borderStyles.map((e) => ({ value: e.value, name: e.value }))}
-						bind:value={styling.objectBorderStyle}
-						placeholder="Select Style"
-					/>
-					<WrappedInput
-						id="object-border-width"
-						label="Border Width"
-						type="number"
-						suffix="px"
-						bind:value={styling.objectBorderWidth}
-					/>
-				</div>
-				<div class="flex flex-col gap-y-2">
-					<h6>Rounded corners on the choices</h6>
-					<WrappedInput
-						id="object-border-radius-top-left"
-						label="Rounded corners in the top of each choice"
-						placeholder="0"
-						type="number"
-						suffix={borderRadiusSuffix}
-						bind:value={() => styling.objectBorderRadiusTopLeft,
-						(v) => {
-							styling.objectBorderRadiusTopLeft = v;
-							styling.objectBorderRadiusTopRight = v;
-						}}
-					/>
-					<WrappedInput
-						id="object-border-radius-bottom-left"
-						label="Rounded corners in the bottom of each choice"
-						placeholder="0"
-						type="number"
-						suffix={borderRadiusSuffix}
-						bind:value={() => styling.objectBorderRadiusBottomLeft,
-						(v) => {
-							styling.objectBorderRadiusBottomLeft = v;
-							styling.objectBorderRadiusBottomRight = v;
-						}}
-					/>
-				</div>
-			</div>
-		{/if}
-		<div class="grid grid-cols-3 gap-4">
-			<div class="flex flex-col gap-y-2">
-				<h6>Color of the Drop Shadow</h6>
-				<ColorPicker
-					bind:hex={() => styling.objectDropShadowColor ?? 'grey',
-					(v) => (styling.objectDropShadowColor = v)}
-					components={ChromeVariant}
-					sliderDirection="horizontal"
-					isDialog={false}
-					isAlpha
-				/>
-			</div>
-			<div class="flex flex-col gap-y-2">
-				<div class="flex flex-row items-center gap-x-1">
-					<Switch id="object-design-is-advanced" bind:checked={styling.objectDesignIsAdvanced} />
-					<Label for="object-design-is-advanced">Advanced Design?</Label>
-				</div>
-				<div class="flex flex-row items-center gap-x-1">
-					<Checkbox id="object-height" bind:checked={styling.objectHeight} />
-					<Label for="object-height"
-						>If this is checked then every choice in a row will have identical height.</Label
-					>
-				</div>
-				<div class="flex flex-row items-center gap-x-1">
-					<Checkbox id="object-gradient-is-on" bind:checked={styling.objectGradientIsOn} />
-					<Label for="object-gradient-is-on">Object Gradient is turned on</Label>
-				</div>
-				{#if styling.objectGradientIsOn}
-					<WrappedInput
-						id="object-gradient"
-						label="Gradient when not selected"
-						placeholder="to left, blue, red"
-						bind:value={styling.objectGradient}
-					/>
-					<WrappedInput
-						id="object-gradient-on-select"
-						label="Gradient when selected"
-						placeholder="to left, blue, red"
-						bind:value={styling.objectGradientOnSelect}
-					/>
-					<WrappedInput
-						id="object-gradient-on-req"
-						label="Gradient when missing requirement"
-						placeholder="to left, blue, red"
-						bind:value={styling.objectGradientOnReq}
-					/>
-					<span>
-						You might need to leave for the main menu if things stop updating, using the background
-						colors for filters does not work well, so you'll need to place gradients in ALL of them,
-						but using something like (green, green) works.
-						<a target="_blank" href="https://www.w3schools.com/css/css3_gradients.asp">
-							https://www.w3schools.com/css/css3_gradients.asp
-						</a>
-					</span>
-				{/if}
-			</div>
-			<div class="flex flex-col gap-y-2">
-				<h6>Color of the choice border</h6>
-				<ColorPicker
-					bind:hex={() => styling.objectBorderColor ?? 'red',
-					(v) => (styling.objectBorderColor = v)}
-					components={ChromeVariant}
-					sliderDirection="horizontal"
-					isDialog={false}
-					isAlpha
-				/>
-			</div>
-		</div>
-	</div>
+<div class="grid gap-4 py-4">
+<div class="grid grid-cols-3 gap-4">
+<div class="flex flex-col gap-y-2">
+<h6>Margin and Padding of the choices</h6>
+<WrappedInput
+id="object-margin"
+label="Margin"
+type="number"
+suffix="px"
+bind:value={styling.objectMargin}
+/>
+<WrappedInput
+id="object-text-padding"
+label="Padding"
+type="number"
+suffix="px"
+bind:value={styling.objectTextPadding}
+/>
+{#if styling.objectDesignIsAdvanced}
+<h6>Style and Width of the border</h6>
+<WrappedSelect
+id="object-border-style"
+label="Border Styles"
+items={borderStyles.map((e) => ({ value: e.value, name: e.value }))}
+bind:value={styling.objectBorderStyle}
+placeholder="Select Style"
+/>
+<WrappedInput
+id="object-border-width"
+label="Border Width"
+type="number"
+suffix="px"
+bind:value={styling.objectBorderWidth}
+/>
+<div class="flex flex-row items-center gap-x-1">
+<Checkbox id="object-overflow-is-on" bind:checked={styling.objectOverflowIsOn}/>
+<Label for="object-overflow-is-on">Border-Radius Cuts off overflow</Label>
+</div>
+{/if}
+</div>
+<div class="flex flex-col gap-y-2">
+<h6>Shadow that the choice makes</h6>
+{#if styling.objectDesignIsAdvanced}
+<WrappedInput
+id="object-drop-shadow-h"
+label="Horizontal Shadow"
+type="number"
+suffix="px"
+bind:value={styling.objectDropShadowH}
+/>
+<WrappedInput
+id="object-drop-shadow-v"
+label="Vertical Shadow"
+type="number"
+suffix="px"
+bind:value={styling.objectDropShadowV}
+/>
+<WrappedInput
+id="object-drop-shadow-blur"
+label="Shadow Blur"
+type="number"
+suffix="px"
+bind:value={styling.objectDropShadowBlur}
+/>
+<WrappedInput
+id="object-drop-shadow-spread"
+label="Shadow Spread"
+type="number"
+suffix="px"
+bind:value={styling.objectDropShadowSpread}
+/>
+{:else}
+<WrappedInput
+id="object-drop-shadow-h"
+label="The Higher the number the bigger the shadow will be."
+type="number"
+suffix="px"
+bind:value={() => styling.objectDropShadowH,
+(v) => {
+styling.objectDropShadowH = v;
+styling.objectDropShadowV = v;
+styling.objectDropShadowSpread = v;
+styling.objectDropShadowBlur = v;
+}}
+/>
+{/if}
+<div class="flex flex-row items-center gap-x-1">
+<Checkbox id="object-drop-shadow-is-on" bind:checked={styling.objectDropShadowIsOn}/>
+<Label for="object-drop-shadow-is-on">Drop Shadow Is turned on</Label>
+</div>
+<div class="flex flex-row items-center gap-x-1">
+<Checkbox id="object-border-is-on" bind:checked={styling.objectBorderIsOn}/>
+<Label for="object-border-is-on">Border is turned on</Label>
+</div>
+</div>
+<div class="flex flex-col gap-y-2">
+<h6>Rounded corners on the choices</h6>
+{#if styling.objectDesignIsAdvanced}
+<WrappedInput
+id="object-border-radius-top-left"
+label="Top Left"
+placeholder="0"
+type="number"
+suffix={borderRadiusSuffix}
+bind:value={styling.objectBorderRadiusTopLeft}
+/>
+<WrappedInput
+id="object-border-radius-top-right"
+label="Top Right"
+placeholder="0"
+type="number"
+suffix={borderRadiusSuffix}
+bind:value={styling.objectBorderRadiusTopRight}
+/>
+<WrappedInput
+id="object-border-radius-bottom-right"
+label="Bottom Right"
+placeholder="0"
+type="number"
+suffix={borderRadiusSuffix}
+bind:value={styling.objectBorderRadiusBottomRight}
+/>
+<WrappedInput
+id="object-border-radius-bottom-left"
+label="Bottom Left"
+placeholder="0"
+type="number"
+suffix={borderRadiusSuffix}
+bind:value={styling.objectBorderRadiusBottomLeft}
+/>
+<div class="flex flex-row items-center gap-x-1">
+<Switch
+id="object-border-radius-is-pixels"
+bind:checked={styling.objectBorderRadiusIsPixels}
+/>
+<Label for="object-border-radius-is-pixels">Border-Radius Percent or Pixels?</Label>
+</div>
+{:else}
+<WrappedInput
+id="object-border-radius-top-left"
+label="Rounded corners in the top of each choice"
+placeholder="0"
+type="number"
+suffix={borderRadiusSuffix}
+bind:value={() => styling.objectBorderRadiusTopLeft,
+(v) => {
+styling.objectBorderRadiusTopLeft = v;
+styling.objectBorderRadiusTopRight = v;
+}}
+/>
+<WrappedInput
+id="object-border-radius-bottom-left"
+label="Rounded corners in the bottom of each choice"
+placeholder="0"
+type="number"
+suffix={borderRadiusSuffix}
+bind:value={() => styling.objectBorderRadiusBottomLeft,
+(v) => {
+styling.objectBorderRadiusBottomLeft = v;
+styling.objectBorderRadiusBottomRight = v;
+}}
+/>
+{/if}
+</div>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<div class="flex flex-col gap-y-2">
+<h6>Color of the Drop Shadow</h6>
+<ColorPicker
+bind:hex={() => styling.objectDropShadowColor ?? 'grey',
+(v) => (styling.objectDropShadowColor = v)}
+components={ChromeVariant}
+sliderDirection="horizontal"
+isDialog={false}
+isAlpha
+/>
+</div>
+<div class="flex flex-col gap-y-2">
+<div class="flex flex-row items-center gap-x-1">
+<Switch id="object-design-is-advanced" bind:checked={styling.objectDesignIsAdvanced} />
+<Label for="object-design-is-advanced">Advanced Design?</Label>
+</div>
+<div class="flex flex-row items-center gap-x-1">
+<Checkbox id="object-height" bind:checked={styling.objectHeight} />
+<Label for="object-height"
+>If this is checked then every choice in a row will have identical height.</Label
+>
+</div>
+<div class="flex flex-row items-center gap-x-1">
+<Checkbox id="object-gradient-is-on" bind:checked={styling.objectGradientIsOn} />
+<Label for="object-gradient-is-on">Object Gradient is turned on</Label>
+</div>
+{#if styling.objectGradientIsOn}
+<WrappedInput
+id="object-gradient"
+label="Gradient when not selected"
+placeholder="to left, blue, red"
+bind:value={styling.objectGradient}
+/>
+<WrappedInput
+id="object-gradient-on-select"
+label="Gradient when selected"
+placeholder="to left, blue, red"
+bind:value={styling.objectGradientOnSelect}
+/>
+<WrappedInput
+id="object-gradient-on-req"
+label="Gradient when missing requirement"
+placeholder="to left, blue, red"
+bind:value={styling.objectGradientOnReq}
+/>
+<span>
+You might need to leave for the main menu if things stop updating, using the background
+colors for filters does not work well, so you'll need to place gradients in ALL of them,
+but using something like (green, green) works.
+<a target="_blank" href="https://www.w3schools.com/css/css3_gradients.asp">
+https://www.w3schools.com/css/css3_gradients.asp
+</a>
+</span>
+{/if}
+</div>
+<div class="flex flex-col gap-y-2">
+<h6>Color of the choice border</h6>
+<ColorPicker
+bind:hex={() => styling.objectBorderColor ?? 'red',
+(v) => (styling.objectBorderColor = v)}
+components={ChromeVariant}
+sliderDirection="horizontal"
+isDialog={false}
+isAlpha
+/>
+</div>
+</div>
+</div>
 </WrappedStyle>
