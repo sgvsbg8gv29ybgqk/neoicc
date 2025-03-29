@@ -183,7 +183,6 @@
 		<div class="grid gap-6 py-4">
 			<div class="flex flex-col gap-y-2">
 				<WrappedSelect
-					id="row-settings-sort-choices"
 					label="Sort The Choices In The Row"
 					items={sort}
 					placeholder="Sort By..."
@@ -193,7 +192,6 @@
 			</div>
 			<div class="flex flex-col gap-y-2">
 				<WrappedSelect
-					id="row-settings-copy-choices"
 					label="Copy Choices Into Another Row"
 					items={app.rows.map((r) => ({ name: r.title, value: r.id }))}
 					placeholder="Copy this row's objects into..."
@@ -206,7 +204,6 @@
 			</div>
 			<div>
 				<WrappedSelect
-					id="row-settings-row-group-membership"
 					label="All Choices in Row is Members of This Group"
 					items={app.groups.map((g) => ({ name: g.name, value: g.id }))}
 					placeholder="All Rows and Objects"
@@ -216,7 +213,6 @@
 			{#if app.styling.objectImgObjectFillIsOn || (row.isPrivateStyling && row.styling.objectImgObjectFillIsOn)}
 				<div>
 					<WrappedInput
-						id="row-settings-object-fill-height"
 						label="Height of the image container"
 						type="number"
 						suffix="px"

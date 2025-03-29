@@ -284,14 +284,12 @@
 		<div class="grid gap-4 py-4">
 			<div class="flex flex-col gap-y-2">
 				<WrappedInput
-					id="load-project"
 					label="Load Project"
 					type="file"
 					onchange={(e) => uploadFile((e.target as unknown as { files: FileList })?.files)}
 				/>
 				<WrappedInput
 					class="w-full"
-					id="image-prefix"
 					label="Optional Image Prefix (Enter the full URL of the website, including the slash at the end)"
 					bind:value={appMetaState.imagePrefix}
 					placeholder="https://example.com/"

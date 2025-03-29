@@ -39,7 +39,6 @@
 				isAlpha
 			/>
 			<WrappedImageInput
-				id="background-image-file-input"
 				label="Background Image"
 				bind:value={styling.backgroundImage}
 			/>
@@ -57,7 +56,6 @@
 				isAlpha
 			/>
 			<WrappedImageInput
-				id="background-row-image-file-input"
 				label="Row Background Image"
 				bind:value={styling.rowBackgroundImage}
 			/>
@@ -75,7 +73,6 @@
 				isAlpha
 			/>
 			<WrappedImageInput
-				id="background-object-image-file-input"
 				label="Choice Background Image"
 				bind:value={styling.objectBackgroundImage}
 			/>

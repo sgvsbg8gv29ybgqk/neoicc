@@ -112,7 +112,6 @@
 				<Button size="lg" onclick={() => (modal = 'appImageUpload')}>Change Image</Button>
 			</div>
 			<WrappedInput
-				id="object-addon-title-input-{addon.id}"
 				label="Addon Title"
 				bind:value={addon.title}
 			/>
@@ -126,38 +125,32 @@
 						{#if required.type === 'id'}
 							{#if required.showRequired}
 								<WrappedInput
-									id="addon-required-before-text-{addon.id}-{index}"
 									label="Text Before"
 									bind:value={required.beforeText}
 								/>
 								<WrappedInput
-									id="addon-required-after-text-{addon.id}-{index}"
 									label="Text After"
 									bind:value={required.afterText}
 								/>
 							{/if}
 							<WrappedInput
-								id="addon-required-id-{addon.id}-{index}"
 								label={required.required ? 'Selected ID' : 'Not Selected ID'}
 								bind:value={required.reqId}
 							/>
 						{:else if required.type === 'points'}
 							<WrappedSelect
 								label="Operator"
-								id="addon-required-operator-{addon.id}-{index}"
 								bind:value={required.operator}
 								items={pointReqOperators}
 								placeholder="Operator"
 							/>
 							<WrappedSelect
 								label="Point Type"
-								id="addon-required-pointtype-{addon.id}-{index}"
 								bind:value={required.reqId}
 								items={app.pointTypes.map((typ) => ({ value: typ.id, name: typ.name }))}
 								placeholder="Point Type"
 							/>
 							<WrappedInput
-								id="addon-required-reqPoints-{addon.id}-{index}"
 								label={required.required ? 'More Than' : 'Less Than'}
 								bind:value={required.reqPoints}
 								type="number"
@@ -170,28 +163,24 @@
 							</span>
 							<WrappedSelect
 								label="Operator"
-								id="object-addon-operator-{row.id}-{required.id}"
 								bind:value={required.operator}
 								items={pointReqOperators}
 								placeholder="Operator"
 							/>
 							<WrappedSelect
 								label="Point Type A"
-								id="object-addon-pointtype-{row.id}-{required.id}"
 								bind:value={required.reqId}
 								items={app.pointTypes.map((typ) => ({ value: typ.id, name: typ.name }))}
 								placeholder="Point Type"
 							/>
 							<WrappedSelect
 								label="Point Type B"
-								id="object-addon-pointtype2-{row.id}-{required.id}"
 								bind:value={required.reqId2}
 								items={app.pointTypes.map((typ) => ({ value: typ.id, name: typ.name }))}
 								placeholder="Point Type"
 							/>
 						{:else if required.type === 'or'}
 							<WrappedInput
-								id="object-addon-or-ornum-{addon.id}-{required.id}-{index}"
 								label="X"
 								bind:value={() => required.orNum ?? 1,
 								(v) => (required.orNum = Math.max(0, Math.min(v, required.orRequired.length)))}
@@ -201,7 +190,6 @@
 							/>
 							{#each required.orRequired as orRequired, orIndex}
 								<WrappedInput
-									id="addon-required-or-{addon.id}-{index}-{orIndex}"
 									label={required.required ? 'Selected Choice ID' : 'Not Selected Choice ID'}
 									bind:value={orRequired.req}
 									placeholder={required.required ? 'Selected ID' : 'Not Selected ID'}

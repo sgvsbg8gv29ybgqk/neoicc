@@ -193,7 +193,6 @@
 				</p>
 				<div class="flex flex-row items-center gap-x-2">
 					<WrappedInput
-						id="max-size-compress-image"
 						label="Max Size of Images after compress (KB)"
 						bind:value={maxSize}
 						suffix="KB"

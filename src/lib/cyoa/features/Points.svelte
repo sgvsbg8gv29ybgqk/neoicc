@@ -72,7 +72,6 @@
 						</div>
 						{#if point.iconIsOn}
 							<WrappedImageInput
-								id="point-image-{point.id}-{index}"
 								label="Upload Point Icon"
 								bind:value={() => point.image ?? '', (v) => (point.image = v)}
 							/>
@@ -96,13 +95,11 @@
 								</Label>
 							</div>
 							<WrappedInput
-								id="point-icon-width-{point.id}-{index}"
 								label="The Image Width"
 								bind:value={point.iconWidth}
 								type="number"
 							/>
 							<WrappedInput
-								id="point-icon-height-{point.id}-{index}"
 								label="The Image Height"
 								bind:value={point.iconHeight}
 								type="number"
@@ -179,34 +176,28 @@
 					</div>
 					<div class="grid grid-cols-3 gap-2">
 						<WrappedInput
-							id="point-id-{point.id}-{index}"
 							label="The Pointype Id"
 							bind:value={point.id}
 						/>
 						<WrappedInput
-							id="point-name-{point.id}-{index}"
 							label="The Pointtype Name"
 							bind:value={point.name}
 						/>
 						<WrappedInput
-							id="point-starting-sum-{point.id}-{index}"
 							label="Starting Sum"
 							bind:value={point.startingSum}
 							type="number"
 						/>
 						<WrappedInput
-							id="point-activated-id-{point.id}-{index}"
 							label="Id Needed To Show"
 							bind:value={point.activatedId}
 							placeholder="No Id Needed"
 						/>
 						<WrappedInput
-							id="point-before-text-{point.id}-{index}"
 							label="Text Before Number"
 							bind:value={point.beforeText}
 						/>
 						<WrappedInput
-							id="point-after-text-{point.id}-{index}"
 							label="Text After Number"
 							bind:value={point.afterText}
 						/>

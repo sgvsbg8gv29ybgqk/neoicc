@@ -4,7 +4,6 @@
 	import * as Select from '../ui/select';
 
 	let {
-		id,
 		label,
 		items,
 		placeholder,
@@ -13,7 +12,6 @@
 		noLabel,
 		value = $bindable()
 	}: {
-		id?: string;
 		label?: string;
 		items: { name: string; value: string }[];
 		placeholder: string;
@@ -23,6 +21,8 @@
 		noLabel?: boolean;
 	} = $props();
 
+	const id = window.crypto.randomUUID();
+	
 	function toS(v: string | number | undefined | null): string {
 		if (v === undefined || v === null) return '';
 		return v.toString();

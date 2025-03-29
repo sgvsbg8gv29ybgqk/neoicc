@@ -18,12 +18,10 @@
 				<div class="flex flex-col gap-y-2">
 					<div class="grid grid-cols-2 items-center gap-2">
 						<WrappedInput
-							id="variable-id-{variable.id}-{index}"
 							label="ID"
 							bind:value={variable.id}
 						/>
 						<WrappedInput
-							id="variable-isTrue-{variable.id}-{index}"
 							label="Status"
 							bind:value={variable.isTrue}
 							disabled={true}

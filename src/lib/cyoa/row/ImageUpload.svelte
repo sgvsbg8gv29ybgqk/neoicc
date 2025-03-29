@@ -287,8 +287,8 @@
 						</div>
 					</div>
 					<div class="grid grid-cols-2 gap-x-2">
-						<WrappedInput id="scale-input" label="Scale" type="number" bind:value={scale} />
-						<WrappedInput id="quality-input" label="Quality" type="number" bind:value={quality} />
+						<WrappedInput label="Scale" type="number" bind:value={scale} />
+						<WrappedInput label="Quality" type="number" bind:value={quality} />
 					</div>
 					<span>
 						Before: {Math.round((resultImage?.originalSize ?? 0) / 1000)}kB After: {Math.round(

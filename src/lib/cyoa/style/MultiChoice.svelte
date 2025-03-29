@@ -46,14 +46,12 @@
 <WrappedStyle title="Multi Choice Design" {open} {onclose} {embedded} class="sm:max-w-[1000px]">
 	<div class="grid grid-cols-2 gap-4 py-4">
 		<WrappedInput
-			id="tier-number-text-size"
 			label="Font size of the tier number"
 			bind:value={styling.multiChoiceTextSize}
 			suffix="%"
 			type="number"
 		/>
 		<WrappedSelect
-			id="tier-number-text-font"
 			label="The font of the tier number"
 			bind:value={styling.multiChoiceTextFont}
 			items={textFonts}

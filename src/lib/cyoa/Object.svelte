@@ -538,7 +538,6 @@
 				{#if row.isWeightedRandom && row.isButtonRow && row.buttonRandom}
 					<WrappedInput
 						label="Random Weight"
-						id="random-weight-input-{object.id}"
 						bind:value={object.randomWeight}
 						type="number"
 						placeholder="100"
@@ -587,20 +586,17 @@
 				<div class="grid grid-cols-2 gap-x-2 gap-y-2">
 					<WrappedInput
 						label="Object Title"
-						id="object-title-input-{object.id}"
 						bind:value={object.title} 
 					/>
-					<WrappedInput label="Object ID" id="object-id-input-{object.id}" bind:value={object.id} />
+					<WrappedInput label="Object ID" bind:value={object.id} />
 					<WrappedSelect
 						label="Template"
-						id="object-template-select-{object.id}"
 						bind:value={object.template}
 						items={templates}
 						placeholder="Template"
 					/>
 					<WrappedSelect
 						label="Object Width"
-						id="object-width-select-{object.id}"
 						bind:value={object.objectWidth}
 						items={appMetaState.objectWidths}
 						placeholder="Width"
@@ -611,7 +607,7 @@
 			<div class="flex flex-row justify-around p-1">
 				{@render TooltipIconButton(BadgePlus, 'Create Score', () =>
 					object.scores.push({
-						id: '',
+						id: generateID(),
 						value: 0,
 						type: '',
 						requireds: [],
@@ -622,7 +618,7 @@
 				)}
 				{@render TooltipIconButton(MessageSquarePlus, 'Create Addon', () =>
 					object.addons.push({
-						id: '',
+						id: generateID(),
 						title: app.defaultAddonTitle,
 						text: app.defaultAddonText,
 						template: '',
@@ -635,7 +631,7 @@
 					'Create Requirement',
 					() => (modal = 'appRequirement')
 				)}
-				{@render TooltipIconButton(Group, 'Add To Group', () => object.groups.push({ id: '' }))}
+				{@render TooltipIconButton(Group, 'Add To Group', () => object.groups.push({ id: generateID() }))}
 			</div>
 			<Accordion.Root type="multiple">
 				{#if object.scores.length > 0}
@@ -742,7 +738,6 @@
 									<div class="flex flex-col gap-y-1">
 										<WrappedSelect
 											label="Group ID"
-											id="object-group-select-{object.id}-{index}"
 											bind:value={group.id}
 											items={app.groups.map((e) => ({ name: e.name, value: e.id }))}
 											placeholder="Group ID"
@@ -810,7 +805,6 @@
 								</p>
 								<WrappedSelect
 									label="Point Type that will be used"
-									id="object-multiple-score-id-{object.id}"
 									bind:value={object.multipleScoreId}
 									items={app.pointTypes.map((e) => ({ name: e.name, value: e.id }))}
 									placeholder="Point Type that will be used"
@@ -819,13 +813,11 @@
 							{#if object.isSelectableMultiple}
 								<WrappedInput
 									label="Number where the minus will stop working"
-									id="object-num-multiple-times-minus-{object.id}"
 									bind:value={object.numMultipleTimesMinus}
 									type="number"
 								/>
 								<WrappedInput
 									label="Number where the pluss will stop working"
-									id="object-num-multiple-times-pluss-{object.id}"
 									bind:value={object.numMultipleTimesPluss}
 									type="number"
 								/>
@@ -881,7 +873,6 @@
 								</p>
 								<WrappedInput
 									label="ID of the choice that will be activated"
-									id="object-activate-this-choice-{object.id}"
 									bind:value={object.activateThisChoice}
 								/>
 							{/if}
@@ -902,7 +893,6 @@
 								</p>
 								<WrappedInput
 									label="ID of the choice that will be deactivated"
-									id="object-deactivate-this-choice-{object.id}"
 									bind:value={object.deactivateThisChoice}
 								/>
 							{/if}
@@ -924,7 +914,6 @@
 								</p>
 								<WrappedSelect
 									label="Point-Type to multiply"
-									id="object-point-type-to-multiply-{object.id}"
 									bind:value={object.pointTypeToMultiply}
 									items={app.pointTypes.map((e) => ({ name: e.name, value: e.id }))}
 									placeholder="Point-Type to multiply"
@@ -934,7 +923,6 @@
 								{#if object.multiplyPointtypeIsId}
 									<WrappedSelect
 										label="Multiplied with this Point-Type"
-										id="object-multiply-with-this-{object.id}"
 										bind:value={object.multiplyWithThis}
 										items={app.pointTypes.map((e) => ({ name: e.name, value: e.id }))}
 										placeholder="Multiplied with this Point-Type"
@@ -942,7 +930,6 @@
 								{:else}
 									<WrappedInput
 										label="Multiplied by X"
-										id="object-multiply-with-this-{object.id}"
 										bind:value={object.multiplyWithThis}
 										type="number"
 									/>
@@ -972,14 +959,12 @@
 							{#if object.dividePointtypeIsOn}
 								<WrappedSelect
 									label="Point-Type to divide"
-									id="object-point-type-to-divide-{object.id}"
 									bind:value={object.pointTypeToDivide}
 									items={app.pointTypes.map((e) => ({ name: e.name, value: e.id }))}
 									placeholder="Point-Type to divide"
 								/>
 								<WrappedInput
 									label="Divided by X"
-									id="object-divide-with-this-{object.id}"
 									bind:value={object.divideWithThis}
 									type="number"
 								/>
@@ -997,19 +982,16 @@
 							{#if object.textfieldIsOn}
 								<WrappedSelect
 									label="ID of word that will change"
-									id="object-id-of-the-textfield-word-{object.id}"
 									bind:value={object.idOfTheTextfieldWord}
 									items={app.words.map((e) => ({ name: e.id, value: e.id }))}
 									placeholder="Word ID"
 								/>
 								<WrappedInput
 									label="Will be changed to this on select"
-									id="object-word-change-select-{object.id}"
 									bind:value={object.wordChangeSelect}
 								/>
 								<WrappedInput
 									label="Will be changed to this on deselect"
-									id="object-word-change-deselect-{object.id}"
 									bind:value={object.wordChangeDeselect}
 								/>
 							{/if}
@@ -1036,14 +1018,12 @@
 							{#if object.addToAllowChoice}
 								<WrappedSelect
 									label="ID of the row whose Allowed Choices will be changed."
-									id="object-id-of-allow-choice-{object.id}"
 									bind:value={object.idOfAllowChoice}
 									items={app.rows.map((e) => ({ name: `${e.id} - ${e.title}`, value: e.id }))}
 									placeholder="Row ID"
 								/>
 								<WrappedInput
 									label="This number will be added to the Allowed Choices on select."
-									id="object-id-needed-to-activate-{object.id}"
 									bind:value={object.numbAddToAllowChoice}
 									type="number"
 								/>

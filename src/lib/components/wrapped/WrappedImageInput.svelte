@@ -6,17 +6,17 @@
 	import { Button } from '../ui/button';
 
 	let {
-		id,
 		label,
 		ref = $bindable(null),
 		value = $bindable(),
 		...rest
 	}: {
-		id: string;
 		label: string;
 		value: string;
 	} & WithElementRef<HTMLInputAttributes> = $props();
 
+	const id = window.crypto.randomUUID(); 
+	
 	function onFileUpload(image: FileList | null) {
 		if (!image) {
 			value = '';

@@ -60,7 +60,6 @@
 			<div class="flex flex-col gap-y-2">
 				<WrappedSelect
 					label="Copy Choice Into Another Row"
-					id="copy-choices-select"
 					bind:value={newRow}
 					items={app.rows.map((row) => ({ value: row.id, name: row.title }))}
 					placeholder="Select a row"

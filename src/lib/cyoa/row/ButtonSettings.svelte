@@ -21,7 +21,6 @@
 			<div class="flex flex-col gap-y-4">
 				<!-- The number of random choices that will be selected -->
 				<WrappedInput
-					id="button-settings-button-text"
 					label="Button Text"
 					bind:value={row.buttonText}
 				/>
@@ -43,7 +42,6 @@
 				{#if row.buttonTypeRadio === 'choiceselect'}
 					{#if !row.buttonRandom}
 						<WrappedSelect
-							id="button-settings-button-id"
 							label="Variable"
 							items={app.variables.map((e) => ({ value: e.id, name: e.id }))}
 							bind:value={row.buttonId}
@@ -52,7 +50,6 @@
 					{/if}
 					{#if row.buttonRandom && !row.isWeightedRandom}
 						<WrappedInput
-							id="button-settings-button-random-number"
 							label="Number of random choices that will be selected"
 							type="number"
 							bind:value={row.buttonRandomNumber}
@@ -109,20 +106,17 @@
 					</div>
 					{#if row.btnPointAddon}
 						<WrappedSelect
-							id="button-settings-point-type-for-random"
 							label="Point-Type to use"
 							items={app.pointTypes.map((e) => ({ value: e.id, name: e.name }))}
 							bind:value={row.pointTypeRandom}
 							placeholder="Point Type"
 						/>
 						<WrappedInput
-							id="button-settings-random-min"
 							label="Random Min"
 							type="number"
 							bind:value={row.randomMin}
 						/>
 						<WrappedInput
-							id="button-settings-random-max"
 							label="Random Max"
 							type="number"
 							bind:value={row.randomMax}

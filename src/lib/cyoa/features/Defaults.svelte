@@ -26,13 +26,11 @@
 			<div class="flex flex-col gap-y-2">
 				<h6>Row</h6>
 				<WrappedInput
-					id="default-row-title"
 					label="Row Title"
 					bind:value={app.defaultRowTitle}
 					placeholder="Empty"
 				/>
 				<WrappedInput
-					id="default-row-text"
 					label="Row Text"
 					bind:value={app.defaultRowText}
 					placeholder="Empty"
@@ -41,13 +39,11 @@
 			<div class="flex flex-col gap-y-2">
 				<h6>Addon</h6>
 				<WrappedInput
-					id="default-addon-title"
 					label="Addon Title"
 					bind:value={app.defaultAddonTitle}
 					placeholder="Empty"
 				/>
 				<WrappedInput
-					id="default-addon-text"
 					label="Addon Text"
 					bind:value={app.defaultAddonText}
 					placeholder="Empty"
@@ -56,13 +52,11 @@
 			<div class="flex flex-col gap-y-2">
 				<h6>Points</h6>
 				<WrappedInput
-					id="default-before-point"
 					label="Before Points Text"
 					bind:value={app.defaultBeforePoint}
 					placeholder="Empty"
 				/>
 				<WrappedInput
-					id="default-after-point"
 					label="After Points Text"
 					bind:value={app.defaultAfterPoint}
 					placeholder="Empty"
@@ -71,13 +65,11 @@
 			<div class="flex flex-col gap-y-2">
 				<h6>Choice</h6>
 				<WrappedInput
-					id="default-choice-title"
 					label="Choice Title"
 					bind:value={app.defaultChoiceTitle}
 					placeholder="Empty"
 				/>
 				<WrappedInput
-					id="default-choice-text"
 					label="Choice Text"
 					bind:value={app.defaultChoiceText}
 					placeholder="Empty"
@@ -86,13 +78,11 @@
 			<div class="flex flex-col gap-y-2">
 				<h6>Requirement</h6>
 				<WrappedInput
-					id="default-before-req"
 					label="Before Required Text"
 					bind:value={app.defaultBeforeReq}
 					placeholder="Empty"
 				/>
 				<WrappedInput
-					id="default-after-req"
 					label="After Required Text"
 					bind:value={app.defaultAfterReq}
 					placeholder="Empty"

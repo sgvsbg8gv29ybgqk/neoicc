@@ -61,20 +61,17 @@
 		<Separator />
 		<WrappedSelect
 			label="Text Font"
-			id="font-select-{id}"
 			bind:value={styling[fontKey as keyof typeof styling] as string}
 			items={textFonts}
 			placeholder="Select Font"
 		/>
 		<WrappedInput
 			label="Text Size"
-			id="font-size-{id}"
 			bind:value={styling[sizeKey as keyof typeof styling] as string}
 			type="number"
 		/>
 		<WrappedSelect
 			label="Text Alignment"
-			id="align-select-{id}"
 			bind:value={styling[alignKey as keyof typeof styling] as string}
 			items={textAlignment}
 			placeholder="Select Alignment"

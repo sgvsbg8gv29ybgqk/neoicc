@@ -158,7 +158,6 @@ function updateImageInput(index: number, value: string) {
 									{#each styling.selFilterBgImages as image, index}
 										<div class="flex flex-row items-center gap-x-2">
 											<WrappedImageInput
-												id="selected-bg-image-input-{index}"
 												label="Background Image {index + 1}"
 												bind:value={styling.selFilterBgImages[index]}
 											/>

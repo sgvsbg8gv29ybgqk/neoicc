@@ -65,7 +65,6 @@
 		<div class="mx-auto grid grid-cols-3 gap-x-8">
 			<div class="flex flex-col gap-y-2">
 				<WrappedSelect
-					id="object-border-style"
 					label="Style of the border"
 					items={borderStyles.map((e) => ({ value: e.text, name: e.text }))}
 					bind:value={styling.objectImgBorderStyle}
@@ -73,28 +72,24 @@
 					triggerClass="max-w-48"
 				/>
 				<WrappedInput
-					id="object-border-width"
 					label="Thickness of the border"
 					type="number"
 					suffix="px"
 					bind:value={styling.objectImgBorderWidth}
 				/>
 				<WrappedInput
-					id="object-image-width"
 					label="Width of the image inside of a choice"
 					type="number"
 					suffix="%"
 					bind:value={styling.objectImageWidth}
 				/>
 				<WrappedInput
-					id="object-image-margin-top"
 					label="Distance Between Top of choice and Image"
 					type="number"
 					suffix="%"
 					bind:value={styling.objectImageMarginTop}
 				/>
 				<WrappedInput
-					id="object-image-margin-bottom"
 					label="Distance Between Title and Image"
 					type="number"
 					suffix="%"
@@ -103,7 +98,6 @@
 			</div>
 			<div class="flex flex-col gap-y-2">
 				<WrappedInput
-					id="object-border-radius-top-left"
 					label="Border-radius Top Left"
 					placeholder="0"
 					type="number"
@@ -111,7 +105,6 @@
 					bind:value={styling.objectImgBorderRadiusTopLeft}
 				/>
 				<WrappedInput
-					id="object-border-radius-top-right"
 					label="Border-radius Top Right"
 					placeholder="0"
 					type="number"
@@ -119,7 +112,6 @@
 					bind:value={styling.objectImgBorderRadiusTopRight}
 				/>
 				<WrappedInput
-					id="object-border-radius-bottom-right"
 					label="Border-radius Bottom Right"
 					placeholder="0"
 					type="number"
@@ -127,7 +119,6 @@
 					bind:value={styling.objectImgBorderRadiusBottomRight}
 				/>
 				<WrappedInput
-					id="object-border-radius-bottom-left"
 					label="Border-radius Bottom Left"
 					placeholder="0"
 					type="number"
@@ -170,7 +161,6 @@
 				switch is on.
 			</span>
 			<WrappedSelect
-				id="object-fit-select"
 				label="Object Fill"
 				items={objectFitStyles.map((e) => ({ value: e.value, name: e.text }))}
 				bind:value={styling.objectImgObjectFillStyle}

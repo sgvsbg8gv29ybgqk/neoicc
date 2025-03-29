@@ -44,21 +44,18 @@
 			<div class="flex flex-col gap-y-2 px-[10px]">
 				<h6>Style of text inside the point-bar</h6>
 				<WrappedInput
-					id="bar-text-padding"
 					label="Bar Text Padding"
 					bind:value={app.styling.barTextPadding}
 					suffix="px"
 					type="number"
 				/>
 				<WrappedInput
-					id="bar-text-margin"
 					label="Bar Text Margin"
 					bind:value={app.styling.barTextMargin}
 					suffix="px"
 					type="number"
 				/>
 				<WrappedSelect
-					id="bar-text-font"
 					label="Text Font"
 					bind:value={app.styling.barTextFont}
 					items={textFonts}
@@ -116,21 +113,18 @@
 			<div class="flex flex-col gap-y-2 px-[10px]">
 				<h6>Style of the bar itself</h6>
 				<WrappedInput
-					id="bar-padding"
 					label="Bar Padding"
 					bind:value={app.styling.barPadding}
 					suffix="px"
 					type="number"
 				/>
 				<WrappedInput
-					id="bar-margin"
 					label="Bar Margin"
 					bind:value={app.styling.barMargin}
 					suffix="px"
 					type="number"
 				/>
 				<WrappedInput
-					id="bar-text-size"
 					label="Bar Text Size"
 					bind:value={app.styling.barTextSize}
 					suffix="px"

@@ -21,9 +21,8 @@
 			{#each app.words as word, index}
 				<div class="flex flex-col gap-y-2">
 					<div class="grid grid-cols-2 items-center gap-2">
-						<WrappedInput id="word-id-{word.id}-{index}" label="ID" bind:value={word.id} />
+						<WrappedInput label="ID" bind:value={word.id} />
 						<WrappedInput
-							id="word-replaceText-{word.id}-{index}"
 							label="Text to replace id with"
 							bind:value={word.replaceText}
 						/>

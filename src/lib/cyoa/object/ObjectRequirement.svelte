@@ -19,7 +19,6 @@
 <div>
 	{#if required.type === 'id'}
 		<WrappedInput
-				id="object-required-id-{idPostfix}"
 				label={required.required ? 'Selected Choice ID' : 'Not Selected Choice ID'}
 				bind:value={required.reqId}
 				placeholder={required.required ? 'Selected ID' : 'Not Selected ID'}
@@ -28,20 +27,17 @@
 		<div>
 			<WrappedSelect
 					label="Point Type"
-					id="object-required-pointtype-{idPostfix}"
 					bind:value={required.reqId}
 					items={app.pointTypes.map((typ) => ({ value: typ.id, name: typ.name }))}
 					placeholder="Point Type"
 			/>
 			<WrappedSelect
 					label="Operator"
-					id="object-required-operator-{idPostfix}"
 					bind:value={required.operator}
 					items={pointReqOperators}
 					placeholder="Operator"
 			/>
 			<WrappedInput
-					id="object-required-points-{idPostfix}"
 					label="Value"
 					bind:value={required.reqPoints}
 					type="number"
@@ -56,21 +52,18 @@
 						</span>
 			<WrappedSelect
 					label="Operator"
-					id="object-required-operator-{idPostfix}"
 					bind:value={required.operator}
 					items={pointReqOperators}
 					placeholder="Operator"
 			/>
 			<WrappedSelect
 					label="Point Type A"
-					id="object-required-pointtype-{idPostfix}"
 					bind:value={required.reqId}
 					items={app.pointTypes.map((typ) => ({ value: typ.id, name: typ.name }))}
 					placeholder="Point Type"
 			/>
 			<WrappedSelect
 					label="Point Type B"
-					id="object-required-pointtype2-{idPostfix}"
 					bind:value={required.reqId2}
 					items={app.pointTypes.map((typ) => ({ value: typ.id, name: typ.name }))}
 					placeholder="Point Type"
@@ -78,7 +71,6 @@
 		</div>
 	{:else if required.type === 'or'}
 		<WrappedInput
-				id="object-required-or-ornum-{idPostfix}"
 				label="N"
 				bind:value={() => required.orNum ?? 1,
 						(v) => (required.orNum = Math.max(0, Math.min(v, required.orRequired.length)))}
@@ -88,7 +80,6 @@
 		/>
 		{#each required.orRequired as orRequired, orIndex}
 			<WrappedInput
-					id="object-required-or-{idPostfix}-{orIndex}"
 					label={required.required ? 'Selected Choice ID' : 'Not Selected Choice ID'}
 					bind:value={orRequired.req}
 					placeholder={required.required ? 'Selected ID' : 'Not Selected ID'}

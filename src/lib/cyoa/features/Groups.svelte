@@ -20,13 +20,12 @@
 			{#each app.groups as group, index}
 				<div class="flex flex-col gap-y-2">
 					<div class="grid grid-cols-2 gap-2">
-						<WrappedInput id="group-id-{group.id}-{index}" label="ID" bind:value={group.id} />
-						<WrappedInput id="group-name-{group.id}-{index}" label="Name" bind:value={group.name} />
+						<WrappedInput label="ID" bind:value={group.id} />
+						<WrappedInput label="Name" bind:value={group.name} />
 					</div>
 					{#each group.elements as element, index}
 						<div class="grid grid-cols-2 gap-2">
 							<WrappedInput
-								id="group-element-id-{group.id}-{element.id}-{index}"
 								label="ID"
 								bind:value={element.id}
 							/>
@@ -36,7 +35,7 @@
 						</div>
 					{/each}
 					<div class="grid grid-cols-2 gap-2">
-						<Button onclick={() => group.elements.push({ id: '' })}>Add New row/choice</Button>
+						<Button onclick={() => group.elements.push({ id: generateID() })}>Add New row/choice</Button>
 						<Button onclick={() => app.groups.splice(index, 1)}>Delete</Button>
 					</div>
 				</div>

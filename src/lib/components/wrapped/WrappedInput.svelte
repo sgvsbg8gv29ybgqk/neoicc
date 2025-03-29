@@ -5,7 +5,6 @@
 	import type { HTMLInputAttributes } from 'svelte/elements';
 
 	let {
-		id,
 		label,
 		ref = $bindable(null),
 		value = $bindable(),
@@ -13,11 +12,13 @@
 		suffix,
 		...rest
 	}: {
-		id: string;
 		label: string;
 		suffix?: string;
 		defaultValue?: unknown;
 	} & WithElementRef<HTMLInputAttributes> = $props();
+	
+	const id = window.crypto.randomUUID();
+	
 </script>
 
 <div class="flex w-full flex-col items-start gap-y-1">

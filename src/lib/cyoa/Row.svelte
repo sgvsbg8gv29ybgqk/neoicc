@@ -453,7 +453,6 @@
 					{#if row.isResultRow}
 						<WrappedSelect
 							label="Select Choices From Group ID"
-							id="group-select-{row.id}"
 							items={app.groups.map((group) => ({ value: group.id, name: group.name }))}
 							bind:value={() => row.resultGroupId ?? '',
 							(v) => (row.resultGroupId = v === '' ? null : v)}
@@ -466,20 +465,17 @@
 				<div class="flex flex-col gap-y-2">
 					<WrappedSelect
 						label="Template"
-						id="template-select-{row.id}"
 						items={templates}
 						bind:value={row.template}
 						triggerClass="w-[180px]"
 						placeholder="Templates"
 					/>
 					<WrappedInput
-						id="row-width-input-{row.id}"
 						label="Row Title"
 						placeholder="Placeholder"
 						bind:value={row.title} 
 					/>
 					<WrappedInput
-						id="allowed-choices-input-{row.id}"
 						label="Allowed Choices"
 						type="number"
 						placeholder="Placeholder"
@@ -489,7 +485,6 @@
 				<div class="flex flex-col gap-y-2">
 					<WrappedSelect
 						label="Objects Per Row"
-						id="object-width-select-{row.id}"
 						items={appMetaState.objectWidths}
 						bind:value={row.objectWidth}
 						triggerClass="w-[180px]"
@@ -498,16 +493,14 @@
 					/>
 					<WrappedSelect
 						label="Choices Justify"
-						id="justify-select-{row.id}"
 						items={justify}
 						bind:value={row.rowJustify}
 						triggerClass="w-[180px]"
 						placeholder="Justifies"
 						hasNone={true}
 					/>
-					<WrappedInput id="row-id-input-{row.id}" label="Row ID" bind:value={row.id} />
+					<WrappedInput label="Row ID" bind:value={row.id} />
 					<WrappedInput
-						id="selected-choices-input-{row.id}"
 						label="Selected Choices"
 						type="number"
 						bind:value={row.currentChoices}

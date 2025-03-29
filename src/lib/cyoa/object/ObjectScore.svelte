@@ -107,13 +107,11 @@
 			<div class="flex flex-col gap-y-2">
 				<WrappedSelect
 					label="Point Type"
-					id="score-id-select-{score.id}"
 					bind:value={score.id}
 					items={app.pointTypes.map((typ) => ({ value: typ.id, name: typ.name }))}
 					placeholder="Point Type"
 				/>
 				<WrappedInput
-					id="score-value-input-{score.id}"
 					label="Value"
 					type="number"
 					bind:value={score.value}
@@ -122,12 +120,10 @@
 			<!-- Where the user places in the value the object will cost/give -->
 			<div class="flex flex-col gap-y-2">
 				<WrappedInput
-					id="score-before-text-input-{score.id}"
 					label="Text Before"
 					bind:value={score.beforeText}
 				/>
 				<WrappedInput
-					id="score-after-text-input-{score.id}"
 					label="Text After"
 					bind:value={score.afterText}
 				/>
@@ -148,38 +144,32 @@
 						-->
 						{#if required.showRequired}
 							<WrappedInput
-								id="score-before-text-input-{score.id}-{index}"
 								label="Text Before"
 								bind:value={required.beforeText}
 							/>
 							<WrappedInput
-								id="score-after-text-input-{score.id}-{index}"
 								label="Text After"
 								bind:value={required.afterText}
 							/>
 						{/if}
 						<WrappedInput
-							id="score-required-id-{score.id}-{index}"
 							label={required.required ? 'Selected ID' : 'Not Selected ID'}
 							bind:value={required.reqId}
 						/>
 					{:else if required.type === 'points'}
 						<WrappedSelect
 							label="Operator"
-							id="score-required-operator-{score.id}-{index}"
 							bind:value={required.operator}
 							items={pointReqOperators}
 							placeholder="Operator"
 						/>
 						<WrappedSelect
 							label="Point Type"
-							id="score-required-pointtype-{score.id}-{index}"
 							bind:value={required.reqId}
 							items={app.pointTypes.map((typ) => ({ value: typ.id, name: typ.name }))}
 							placeholder="Point Type"
 						/>
 						<WrappedInput
-							id="score-required-req-points-{score.id}-{index}"
 							label={required.required ? 'More Than' : 'Less Than'}
 							type="number"
 							bind:value={required.reqPoints}
@@ -192,7 +182,6 @@
 						</span>
 						<WrappedSelect
 							label="Operator"
-							id="object-score-operator-{score.id}-{required.id}"
 							bind:value={required.operator}
 							items={pointReqOperators}
 							placeholder="Operator"
@@ -235,7 +224,6 @@
 						</div>
 					{:else if required.type === 'or'}
 						<WrappedInput
-							id="object-score-or-ornum-{score.id}-{required.id}-{index}"
 							label="N"
 							bind:value={() => required.orNum ?? 1,
 							(v) => (required.orNum = Math.max(0, Math.min(v, required.orRequired.length)))}
@@ -245,7 +233,6 @@
 						/>
 						{#each required.orRequired as orRequired, orIndex}
 							<WrappedInput
-								id="object-score-required-or-required-{score.id}-{required.id}-{orIndex}"
 								label={required.required ? 'Selected Choice ID' : 'Not Selected Choice ID'}
 								bind:value={orRequired.req}
 								placeholder={required.required ? 'Selected ID' : 'Not Selected ID'}

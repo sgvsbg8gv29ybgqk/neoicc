@@ -44,7 +44,6 @@
 	<div class="mx-auto grid grid-cols-3 gap-4 py-4">
 		<div class="flex flex-col gap-y-2">
 			<WrappedSelect
-				id="row-image-border-style"
 				label="Style of the border"
 				items={borderStyles.map((s) => ({ name: s.value, value: s.value }))}
 				bind:value={styling.rowImgBorderStyle}
@@ -52,7 +51,6 @@
 				triggerClass="max-w-48"
 			/>
 			<WrappedInput
-				id="row-image-border-width"
 				label="Thickness of the border"
 				bind:value={styling.rowImgBorderWidth}
 				placeholder="0"
@@ -60,21 +58,18 @@
 				type="number"
 			/>
 			<WrappedInput
-				id="row-image-width"
 				label="Width of the image inside of a choice"
 				bind:value={styling.rowImageWidth}
 				suffix="%"
 				type="number"
 			/>
 			<WrappedInput
-				id="row-image-margin-top"
 				label="Distance Between Top of row and Image"
 				bind:value={styling.rowImageMarginTop}
 				suffix="%"
 				type="number"
 			/>
 			<WrappedInput
-				id="row-image-margin-bottom"
 				label="Distance Between Title and Image"
 				bind:value={styling.rowImageMarginBottom}
 				placeholder="0"
@@ -84,7 +79,6 @@
 		</div>
 		<div class="flex flex-col gap-y-2">
 			<WrappedInput
-				id="row-image-border-radius-top-left"
 				label="Border-radius Top Left"
 				bind:value={styling.rowImgBorderRadiusTopLeft}
 				placeholder="0"
@@ -92,7 +86,6 @@
 				type="number"
 			/>
 			<WrappedInput
-				id="row-image-border-radius-top-right"
 				label="Border-radius Top Right"
 				bind:value={styling.rowImgBorderRadiusTopRight}
 				placeholder="0"
@@ -100,7 +93,6 @@
 				type="number"
 			/>
 			<WrappedInput
-				id="row-image-border-radius-bottom-right"
 				label="Border-radius Bottom Right"
 				bind:value={styling.rowImgBorderRadiusBottomRight}
 				placeholder="0"
@@ -108,7 +100,6 @@
 				type="number"
 			/>
 			<WrappedInput
-				id="row-image-border-radius-bottom-left"
 				label="Border-radius Bottom Left"
 				bind:value={styling.rowImgBorderRadiusBottomLeft}
 				placeholder="0"

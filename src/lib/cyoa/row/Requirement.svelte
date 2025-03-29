@@ -4,7 +4,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Label } from '$lib/components/ui/label';
 	import { app } from '$lib/store/store.svelte';
-	import { pi } from '$lib/store/utils';
+	import { generateID, pi } from '$lib/store/utils';
 	import WrappedInput from '$lib/components/wrapped/WrappedInput.svelte';
 
 	const {
@@ -23,7 +23,7 @@
 			required: required,
 			requireds: [],
 			orRequired: orRequired,
-			id: '',
+			id: generateID(),
 			type: type,
 			reqId: '',
 			reqId1: '',
@@ -102,7 +102,6 @@
 		</div>
 		<WrappedInput
 			label="Number of Requirements"
-			id="number-of-requirement-input"
 			bind:value={numberOfOrRequireds}
 			type="number"
 		/>

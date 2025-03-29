@@ -52,28 +52,24 @@
 				<div class="flex flex-col gap-y-2">
 					<h6>Margin and Padding</h6>
 					<WrappedInput
-						id="row-text-margin"
 						label="Text Margin"
 						bind:value={styling.rowMargin}
 						type="number"
 						suffix="px"
 					/>
 					<WrappedInput
-						id="row-body-margin-sides"
 						label="Row Left and Right Margin"
 						bind:value={styling.rowBodyMarginSides}
 						type="number"
 						suffix="px"
 					/>
 					<WrappedInput
-						id="row-body-margin-top"
 						label="Row Top Margin"
 						bind:value={styling.rowBodyMarginTop}
 						type="number"
 						suffix="px"
 					/>
 					<WrappedInput
-						id="row-body-margin-bottom"
 						label="Row Bottom Margin"
 						bind:value={styling.rowBodyMarginBottom}
 						type="number"
@@ -81,14 +77,12 @@
 					/>
 					<h6>Text Padding</h6>
 					<WrappedInput
-						id="row-text-padding-y"
 						label="Text Left and Right Padding"
 						bind:value={styling.rowTextPaddingY}
 						type="number"
 						suffix="px"
 					/>
 					<WrappedInput
-						id="row-text-padding-x"
 						label="Text Top and Bottom Padding"
 						bind:value={styling.rowTextPaddingX}
 						type="number"
@@ -104,7 +98,6 @@
 					</div>
 					{#if styling.rowGradientIsOn}
 						<WrappedInput
-							id="row-gradient"
 							label="Gradient"
 							bind:value={styling.rowGradient}
 							placeholder="to left, blue, red"
@@ -121,28 +114,24 @@
 				<div class="flex flex-col gap-y-2">
 					<h6>Shadow that the row makes</h6>
 					<WrappedInput
-						id="row-drop-shadow-h"
 						label="Horizontal Shadow"
 						bind:value={styling.rowDropShadowH}
 						type="number"
 						suffix="px"
 					/>
 					<WrappedInput
-						id="row-drop-shadow-v"
 						label="Vertical Shadow"
 						bind:value={styling.rowDropShadowV}
 						type="number"
 						suffix="px"
 					/>
 					<WrappedInput
-						id="row-drop-shadow-blur"
 						label="Shadow Blur"
 						bind:value={styling.rowDropShadowBlur}
 						type="number"
 						suffix="px"
 					/>
 					<WrappedInput
-						id="row-drop-shadow-spread"
 						label="Shadow Spread"
 						bind:value={styling.rowDropShadowSpread}
 						type="number"
@@ -150,14 +139,12 @@
 					/>
 					<h6>The Width and Height of the buttons</h6>
 					<WrappedInput
-						id="row-button-x-padding"
 						label="Button Height"
 						bind:value={styling.rowButtonXPadding}
 						type="number"
 						suffix="px"
 					/>
 					<WrappedInput
-						id="row-button-y-padding"
 						label="Button Width"
 						bind:value={styling.rowButtonYPadding}
 						type="number"
@@ -171,28 +158,24 @@
 				<div class="flex flex-col gap-y-2">
 					<h6>Rounded corners on the choices</h6>
 					<WrappedInput
-						id="row-border-radius-top-left"
 						label="Border-radius Top Left"
 						bind:value={styling.rowBorderRadiusTopLeft}
 						type="number"
 						suffix={borderRadiusSuffix}
 					/>
 					<WrappedInput
-						id="row-border-radius-top-right"
 						label="Border-radius Top Right"
 						bind:value={styling.rowBorderRadiusTopRight}
 						type="number"
 						suffix={borderRadiusSuffix}
 					/>
 					<WrappedInput
-						id="row-border-radius-bottom-right"
 						label="Border-radius Bottom Right"
 						bind:value={styling.rowBorderRadiusBottomRight}
 						type="number"
 						suffix={borderRadiusSuffix}
 					/>
 					<WrappedInput
-						id="row-border-radius-bottom-left"
 						label="Border-radius Bottom Left"
 						bind:value={styling.rowBorderRadiusBottomLeft}
 						type="number"
@@ -200,14 +183,12 @@
 					/>
 					<h6>Border Style and Width</h6>
 					<WrappedSelect
-						id="row-border-style"
 						label="Border Styles"
 						bind:value={styling.rowBorderStyle}
 						items={borderStyles.map((e) => ({ value: e.value, name: e.value }))}
 						placeholder="Select Style"
 					/>
 					<WrappedInput
-						id="row-border-width"
 						label="Border Width"
 						bind:value={styling.rowBorderWidth}
 						type="number"
@@ -250,21 +231,18 @@
 				<div class="flex flex-col gap-y-2">
 					<h6>Size of the row</h6>
 					<WrappedInput
-						id="row-margin"
 						label="Width of the row top."
 						bind:value={styling.rowMargin}
 						type="number"
 						suffix="px"
 					/>
 					<WrappedInput
-						id="row-body-margin-sides"
 						label="Space at the right and left of the rows"
 						bind:value={styling.rowBodyMarginSides}
 						type="number"
 						suffix="%"
 					/>
 					<WrappedInput
-						id="row-body-margin-bottom"
 						label="Space Between Rows"
 						bind:value={styling.rowBodyMarginBottom}
 						type="number"
@@ -280,7 +258,6 @@
 					</div>
 					{#if styling.rowGradientIsOn}
 						<WrappedInput
-							id="row-gradient"
 							label="Gradient"
 							bind:value={styling.rowGradient}
 							placeholder="to left, blue, red"
@@ -297,14 +274,12 @@
 				<div class="flex flex-col gap-y-2">
 					<h6>Padding of the text inside of row</h6>
 					<WrappedInput
-						id="row-text-padding-y"
 						label="Text Left and Right Padding"
 						bind:value={styling.rowTextPaddingY}
 						type="number"
 						suffix="px"
 					/>
 					<WrappedInput
-						id="row-text-padding-x"
 						label="Text Top and Bottom Padding"
 						bind:value={styling.rowTextPaddingX}
 						type="number"
@@ -312,7 +287,6 @@
 					/>
 					<h6>Shadow that the choice makes</h6>
 					<WrappedInput
-						id="row-drop-shadow-h"
 						label="The Higher the number the bigger the shadow will be."
 						bind:value={() => styling.rowDropShadowH,
 						(v) => {
@@ -332,14 +306,12 @@
 				<div class="flex flex-col gap-y-2">
 					<h6>Style and Width of the border</h6>
 					<WrappedSelect
-						id="row-border-style"
 						label="Border Styles"
 						bind:value={styling.rowBorderStyle}
 						items={borderStyles.map((e) => ({ value: e.value, name: e.value }))}
 						placeholder="Select Style"
 					/>
 					<WrappedInput
-						id="row-border-width"
 						label="Border Width"
 						bind:value={styling.rowBorderWidth}
 						type="number"
@@ -347,7 +319,6 @@
 					/>
 					<h6>Rounded corners on the choices</h6>
 					<WrappedInput
-						id="row-border-radius-top-left"
 						label="Rounded corners in the top of each row"
 						bind:value={() => styling.rowBorderRadiusTopLeft,
 						(v) => {
@@ -359,7 +330,6 @@
 						suffix={borderRadiusSuffix}
 					/>
 					<WrappedInput
-						id="row-border-radius-bottom-left"
 						label="Rounded corners in the bottom of each row"
 						bind:value={() => styling.rowBorderRadiusBottomLeft,
 						(v) => {

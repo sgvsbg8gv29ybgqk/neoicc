@@ -10,7 +10,6 @@
 <WrappedStyle title="Backpack Design" {open} {onclose} {embedded} class="sm:max-w-[800px]">
 	<div class="grid gap-4 py-4">
 		<WrappedInput
-			id="backpack-width"
 			label="Backpack Width"
 			bind:value={app.styling.backPackWidth}
 			suffix="px"
