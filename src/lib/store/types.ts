@@ -178,6 +178,8 @@ export type Styling = {
 	rowBorderImageSliceLeft?: number | string;
 	rowBorderImageWidth?: number | string;
 	rowBorderImageRepeat?: string;
+	objectBorderImageIsOn?: boolean;
+	objectBorderImageSource?: string;
 	objectBorderImage?: string;
 	objectBorderImageSliceTop?: number | string;
 	objectBorderImageSliceRight?: number | string;
@@ -185,6 +187,16 @@ export type Styling = {
 	objectBorderImageSliceLeft?: number | string;
 	objectBorderImageWidth?: number | string;
 	objectBorderImageRepeat?: string;
+	objectBorderImageWidthTop?: number | string; // Using individual widths for flexibility
+	objectBorderImageWidthRight?: number | string;
+	objectBorderImageWidthBottom?: number | string;
+	objectBorderImageWidthLeft?: number | string;
+	objectBorderImageOutsetTop?: number | string; // Optional: outset
+	objectBorderImageOutsetRight?: number | string;
+	objectBorderImageOutsetBottom?: number | string;
+	objectBorderImageOutsetLeft?: number | string;
+	objectBorderImageRepeatHorizontal?: 'stretch' | 'repeat' | 'round' | 'space';
+	objectBorderImageRepeatVertical?: 'stretch' | 'repeat' | 'round' | 'space';
 	objectGradientOnSelect?: string;
 	objectGradientOnReq?: string;
 	objectImgObjectFillHeight?: number | string;

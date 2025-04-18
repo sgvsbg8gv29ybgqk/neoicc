@@ -7,6 +7,7 @@
 	import WrappedInput from '$lib/components/wrapped/WrappedInput.svelte';
 	import WrappedSelect from '$lib/components/wrapped/WrappedSelect.svelte';
 	import WrappedStyle from '$lib/components/wrapped/WrappedStyle.svelte';
+	import WrappedImageInput from '$lib/components/wrapped/WrappedImageInput.svelte'; // + Import WrappedImageInput
 	import { parseStyling } from '$lib/store/parsers/stylingParser';
 	import { app } from '$lib/store/store.svelte';
 	import type { Object, Row } from '$lib/store/types';
@@ -29,7 +30,7 @@
 	const styling = $derived(
 		from === 'private' ? (obj?.styling ?? app.styling) : app.styling
 	) as typeof app.styling;
-	
+
 	parseStyling(styling);
 	const borderRadiusSuffix = $derived(styling.objectBorderRadiusIsPixels ? 'px' : '%');
 	const borderStyles = [
@@ -42,6 +43,13 @@
 		{ value: 'inset' },
 		{ value: 'outset' },
 		{ value: 'hidden' }
+	];
+	// + Define border image repeat options
+	const borderImageRepeatStyles = [
+		{ value: 'stretch', name: 'stretch' },
+		{ value: 'repeat', name: 'repeat' },
+		{ value: 'round', name: 'round' },
+		{ value: 'space', name: 'space' }
 	];
 </script>
 <WrappedStyle title="Choice Design" {open} {onclose} {embedded} class="sm:max-w-[1200px]">
@@ -83,6 +91,44 @@ bind:value={styling.objectBorderWidth}
 <Checkbox id="object-overflow-is-on" bind:checked={styling.objectOverflowIsOn}/>
 <Label for="object-overflow-is-on">Border-Radius Cuts off overflow</Label>
 </div>
+<!-- + Border Image Section Start -->
+<h6 class="mt-2">Border Image</h6>
+<WrappedImageInput
+	id="object-border-image-file-input"
+	label="Border Image File"
+	bind:value={() => styling.objectBorderImage ?? '', (v) => styling.objectBorderImage = v === '' ? undefined : v}
+/>
+<div class="grid grid-cols-2 gap-x-2 mt-1">
+	<WrappedInput
+		id="object-border-image-slice-top"
+		label="Slice Top"
+		type="number"
+		placeholder="30"
+		bind:value={styling.objectBorderImageSliceTop}
+	/>
+	<WrappedInput
+		id="object-border-image-slice-right"
+		label="Slice Right"
+		type="number"
+		placeholder="30"
+		bind:value={styling.objectBorderImageSliceRight}
+	/>
+	<WrappedInput
+		id="object-border-image-slice-bottom"
+		label="Slice Bottom"
+		type="number"
+		placeholder="30"
+		bind:value={styling.objectBorderImageSliceBottom}
+	/>
+	<WrappedInput
+		id="object-border-image-slice-left"
+		label="Slice Left"
+		type="number"
+		placeholder="30"
+		bind:value={styling.objectBorderImageSliceLeft}
+	/>
+</div>
+<!-- + Border Image Section End -->
 {/if}
 </div>
 <div class="flex flex-col gap-y-2">
@@ -276,6 +322,27 @@ sliderDirection="horizontal"
 isDialog={false}
 isAlpha
 />
+<!-- + Border Image Settings Start -->
+{#if styling.objectDesignIsAdvanced}
+<div class="mt-2 flex flex-col gap-y-2">
+	<h6>Border Image Settings</h6>
+	<WrappedInput
+		id="object-border-image-width"
+		label="Border Image Width"
+		type="number"
+		suffix="px"
+		bind:value={styling.objectBorderImageWidth}
+	/>
+	<WrappedSelect
+		id="object-border-image-repeat"
+		label="Border Image Repeat"
+		items={borderImageRepeatStyles}
+		bind:value={styling.objectBorderImageRepeat}
+		placeholder="Select Repeat Style"
+	/>
+</div>
+{/if}
+<!-- + Border Image Settings End -->
 </div>
 </div>
 </div>

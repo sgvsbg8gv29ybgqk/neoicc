@@ -1,3 +1,5 @@
+ 
+
 <script lang="ts">
 	import type { Backpack, Object, Requireds, Row } from '$lib/store/types';
 	import * as Tooltip from '$lib/components/ui/tooltip';
@@ -130,10 +132,7 @@
 	const objectBackground = $derived.by(() => {
 		let style = '';
 
-		if (styling.objectBorderImage) {
-			style += `border-image: url("${styling.objectBorderImage}") ${styling.objectBorderImageSliceTop} ${styling.objectBorderImageSliceRight} ${styling.objectBorderImageSliceBottom} ${styling.objectBorderImageSliceLeft} / ${styling.objectBorderImageWidth}px ${styling.objectBorderImageRepeat};`;
-			style += `border-style: solid; padding: ${styling.objectBorderImageWidth}px !important;`;
-		}
+		style += `position: relative; `; // Needed for absolute positioning of the overlay
 
 		// Styles the color of the background, margin and selected color if selected.
 		if (!object.isActive) {
@@ -176,8 +175,8 @@
 
 		if (styling.objectBorderIsOn || (object.isActive && styling.selBorderColorIsOn))
 			style += `border: ${styling.objectBorderWidth}px ${styling.objectBorderStyle} ${
-				object.isActive && styling.selBorderColorIsOn 
-					? styling.selFilterBorderColor 
+				object.isActive && styling.selBorderColorIsOn
+					? styling.selFilterBorderColor
 					: styling.objectBorderColor
 			};`;
 
@@ -411,10 +410,10 @@
 		style:font-size={`${styling.objectTitleTextSize}%`}
 		style:text-align={styling.objectTitleAlign}
 		style:color={
-			!checkRequireds(object) && styling.reqCTitleColorIsOn 
-				? styling.reqFilterCTitleColor 
-				: (object.isActive && styling.selCTitleColorIsOn 
-					? styling.selFilterCTitleColor 
+			!checkRequireds(object) && styling.reqCTitleColorIsOn
+				? styling.reqFilterCTitleColor
+				: (object.isActive && styling.selCTitleColorIsOn
+					? styling.selFilterCTitleColor
 					: styling.objectTitleColor)
 		}
 	>
@@ -488,10 +487,10 @@
 			style:text-align={styling.objectTextAlign}
 			style:font-size={`${styling.objectTextTextSize}%`}
 			style:color={
-				!checkRequireds(object) && styling.reqCTextColorIsOn 
-					? styling.reqFilterCTextColor 
-					: (object.isActive && styling.selCTextColorIsOn 
-						? styling.selFilterCTextColor 
+				!checkRequireds(object) && styling.reqCTextColorIsOn
+					? styling.reqFilterCTextColor
+					: (object.isActive && styling.selCTextColorIsOn
+						? styling.selFilterCTextColor
 						: styling.objectTextColor)
 			}
 			style:padding={`${styling.objectTextPadding}px`}
@@ -555,7 +554,7 @@
 									style="max-height: 250px; min-height: 150px;"
 								/>
 							{:else}
-								<div 
+								<div
 									class="h-[250px] w-full flex items-center justify-center border-2 border-dashed border-gray-300 bg-gray-50"
 									style="max-height: 250px; min-height: 150px;"
 								>
@@ -588,7 +587,7 @@
 					<WrappedInput
 						label="Object Title"
 						id="object-title-input-{object.id}"
-						bind:value={object.title} 
+						bind:value={object.title}
 					/>
 					<WrappedInput label="Object ID" id="object-id-input-{object.id}" bind:value={object.id} />
 					<WrappedSelect
@@ -1066,7 +1065,7 @@
 				if (object.isActive && object.forcedActivated) {
 					return;
 				}
-				
+
 				if (object.isImageUpload) modal = 'appImageUpload';
 				else if (
 					!row.isInfoRow &&
@@ -1168,6 +1167,17 @@
 							<ObjectAddon {addon} {row} {isEditModeOn} />
 						</div>
 					{/each}
+				</div>
+			{/if}
+			<!-- Border Image Overlay -->
+			{#if styling.objectBorderImage}
+				<div
+					class="absolute inset-0 z-10 pointer-events-none"
+					style:background-image={`url("${getImageURL(styling.objectBorderImage, appMetaState.imagePrefix)}")`}
+					style:background-size="100% 100%"  
+					style:background-repeat="no-repeat"
+				>
+					<!-- This div is just the border overlay -->
 				</div>
 			{/if}
 		</div>
