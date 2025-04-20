@@ -58,13 +58,57 @@ type="number"
 suffix="px"
 bind:value={styling.objectMargin}
 />
-<WrappedInput
-id="object-text-padding"
-label="Padding"
-type="number"
-suffix="px"
-bind:value={styling.objectTextPadding}
-/>
+{#if styling.objectDesignIsAdvanced} 
+	<WrappedInput
+		id="object-text-padding-top"
+		label="Padding Top"
+		type="number"
+		suffix="px"
+		bind:value={styling.objectTextPaddingTop}
+		placeholder="0"
+	/>
+	<WrappedInput
+		id="object-text-padding-right"
+		label="Padding Right"
+		type="number"
+		suffix="px"
+		bind:value={styling.objectTextPaddingRight}
+		placeholder="0"
+	/>
+	<WrappedInput
+		id="object-text-padding-bottom"
+		label="Padding Bottom"
+		type="number"
+		suffix="px"
+		bind:value={styling.objectTextPaddingBottom}
+		placeholder="0"
+	/>
+	<WrappedInput
+		id="object-text-padding-left"
+		label="Padding Left"
+		type="number"
+		suffix="px"
+		bind:value={styling.objectTextPaddingLeft}
+		placeholder="0"
+	/>
+{:else} 
+	<WrappedInput
+		id="object-text-padding"
+		label="Padding (All Sides)"
+		type="number"
+		suffix="px"
+		bind:value={() => styling.objectTextPaddingTop ?? styling.objectTextPadding ?? 0, (v) => {
+			// When simple padding is set, update all individual paddings and the old one for consistency
+			const val = v ?? 0;
+			styling.objectTextPadding = val;
+			styling.objectTextPaddingTop = val;
+			styling.objectTextPaddingRight = val;
+			styling.objectTextPaddingBottom = val;
+			styling.objectTextPaddingLeft = val;
+		}}
+		placeholder="0"
+	/>
+{/if}
 {#if styling.objectDesignIsAdvanced}
 <h6>Style and Width of the border</h6>
 <WrappedSelect

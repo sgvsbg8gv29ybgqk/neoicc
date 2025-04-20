@@ -73,6 +73,11 @@ export type Styling = {
 	rowTextPaddingX: number | string;
 	objectTextPadding: number | string;
 
+	objectTextPaddingTop: number | string; 
+	objectTextPaddingRight: number | string;
+	objectTextPaddingBottom: number | string;
+	objectTextPaddingLeft: number | string;
+
 	rowBodyMarginTop: number | string;
 	rowBodyMarginBottom: number | string;
 	rowBodyMarginSides: number | string;

@@ -499,7 +499,14 @@
 						? styling.selFilterCTextColor
 						: styling.objectTextColor)
 			}
-			style:padding={`${styling.objectTextPadding}px`}
+			style:padding={
+				(typeof styling.objectTextPaddingTop === 'number' ||
+				 typeof styling.objectTextPaddingRight === 'number' ||
+				 typeof styling.objectTextPaddingBottom === 'number' ||
+				 typeof styling.objectTextPaddingLeft === 'number')
+				? `${styling.objectTextPaddingTop ?? styling.objectTextPadding ?? 0}px ${styling.objectTextPaddingRight ?? styling.objectTextPadding ?? 0}px ${styling.objectTextPaddingBottom ?? styling.objectTextPadding ?? 0}px ${styling.objectTextPaddingLeft ?? styling.objectTextPadding ?? 0}px`
+				: `${styling.objectTextPadding ?? 0}px`
+			}
 		>
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			{@html DOMPurify.sanitize(replaceObjectText)}
