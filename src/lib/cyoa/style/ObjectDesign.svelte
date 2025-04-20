@@ -44,13 +44,7 @@
 		{ value: 'outset' },
 		{ value: 'hidden' }
 	];
-	// + Define border image repeat options
-	const borderImageRepeatStyles = [
-		{ value: 'stretch', name: 'stretch' },
-		{ value: 'repeat', name: 'repeat' },
-		{ value: 'round', name: 'round' },
-		{ value: 'space', name: 'space' }
-	];
+	// Неиспользуемый borderImageRepeatStyles удален
 </script>
 <WrappedStyle title="Choice Design" {open} {onclose} {embedded} class="sm:max-w-[1200px]">
 <div class="grid gap-4 py-4">
@@ -91,44 +85,6 @@ bind:value={styling.objectBorderWidth}
 <Checkbox id="object-overflow-is-on" bind:checked={styling.objectOverflowIsOn}/>
 <Label for="object-overflow-is-on">Border-Radius Cuts off overflow</Label>
 </div>
-<!-- + Border Image Section Start -->
-<h6 class="mt-2">Border Image</h6>
-<WrappedImageInput
-	id="object-border-image-file-input"
-	label="Border Image File"
-	bind:value={() => styling.objectBorderImage ?? '', (v) => styling.objectBorderImage = v === '' ? undefined : v}
-/>
-<div class="grid grid-cols-2 gap-x-2 mt-1">
-	<WrappedInput
-		id="object-border-image-slice-top"
-		label="Slice Top"
-		type="number"
-		placeholder="30"
-		bind:value={styling.objectBorderImageSliceTop}
-	/>
-	<WrappedInput
-		id="object-border-image-slice-right"
-		label="Slice Right"
-		type="number"
-		placeholder="30"
-		bind:value={styling.objectBorderImageSliceRight}
-	/>
-	<WrappedInput
-		id="object-border-image-slice-bottom"
-		label="Slice Bottom"
-		type="number"
-		placeholder="30"
-		bind:value={styling.objectBorderImageSliceBottom}
-	/>
-	<WrappedInput
-		id="object-border-image-slice-left"
-		label="Slice Left"
-		type="number"
-		placeholder="30"
-		bind:value={styling.objectBorderImageSliceLeft}
-	/>
-</div>
-<!-- + Border Image Section End -->
 {/if}
 </div>
 <div class="flex flex-col gap-y-2">
@@ -256,94 +212,83 @@ styling.objectBorderRadiusBottomRight = v;
 {/if}
 </div>
 </div>
-<div class="grid grid-cols-3 gap-4">
-<div class="flex flex-col gap-y-2">
-<h6>Color of the Drop Shadow</h6>
-<ColorPicker
-bind:hex={() => styling.objectDropShadowColor ?? 'grey',
-(v) => (styling.objectDropShadowColor = v)}
-components={ChromeVariant}
-sliderDirection="horizontal"
-isDialog={false}
-isAlpha
-/>
-</div>
-<div class="flex flex-col gap-y-2">
-<div class="flex flex-row items-center gap-x-1">
-<Switch id="object-design-is-advanced" bind:checked={styling.objectDesignIsAdvanced} />
-<Label for="object-design-is-advanced">Advanced Design?</Label>
-</div>
-<div class="flex flex-row items-center gap-x-1">
-<Checkbox id="object-height" bind:checked={styling.objectHeight} />
-<Label for="object-height"
->If this is checked then every choice in a row will have identical height.</Label
->
-</div>
-<div class="flex flex-row items-center gap-x-1">
-<Checkbox id="object-gradient-is-on" bind:checked={styling.objectGradientIsOn} />
-<Label for="object-gradient-is-on">Object Gradient is turned on</Label>
-</div>
-{#if styling.objectGradientIsOn}
-<WrappedInput
-id="object-gradient"
-label="Gradient when not selected"
-placeholder="to left, blue, red"
-bind:value={styling.objectGradient}
-/>
-<WrappedInput
-id="object-gradient-on-select"
-label="Gradient when selected"
-placeholder="to left, blue, red"
-bind:value={styling.objectGradientOnSelect}
-/>
-<WrappedInput
-id="object-gradient-on-req"
-label="Gradient when missing requirement"
-placeholder="to left, blue, red"
-bind:value={styling.objectGradientOnReq}
-/>
-<span>
-You might need to leave for the main menu if things stop updating, using the background
-colors for filters does not work well, so you'll need to place gradients in ALL of them,
-but using something like (green, green) works.
-<a target="_blank" href="https://www.w3schools.com/css/css3_gradients.asp">
-https://www.w3schools.com/css/css3_gradients.asp
-</a>
-</span>
-{/if}
-</div>
-<div class="flex flex-col gap-y-2">
-<h6>Color of the choice border</h6>
-<ColorPicker
-bind:hex={() => styling.objectBorderColor ?? 'red',
-(v) => (styling.objectBorderColor = v)}
-components={ChromeVariant}
-sliderDirection="horizontal"
-isDialog={false}
-isAlpha
-/>
-<!-- + Border Image Settings Start -->
-{#if styling.objectDesignIsAdvanced}
-<div class="mt-2 flex flex-col gap-y-2">
-	<h6>Border Image Settings</h6>
-	<WrappedInput
-		id="object-border-image-width"
-		label="Border Image Width"
-		type="number"
-		suffix="px"
-		bind:value={styling.objectBorderImageWidth}
-	/>
-	<WrappedSelect
-		id="object-border-image-repeat"
-		label="Border Image Repeat"
-		items={borderImageRepeatStyles}
-		bind:value={styling.objectBorderImageRepeat}
-		placeholder="Select Repeat Style"
-	/>
-</div>
-{/if}
-<!-- + Border Image Settings End -->
-</div>
+<div class="grid grid-cols-6 gap-4">
+	<div class="flex flex-col gap-y-2 col-span-1"> 
+		<h6>Color of the Drop Shadow</h6>
+		<ColorPicker
+			bind:hex={() => styling.objectDropShadowColor ?? 'grey',
+			(v) => (styling.objectDropShadowColor = v)}
+			components={ChromeVariant}
+			sliderDirection="horizontal"
+			isDialog={false}
+			isAlpha
+		/>
+	</div>
+	<div class="flex flex-col gap-y-2 col-span-1">
+		<h6>Color of the choice border</h6>
+		<ColorPicker
+			bind:hex={() => styling.objectBorderColor ?? 'red',
+			(v) => (styling.objectBorderColor = v)}
+			components={ChromeVariant}
+			sliderDirection="horizontal"
+			isDialog={false}
+			isAlpha
+		/>
+	</div>
+	<div class="flex flex-col gap-y-2 col-span-1">
+		<div class="flex flex-row items-center gap-x-1">
+			<Switch id="object-design-is-advanced" bind:checked={styling.objectDesignIsAdvanced} />
+			<Label for="object-design-is-advanced">Advanced Design?</Label>
+		</div>
+		<div class="flex flex-row items-center gap-x-1">
+			<Checkbox id="object-height" bind:checked={styling.objectHeight} />
+			<Label for="object-height"
+			>If this is checked then every choice in a row will have identical height.</Label
+			>
+		</div>
+		<div class="flex flex-row items-center gap-x-1">
+			<Checkbox id="object-gradient-is-on" bind:checked={styling.objectGradientIsOn} />
+			<Label for="object-gradient-is-on">Object Gradient is turned on</Label>
+		</div>
+		{#if styling.objectGradientIsOn}
+		<WrappedInput
+			id="object-gradient"
+			label="Gradient when not selected"
+			placeholder="to left, blue, red"
+			bind:value={styling.objectGradient}
+		/>
+		<WrappedInput
+			id="object-gradient-on-select"
+			label="Gradient when selected"
+			placeholder="to left, blue, red"
+			bind:value={styling.objectGradientOnSelect}
+		/>
+		<WrappedInput
+			id="object-gradient-on-req"
+			label="Gradient when missing requirement"
+			placeholder="to left, blue, red"
+			bind:value={styling.objectGradientOnReq}
+		/>
+		<span>
+			You might need to leave for the main menu if things stop updating, using the background
+			colors for filters does not work well, so you'll need to place gradients in ALL of them,
+			but using something like (green, green) works.
+			<a target="_blank" href="https://www.w3schools.com/css/css3_gradients.asp">
+				https://www.w3schools.com/css/css3_gradients.asp
+			</a>
+		</span>
+		{/if}
+	</div>
+	<div class="flex flex-col gap-y-2 col-span-1">
+		{#if styling.objectDesignIsAdvanced}
+		<h6 class="mt-2">Border Image</h6>
+		<WrappedImageInput
+			id="object-border-image-file-input"
+			label="Border Image File"
+			bind:value={() => styling.objectBorderImage ?? '', (v) => styling.objectBorderImage = v === '' ? undefined : v}
+		/>
+		{/if}
+	</div>
 </div>
 </div>
 </WrappedStyle>
