@@ -49,6 +49,7 @@
 	import Text from './style/Text.svelte';
 	import { printDiv } from '$lib/utils';
 	import { backgroundImages } from './style/backgroundImageUtils';
+	import { getImageURL } from '$lib/store/utils';
 
 	const { isCreator }: { isCreator: boolean } = $props();
 
@@ -156,12 +157,15 @@
 </script>
 
 <div
-	class="flex flex-row bg-repeat pb-16 text-center"
-	bind:this={ref}
+	class="flex flex-row pb-16 text-center"  
+	bind:this={ref} 
 	style:background-image={app.styling.backgroundImage
-		? `url("${app.styling.backgroundImage}")`
+		? `url("${getImageURL(app.styling.backgroundImage, appMetaState.imagePrefix)}")`
 		: null}
 	style:background-color={app.styling.backgroundColor}
+    style:background-attachment={app.styling.backgroundAttachment ?? 'scroll'}  
+    style:background-repeat={app.styling.backgroundRepeat ?? 'no-repeat'}    
+    style:background-size={app.styling.backgroundSize ?? 'auto'}                   
 >
 	{#if isCreator && !topNav}
 		<nav class="fixed z-20 flex h-screen flex-col justify-between bg-gray-200 p-2">

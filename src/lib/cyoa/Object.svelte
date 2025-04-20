@@ -137,8 +137,8 @@
 		// Styles the color of the background, margin and selected color if selected.
 		if (!object.isActive) {
 			if (styling.objectBackgroundImage) {
-				style += `background-image: url("${styling.objectBackgroundImage}");`;
-				style += `background-repeat: ${styling.selFilterBgImageRepeat};`;
+				style += `background-image: url("${getImageURL(styling.objectBackgroundImage, appMetaState.imagePrefix)}");`;  
+				style += `background-repeat: ${styling.objectBackgroundRepeat ?? 'repeat'};`;
 			}
 		}
 		if (styling.objectBgColorIsOn) style += `background-color: ${styling.objectBgColor};`;
@@ -147,16 +147,22 @@
 		if (styling.selFilterBgImageIsOn && styling.selFilterBgImages && styling.selFilterBgImages.length > 0) {
 			const randomBackgroundImage = getRandomBackgroundImage(styling.selFilterBgImages, object.id);
 			style += `background-image: url("${randomBackgroundImage}");`;
-			style += `background-repeat: ${styling.selFilterBgImageRepeat};`;
+            // Используем свойство для активного состояния, по умолчанию 'repeat'
+			style += `background-repeat: ${styling.selFilterBgImageRepeat ?? 'repeat'};`;
 			style += `background-position: ${styling.selFilterBgImagePosition};`;
-			style += `background-origin: border-box;`;
+			// background-origin and background-size were applied before, keep or adjust as needed
+            style += `background-origin: border-box;`;
 			style += `background-size: ${styling.selFilterBgImageWidth} auto;`;
-			style += `opacity: ${styling.selFilterBgImageOpacity}%;`;
-			style += `filter: blur(${styling.selFilterBlur}px) brightness(${styling.selFilterBright}%) contrast(${styling.selFilterCont}%) grayscale(${styling.selFilterGray}%) hue-rotate(${styling.selFilterHue}deg) invert(${styling.selFilterInvert}%) saturate(${styling.selFilterSatur}) sepia(${styling.selFilterSepia}%);`;
+            // Opacity and Filter are separate properties, applied later or differently.
+            // Avoid setting opacity directly on background, use rgba color or separate overlay if needed.
 		} else if (styling.selBgColorIsOn) {
-				style += `background-color: ${styling.selFilterBgColor};`;
-			}
+			style += `background-color: ${styling.selFilterBgColor};`;
+            // Если для выбранного состояния нет картинки, но есть цвет, убеждаемся, что фоновая картинка от неактивного состояния убрана
+            if (!styling.selFilterBgImageIsOn || !styling.selFilterBgImages || styling.selFilterBgImages.length === 0) {
+                 style += `background-image: none;`;
+            }
 		}
+	}
 
 		// Border Radius
 		const suffix = styling.objectBorderRadiusIsPixels ? 'px' : '%';

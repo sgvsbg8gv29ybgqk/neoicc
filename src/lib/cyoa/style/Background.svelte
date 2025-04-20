@@ -6,6 +6,7 @@
 	import { app } from '$lib/store/store.svelte';
 	import type { Object, Row } from '$lib/store/types';
 	import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
+	import WrappedSelect from '$lib/components/wrapped/WrappedSelect.svelte';
 
 	const {
 		open,
@@ -24,6 +25,13 @@
 	const styling = $derived(
 		from === 'private' ? (obj?.styling ?? app.styling) : app.styling
 	) as typeof app.styling;
+
+	const backgroundRepeatOptions = [
+        { value: 'repeat', name: 'Repeat' },
+        { value: 'no-repeat', name: 'No Repeat' },
+        { value: 'space', name: 'Space' },
+        { value: 'round', name: 'Round' }
+    ];
 </script>
 
 <WrappedStyle title="Backgrounds" {embedded} {open} {onclose} class="sm:max-w-[1200px]">
@@ -31,8 +39,7 @@
 		<div class="flex flex-col items-center gap-y-2">
 			<p class="text-sm font-medium leading-none">Color of the background</p>
 			<ColorPicker
-				bind:hex={() => styling.backgroundColor ?? '#FFFFFFFF',
-				(v) => (styling.backgroundColor = v)}
+				bind:hex={() => styling.backgroundColor ?? '#FFFFFFFF', (v) => (styling.backgroundColor = v)}
 				components={ChromeVariant}
 				sliderDirection="horizontal"
 				isDialog={false}
@@ -43,6 +50,35 @@
 				label="Background Image"
 				bind:value={styling.backgroundImage}
 			/>
+            
+            <WrappedSelect
+                id="background-repeat-select"
+                label="Background Repeat"
+                items={backgroundRepeatOptions}
+                bind:value={styling.backgroundRepeat}
+                placeholder="Select Repeat"
+            />
+            <WrappedSelect
+                id="background-attachment-select"
+                label="Background Attachment"
+                items={[
+                    { value: 'scroll', name: 'Scroll (Moves with content)' },
+                    { value: 'fixed', name: 'Fixed (Stays in place)' }
+                ]}
+                bind:value={styling.backgroundAttachment}
+                placeholder="Select Attachment"
+            />
+			<WrappedSelect
+                id="background-size-select"
+                label="Background Size"
+                items={[
+                    { value: 'auto', name: 'Auto (Original Size)' },
+                    { value: 'cover', name: 'Cover (Fill Area)' },
+                    { value: 'contain', name: 'Contain (Fit Inside)' }
+                ]}
+                bind:value={styling.backgroundSize}
+                placeholder="Select Size"
+            />
 		</div>
 		<div class="flex flex-col items-center gap-y-2">
 			<div class="flex flex-row items-center gap-x-1">
@@ -61,6 +97,14 @@
 				label="Row Background Image"
 				bind:value={styling.rowBackgroundImage}
 			/>
+             
+            <WrappedSelect
+                id="row-background-repeat-select"
+                label="Row Background Repeat"
+                items={backgroundRepeatOptions}
+                bind:value={styling.rowBackgroundRepeat}
+                placeholder="Select Repeat"
+            />
 		</div>
 		<div class="flex flex-col items-center gap-y-2">
 			<div class="flex flex-row items-center gap-x-1">
@@ -79,6 +123,14 @@
 				label="Choice Background Image"
 				bind:value={styling.objectBackgroundImage}
 			/>
+             
+            <WrappedSelect
+                id="object-background-repeat-select"
+                label="Choice Background Repeat"
+                items={backgroundRepeatOptions}
+                bind:value={styling.objectBackgroundRepeat}
+                placeholder="Select Repeat"
+            />
 		</div>
 	</div>
 </WrappedStyle>

@@ -48,12 +48,19 @@ export type Styling = {
 	rowBackgroundImage: string;
 	objectBackgroundImage: string;
 	backgroundColor: string;
+	backgroundRepeat?: 'repeat' | 'no-repeat' | 'space' | 'round'; // + Global background repeat
+	backgroundAttachment?: 'fixed' | 'scroll';
+    backgroundSize?: 'auto' | 'cover' | 'contain'; 
 	objectBgColor: string;
 	rowBgColor: string;
 
 	// Boolean that says if the row or object-color will be viewed.
 	rowBgColorIsOn: boolean;
 	objectBgColorIsOn: boolean;
+
+
+    rowBackgroundRepeat?: 'repeat' | 'no-repeat' | 'space' | 'round'; // + Row background repeat
+    objectBackgroundRepeat?: 'repeat' | 'no-repeat' | 'space' | 'round'; // + Object background repeat 
 
 	// Image radius and width
 	objectImageWidth: number | string;
@@ -111,7 +118,7 @@ export type Styling = {
 	selFilterBgImageOpacity: number;
 	selFilterBgImageIsOn: boolean;
 	selFilterBgImagePosition: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-	selFilterBgImageRepeat: string;
+	selFilterBgImageRepeat: 'repeat' | 'no-repeat' | 'space' | 'round'; //  
 	selFilterBgImageWidth: 'auto' | '100%';
 	selBorderColorIsOn: boolean;
 	selCTextColorIsOn: boolean;
