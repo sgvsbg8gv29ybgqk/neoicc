@@ -91,7 +91,7 @@
 </script>
 
 <Dialog.Root bind:open={() => open, (a) => !a && onclose()}>
-	<Dialog.Content class="sm:max-w-[800px]">
+	<Dialog.Content class="sm:max-w-[800px]">   <!-- note for datk mode! -->
 		<Dialog.Header>
 			<Dialog.Title>Design</Dialog.Title>
 			<Dialog.Description>Hover over the buttons to see what they do.</Dialog.Description>

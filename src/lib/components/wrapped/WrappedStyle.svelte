@@ -24,7 +24,7 @@
 
 {#if embedded}
 	{#if open}
-		<div class="p-2">
+		<div class="p-2 bg-gray-300">
 			{@render children()}
 			<Button class="w-full" onclick={() => onclose()}>Close</Button>
 		</div>
