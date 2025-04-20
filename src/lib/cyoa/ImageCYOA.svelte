@@ -345,7 +345,7 @@
 		<!-- Navbar that holds the pointtypes and backpack -->
 		{#if app.pointTypes.length > 0 || app.backpack.length > 0 || app.importedChoicesIsOpen}
 			<div
-				class="fixed bottom-0 left-0 right-0 z-10 flex h-14 flex-row items-center justify-around"
+				class="fixed bottom-0 left-0 right-0 z-20 flex h-14 flex-row items-center justify-around"
 				data-html2canvas-ignore
 				style:background-color={app.styling.barBackgroundColor}
 				style:margin={app.styling.barMargin + 'px'}
