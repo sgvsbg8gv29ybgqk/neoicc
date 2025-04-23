@@ -1072,7 +1072,7 @@
 	{#if (!isCreator || !isEditModeOn) && checkRequireds(row)}
 		<div
 			class="w-full p-0"
-			style={objectBackground}
+			style={objectBackground + ' position: relative;'}
 			onclick={() => {
 				// Allow deactivation if isNotDeactivate is active
 				if (object.isActive && object.forcedActivated) {
@@ -1192,7 +1192,7 @@
 				>
 					<!-- This div is just the border overlay -->
 				</div>
-			{/if}
+				{/if}
 		</div>
 	{/if}
 	<ImageUpload open={modal === 'appImageUpload'} onclose={() => (modal = 'none')} obj={object} />
