@@ -187,56 +187,95 @@
 			};`;
 
 		// Styles here the drop-shadow.
-		let filter = '';
-		if (styling.objectDropShadowIsOn)
-			filter += ` drop-shadow(${styling.objectDropShadowH}px ${styling.objectDropShadowV}px ${styling.objectDropShadowBlur}px ${styling.objectDropShadowColor});`;
-
-		// TODO Make this part more efficient.
-
-		// Needs to check if the object have all of the requireds.
+		
+		
+		
+		// --- Начало исправленного блока ---
+		let stateFilters = ''; // Фильтры для состояния (blur, brightness, etc.)
+		let dropShadowFilter = ''; // Фильтр тени
 		const hasRequireds = checkRequireds(object);
 
-		// If the object is selected.
+		// Определяем фильтры для состояния "активирован"
 		if (
 			(object.isActive || (object.isSelectableMultiple && pi(object.multipleUseVariable) > 0)) &&
 			hasRequireds
 		) {
-			if (styling.selFilterBlurIsOn) filter += ` blur(${styling.selFilterBlur}px)`;
-			if (styling.selFilterBrightIsOn) filter += ` brightness(${styling.selFilterBright}%)`;
-			if (styling.selFilterContIsOn) filter += ` contrast(${styling.selFilterCont}%)`;
-			if (styling.selFilterGrayIsOn) filter += ` grayscale(${styling.selFilterGray}%)`;
-			if (styling.selFilterHueIsOn) filter += ` hue-rotate(${styling.selFilterHue}deg)`;
-			if (styling.selFilterInvertIsOn) filter += ` invert(${styling.selFilterInvert}%)`;
-			if (styling.selFilterOpacIsOn) filter += ` opacity(${styling.selFilterOpac}%)`;
-			if (styling.selFilterSaturIsOn) filter += ` saturate(${styling.selFilterSatur})`;
-			if (styling.selFilterSepiaIsOn) filter += ` sepia(${styling.selFilterSepia}%)`;
+			if (styling.selFilterBlurIsOn) stateFilters += ` blur(${styling.selFilterBlur}px)`;
+			if (styling.selFilterBrightIsOn) stateFilters += ` brightness(${styling.selFilterBright}%)`;
+			if (styling.selFilterContIsOn) stateFilters += ` contrast(${styling.selFilterCont}%)`;
+			if (styling.selFilterGrayIsOn) stateFilters += ` grayscale(${styling.selFilterGray}%)`;
+			if (styling.selFilterHueIsOn) stateFilters += ` hue-rotate(${styling.selFilterHue}deg)`;
+			if (styling.selFilterInvertIsOn) stateFilters += ` invert(${styling.selFilterInvert}%)`;
+			if (styling.selFilterOpacIsOn) stateFilters += ` opacity(${styling.selFilterOpac}%)`;
+			if (styling.selFilterSaturIsOn) stateFilters += ` saturate(${styling.selFilterSatur}%)`; // Убрал px, saturate в % или безразмерный
+			if (styling.selFilterSepiaIsOn) stateFilters += ` sepia(${styling.selFilterSepia}%)`;
 
-			if (styling.objectGradientIsOn)
-				style += `background-image: linear-gradient(${styling.objectGradientOnSelect});`;
+            // Логика для фона и градиента в активном состоянии (уже есть выше/ниже, но дублируем для ясности ИЛИ УДАЛЯЕМ ОТСЮДА)
+            // if (styling.objectGradientIsOn) { style += `background-image: linear-gradient(${styling.objectGradientOnSelect});`; }
+
+		}
+		// Определяем фильтры для состояния "недоступен"
+		else if (!hasRequireds) {
+			if (styling.reqFilterBlurIsOn) stateFilters += ` blur(${styling.reqFilterBlur}px)`;
+			if (styling.reqFilterBrightIsOn) stateFilters += ` brightness(${styling.reqFilterBright}%)`;
+			if (styling.reqFilterContIsOn) stateFilters += ` contrast(${styling.reqFilterCont}%)`;
+			if (styling.reqFilterGrayIsOn) stateFilters += ` grayscale(${styling.reqFilterGray}%)`;
+			if (styling.reqFilterHueIsOn) stateFilters += ` hue-rotate(${styling.reqFilterHue}deg)`;
+			if (styling.reqFilterInvertIsOn) stateFilters += ` invert(${styling.reqFilterInvert}%)`;
+			if (styling.reqFilterOpacIsOn) stateFilters += ` opacity(${styling.reqFilterOpac}%)`;
+			if (styling.reqFilterSaturIsOn) stateFilters += ` saturate(${styling.reqFilterSatur}%)`; // Убрал px
+			if (styling.reqFilterSepiaIsOn) stateFilters += ` sepia(${styling.reqFilterSepia}%)`;
+
+			// Применяем фон для недоступного состояния (важно делать это здесь, если оно должно переопределять базовый/активный)
+			if (styling.reqBgColorIsOn) {
+                 style += `background-color: ${styling.reqFilterBgColor};`;
+                 // Если есть фоновая картинка для активного состояния, ее надо убрать для недоступного, если только цвет задан
+                 style += `background-image: none;`;
+            } else {
+                // Если цвет для недоступного не задан, возвращаемся к базовому (если он был)
+                // Эта строка может быть лишней, если базовый цвет уже установлен ранее
+                 // style += `background-color: ${styling.objectBgColor};`;
+            }
+
+             // Логика для градиента в недоступном состоянии (уже есть выше/ниже, но дублируем для ясности ИЛИ УДАЛЯЕМ ОТСЮДА)
+             if (styling.objectGradientIsOn) { style += `background-image: linear-gradient(${styling.objectGradientOnReq});`; }
 		} else {
-			// If the object does not have alle of the conditions.
-			if (!hasRequireds) {
-				if (styling.reqFilterBlurIsOn) filter += ` blur(${styling.reqFilterBlur}px)`;
-				if (styling.reqFilterBrightIsOn) filter += ` brightness(${styling.reqFilterBright}%)`;
-				if (styling.reqFilterContIsOn) filter += ` contrast(${styling.reqFilterCont}%)`;
-				if (styling.reqFilterGrayIsOn) filter += ` grayscale(${styling.reqFilterGray}%)`;
-				if (styling.reqFilterHueIsOn) filter += ` hue-rotate(${styling.reqFilterHue}deg)`;
-				if (styling.reqFilterInvertIsOn) filter += ` invert(${styling.reqFilterInvert}%)`;
-				if (styling.reqFilterOpacIsOn) filter += ` opacity(${styling.reqFilterOpac}%)`;
-				if (styling.reqFilterSaturIsOn) filter += ` saturate(${styling.reqFilterSatur})`;
-				if (styling.reqFilterSepiaIsOn) filter += ` sepia(${styling.reqFilterSepia}%)`;
+            // Обычное состояние - specific background/gradient logic if needed?
+             // Логика для градиента в обычном состоянии (уже есть выше/ниже, но дублируем для ясности ИЛИ УДАЛЯЕМ ОТСЮДА)
+             if (styling.objectGradientIsOn) { style += `background-image: linear-gradient(${styling.objectGradient});`; }
+        }
 
-				if (styling.reqBgColorIsOn) style += `background-color: ${styling.reqFilterBgColor};`;
-				else style += `background-color: ${styling.objectBgColor};`;
 
-				if (styling.objectGradientIsOn)
-					style += `background-image: linear-gradient(${styling.objectGradientOnReq});`;
-			}
+		// Определяем фильтр тени, если он включен
+		if (styling.objectDropShadowIsOn) {
+			dropShadowFilter = `drop-shadow(${styling.objectDropShadowH}px ${styling.objectDropShadowV}px ${styling.objectDropShadowBlur}px ${styling.objectDropShadowColor})`;
 		}
 
-		style += `filter: ${filter};`;
+		// Собираем финальную строку фильтра, добавляя пробел между тенью и фильтрами состояния, если оба есть
+		const finalFilter = [dropShadowFilter, stateFilters.trim()].filter(Boolean).join(' ');
+
+		// Применяем свойство filter, только если есть что применять (тень или фильтры состояния)
+		if (finalFilter) {
+			style += ` filter: ${finalFilter};`;
+		}
+
+
+         // Логика градиентов (применяется ПОСЛЕ фильтров и может визуально перекрывать фон)
+         // Убедись, что эта логика не конфликтует с установкой background-color/image выше
+         if (styling.objectGradientIsOn) {
+              // const hasRequiredsCheck = checkRequireds(object); // Проверка уже есть выше
+              if (object.isActive && hasRequireds) {
+                   style += ` background-image: linear-gradient(${styling.objectGradientOnSelect});`;
+              } else if (!hasRequireds) {
+                    style += ` background-image: linear-gradient(${styling.objectGradientOnReq});`;
+              } else if (styling.objectGradient) { // Применяем базовый градиент только если он задан
+                   // Убедись, что это не перезапишет фон, установленный для активного/недоступного состояния без градиента
+                   style += ` background-image: linear-gradient(${styling.objectGradient});`;
+              }
+         }
 
 		return style;
+		// --- Конец исправленного блока ---
 	});
 
 	const findRowTitle = app.rows.find((row) => row.objects.includes(object))?.title ?? '';
