@@ -1,5 +1,4 @@
- 
-
+<!-- src/lib/cyoa/Object.svelte -->
 <script lang="ts">
 	import type { Backpack, Object, Requireds, Row } from '$lib/store/types';
 	import * as Tooltip from '$lib/components/ui/tooltip';
@@ -131,44 +130,56 @@
 
 	const objectBackground = $derived.by(() => {
 		let style = '';
+		style += `position: relative; `; // Needed for overlay and potentially absolute positioned children
+		style += `margin: ${styling.objectMargin}px;`; // Base margin
 
-		style += `position: relative; `; // Needed for absolute positioning of the overlay
+		const hasRequireds = checkRequireds(object);
+		const isActiveState = (object.isActive || (object.isSelectableMultiple && pi(object.multipleUseVariable) > 0)) && hasRequireds;
+		const isUnavailableState = !hasRequireds;
 
-		// Styles the color of the background, margin and selected color if selected.
-		if (!object.isActive) {
-			if (styling.objectBackgroundImage) {
-				style += `background-image: url("${getImageURL(styling.objectBackgroundImage, appMetaState.imagePrefix)}");`;  
-				style += `background-repeat: ${styling.objectBackgroundRepeat ?? 'repeat'};`;
+		// --- Determine Background ---
+		let finalBgColor = styling.objectBgColorIsOn ? styling.objectBgColor : 'transparent';
+		let finalBgImage = 'none';
+		let finalBgRepeat = styling.objectBackgroundRepeat ?? 'repeat';
+		let finalBgPosition = '0% 0%'; // Default position
+		let finalBgSize = 'auto'; // Default size
+
+		// Base Background Image (if not overridden by state)
+		if (styling.objectBackgroundImage) {
+			finalBgImage = `url("${getImageURL(styling.objectBackgroundImage, appMetaState.imagePrefix)}")`;
+		}
+
+		// Activated State Background
+		if (isActiveState) {
+			if (styling.selFilterBgImageIsOn && styling.selFilterBgImages && styling.selFilterBgImages.length > 0) {
+				const randomBackgroundImage = getRandomBackgroundImage(styling.selFilterBgImages, object.id);
+				finalBgImage = `url("${randomBackgroundImage}")`;
+				finalBgRepeat = styling.selFilterBgImageRepeat ?? 'repeat';
+				finalBgPosition = styling.selFilterBgImagePosition ?? '0% 0%';
+				finalBgSize = styling.selFilterBgImageWidth === '100%' ? '100% auto' : 'auto';
+				finalBgColor = 'transparent';
+			} else if (styling.selBgColorIsOn) {
+				finalBgColor = styling.selFilterBgColor ?? finalBgColor;
+				finalBgImage = 'none';
 			}
 		}
-		if (styling.objectBgColorIsOn) style += `background-color: ${styling.objectBgColor};`;
-		style += `margin: ${styling.objectMargin}px;`;
-		if (object.isActive || (object.isImageUpload && object.image.length > 0)) {
-		if (styling.selFilterBgImageIsOn && styling.selFilterBgImages && styling.selFilterBgImages.length > 0) {
-			const randomBackgroundImage = getRandomBackgroundImage(styling.selFilterBgImages, object.id);
-			style += `background-image: url("${randomBackgroundImage}");`;
-            // Используем свойство для активного состояния, по умолчанию 'repeat'
-			style += `background-repeat: ${styling.selFilterBgImageRepeat ?? 'repeat'};`;
-			style += `background-position: ${styling.selFilterBgImagePosition};`;
-			// background-origin and background-size were applied before, keep or adjust as needed
-            style += `background-origin: border-box;`;
-			style += `background-size: ${styling.selFilterBgImageWidth} auto;`;
-            // Opacity and Filter are separate properties, applied later or differently.
-            // Avoid setting opacity directly on background, use rgba color or separate overlay if needed.
-		} else if (styling.selBgColorIsOn) {
-			style += `background-color: ${styling.selFilterBgColor};`;
-            // Если для выбранного состояния нет картинки, но есть цвет, убеждаемся, что фоновая картинка от неактивного состояния убрана
-            if (!styling.selFilterBgImageIsOn || !styling.selFilterBgImages || styling.selFilterBgImages.length === 0) {
-                 style += `background-image: none;`;
-            }
+		// Unavailable State Background
+		else if (isUnavailableState) {
+			if (styling.reqFilterBgImageIsOn && styling.reqFilterBgImages && styling.reqFilterBgImages.length > 0) {
+				const reqBgImageUrl = getImageURL(styling.reqFilterBgImages[0], appMetaState.imagePrefix);
+				finalBgImage = `url("${reqBgImageUrl}")`;
+				finalBgRepeat = styling.reqFilterBgImageRepeat ?? 'repeat';
+				finalBgPosition = styling.reqFilterBgImagePosition ?? '0% 0%';
+				finalBgSize = styling.reqFilterBgImageSize ?? 'auto';
+				finalBgColor = 'transparent';
+			} else if (styling.reqBgColorIsOn) {
+				finalBgColor = styling.reqFilterBgColor ?? finalBgColor;
+				finalBgImage = 'none';
+			}
 		}
-	}
 
 		// Border Radius
 		const suffix = styling.objectBorderRadiusIsPixels ? 'px' : '%';
-
-		if (styling.objectGradientIsOn)
-			style += `background-image: linear-gradient(${styling.objectGradient});`;
 
 		if (pi(object.template) === 1 || row.choicesShareTemplate)
 			style += `border-radius: ${styling.objectBorderRadiusTopLeft}0${suffix} ${styling.objectBorderRadiusTopRight}0${suffix} ${styling.objectBorderRadiusBottomRight}0${suffix} ${styling.objectBorderRadiusBottomLeft}0${suffix};`;
@@ -179,27 +190,42 @@
 
 		if (styling.objectOverflowIsOn) style += `overflow: hidden;`;
 
-		if (styling.objectBorderIsOn || (object.isActive && styling.selBorderColorIsOn))
-			style += `border: ${styling.objectBorderWidth}px ${styling.objectBorderStyle} ${
-				object.isActive && styling.selBorderColorIsOn
+		// Apply determined background properties
+		style += `background-color: ${finalBgColor};`;
+		if (finalBgImage !== 'none') {
+			style += `background-image: ${finalBgImage};`;
+			style += `background-repeat: ${finalBgRepeat};`;
+			style += `background-position: ${finalBgPosition};`;
+			style += `background-size: ${finalBgSize};`;
+			// style += `background-origin: border-box;`;
+		} else {
+			style += `background-image: none;`;
+		}
+
+		// Border (Conditional Color)
+		if (styling.objectBorderIsOn || (isActiveState && styling.selBorderColorIsOn)) {
+			const borderColor = (isActiveState && styling.selBorderColorIsOn)
 					? styling.selFilterBorderColor
-					: styling.objectBorderColor
-			};`;
+					: styling.objectBorderColor;
+			style += `border: ${styling.objectBorderWidth}px ${styling.objectBorderStyle} ${borderColor};`;
+		}
 
-		// Styles here the drop-shadow.
-		
-		
-		
-		// --- Начало исправленного блока ---
-		let stateFilters = ''; // Фильтры для состояния (blur, brightness, etc.)
-		let dropShadowFilter = ''; // Фильтр тени
-		const hasRequireds = checkRequireds(object);
+		// --- Determine Filters (State Effects + Shadow) ---
+		let stateFilters = ''; // Blur, Brightness, etc.
+		let dropShadowFilter = ''; // Holds the final drop-shadow() value
 
-		// Определяем фильтры для состояния "активирован"
-		if (
-			(object.isActive || (object.isSelectableMultiple && pi(object.multipleUseVariable) > 0)) &&
-			hasRequireds
-		) {
+		// Determine Drop Shadow Override
+		if (isActiveState && styling.selFilterDropShadowIsOn) {
+			dropShadowFilter = `drop-shadow(${styling.selFilterDropShadowH ?? 0}px ${styling.selFilterDropShadowV ?? 0}px ${styling.selFilterDropShadowBlur ?? 0}px ${styling.selFilterDropShadowColor ?? styling.objectDropShadowColor})`; // Added spread if needed: ${styling.selFilterDropShadowSpread ?? 0}px
+		} else if (isUnavailableState && styling.reqFilterDropShadowIsOn) {
+            dropShadowFilter = `drop-shadow(${styling.reqFilterDropShadowH ?? 0}px ${styling.reqFilterDropShadowV ?? 0}px ${styling.reqFilterDropShadowBlur ?? 0}px ${styling.reqFilterDropShadowColor ?? styling.objectDropShadowColor})`; // Added spread if needed: ${styling.reqFilterDropShadowSpread ?? 0}px
+        } else if (styling.objectDropShadowIsOn) {
+			// Use base shadow if no override is active
+			dropShadowFilter = `drop-shadow(${styling.objectDropShadowH}px ${styling.objectDropShadowV}px ${styling.objectDropShadowBlur}px ${styling.objectDropShadowColor})`; // Added spread if needed: ${styling.objectDropShadowSpread}px
+		}
+
+		// Determine State Filters (Blur, Brightness, etc.)
+		if (isActiveState) {
 			if (styling.selFilterBlurIsOn) stateFilters += ` blur(${styling.selFilterBlur}px)`;
 			if (styling.selFilterBrightIsOn) stateFilters += ` brightness(${styling.selFilterBright}%)`;
 			if (styling.selFilterContIsOn) stateFilters += ` contrast(${styling.selFilterCont}%)`;
@@ -207,15 +233,9 @@
 			if (styling.selFilterHueIsOn) stateFilters += ` hue-rotate(${styling.selFilterHue}deg)`;
 			if (styling.selFilterInvertIsOn) stateFilters += ` invert(${styling.selFilterInvert}%)`;
 			if (styling.selFilterOpacIsOn) stateFilters += ` opacity(${styling.selFilterOpac}%)`;
-			if (styling.selFilterSaturIsOn) stateFilters += ` saturate(${styling.selFilterSatur}%)`; // Убрал px, saturate в % или безразмерный
+			if (styling.selFilterSaturIsOn) stateFilters += ` saturate(${styling.selFilterSatur}%)`;
 			if (styling.selFilterSepiaIsOn) stateFilters += ` sepia(${styling.selFilterSepia}%)`;
-
-            // Логика для фона и градиента в активном состоянии (уже есть выше/ниже, но дублируем для ясности ИЛИ УДАЛЯЕМ ОТСЮДА)
-            // if (styling.objectGradientIsOn) { style += `background-image: linear-gradient(${styling.objectGradientOnSelect});`; }
-
-		}
-		// Определяем фильтры для состояния "недоступен"
-		else if (!hasRequireds) {
+		} else if (isUnavailableState) { // Note: This is `else if`, state filters don't apply if active
 			if (styling.reqFilterBlurIsOn) stateFilters += ` blur(${styling.reqFilterBlur}px)`;
 			if (styling.reqFilterBrightIsOn) stateFilters += ` brightness(${styling.reqFilterBright}%)`;
 			if (styling.reqFilterContIsOn) stateFilters += ` contrast(${styling.reqFilterCont}%)`;
@@ -223,59 +243,34 @@
 			if (styling.reqFilterHueIsOn) stateFilters += ` hue-rotate(${styling.reqFilterHue}deg)`;
 			if (styling.reqFilterInvertIsOn) stateFilters += ` invert(${styling.reqFilterInvert}%)`;
 			if (styling.reqFilterOpacIsOn) stateFilters += ` opacity(${styling.reqFilterOpac}%)`;
-			if (styling.reqFilterSaturIsOn) stateFilters += ` saturate(${styling.reqFilterSatur}%)`; // Убрал px
+			if (styling.reqFilterSaturIsOn) stateFilters += ` saturate(${styling.reqFilterSatur}%)`;
 			if (styling.reqFilterSepiaIsOn) stateFilters += ` sepia(${styling.reqFilterSepia}%)`;
-
-			// Применяем фон для недоступного состояния (важно делать это здесь, если оно должно переопределять базовый/активный)
-			if (styling.reqBgColorIsOn) {
-                 style += `background-color: ${styling.reqFilterBgColor};`;
-                 // Если есть фоновая картинка для активного состояния, ее надо убрать для недоступного, если только цвет задан
-                 style += `background-image: none;`;
-            } else {
-                // Если цвет для недоступного не задан, возвращаемся к базовому (если он был)
-                // Эта строка может быть лишней, если базовый цвет уже установлен ранее
-                 // style += `background-color: ${styling.objectBgColor};`;
-            }
-
-             // Логика для градиента в недоступном состоянии (уже есть выше/ниже, но дублируем для ясности ИЛИ УДАЛЯЕМ ОТСЮДА)
-             if (styling.objectGradientIsOn) { style += `background-image: linear-gradient(${styling.objectGradientOnReq});`; }
-		} else {
-            // Обычное состояние - specific background/gradient logic if needed?
-             // Логика для градиента в обычном состоянии (уже есть выше/ниже, но дублируем для ясности ИЛИ УДАЛЯЕМ ОТСЮДА)
-             if (styling.objectGradientIsOn) { style += `background-image: linear-gradient(${styling.objectGradient});`; }
-        }
-
-
-		// Определяем фильтр тени, если он включен
-		if (styling.objectDropShadowIsOn) {
-			dropShadowFilter = `drop-shadow(${styling.objectDropShadowH}px ${styling.objectDropShadowV}px ${styling.objectDropShadowBlur}px ${styling.objectDropShadowColor})`;
 		}
 
-		// Собираем финальную строку фильтра, добавляя пробел между тенью и фильтрами состояния, если оба есть
+		// Combine filters
 		const finalFilter = [dropShadowFilter, stateFilters.trim()].filter(Boolean).join(' ');
-
-		// Применяем свойство filter, только если есть что применять (тень или фильтры состояния)
 		if (finalFilter) {
 			style += ` filter: ${finalFilter};`;
 		}
 
-
-         // Логика градиентов (применяется ПОСЛЕ фильтров и может визуально перекрывать фон)
-         // Убедись, что эта логика не конфликтует с установкой background-color/image выше
+         // --- Apply Gradients (Can override background image/color) ---
          if (styling.objectGradientIsOn) {
-              // const hasRequiredsCheck = checkRequireds(object); // Проверка уже есть выше
-              if (object.isActive && hasRequireds) {
-                   style += ` background-image: linear-gradient(${styling.objectGradientOnSelect});`;
-              } else if (!hasRequireds) {
-                    style += ` background-image: linear-gradient(${styling.objectGradientOnReq});`;
-              } else if (styling.objectGradient) { // Применяем базовый градиент только если он задан
-                   // Убедись, что это не перезапишет фон, установленный для активного/недоступного состояния без градиента
-                   style += ` background-image: linear-gradient(${styling.objectGradient});`;
+              let gradientToApply: string | undefined = undefined;
+              if (isActiveState && styling.objectGradientOnSelect) {
+                  gradientToApply = styling.objectGradientOnSelect;
+              } else if (isUnavailableState && styling.objectGradientOnReq) {
+                  gradientToApply = styling.objectGradientOnReq;
+              } else if (!isActiveState && !isUnavailableState && styling.objectGradient) {
+                  gradientToApply = styling.objectGradient;
+              }
+
+              if (gradientToApply) {
+                  // Use background-image for gradient
+                  style += ` background-image: linear-gradient(${gradientToApply});`;
               }
          }
 
 		return style;
-		// --- Конец исправленного блока ---
 	});
 
 	const findRowTitle = app.rows.find((row) => row.objects.includes(object))?.title ?? '';
@@ -1226,7 +1221,7 @@
 				<div
 					class="absolute inset-0 z-10 pointer-events-none"
 					style:background-image={`url("${getImageURL(styling.objectBorderImage, appMetaState.imagePrefix)}")`}
-					style:background-size="100% 100%"  
+					style:background-size="100% 100%"
 					style:background-repeat="no-repeat"
 				>
 					<!-- This div is just the border overlay -->

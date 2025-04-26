@@ -1,3 +1,4 @@
+// src/lib/store/types.ts
 export type Styling = {
 	// Font for the text.
 	rowTitle: string; // The font for the row-titles.
@@ -50,7 +51,7 @@ export type Styling = {
 	backgroundColor: string;
 	backgroundRepeat?: 'repeat' | 'no-repeat' | 'space' | 'round'; // + Global background repeat
 	backgroundAttachment?: 'fixed' | 'scroll';
-    backgroundSize?: 'auto' | 'cover' | 'contain'; 
+    backgroundSize?: 'auto' | 'cover' | 'contain';
 	objectBgColor: string;
 	rowBgColor: string;
 
@@ -60,7 +61,7 @@ export type Styling = {
 
 
     rowBackgroundRepeat?: 'repeat' | 'no-repeat' | 'space' | 'round'; // + Row background repeat
-    objectBackgroundRepeat?: 'repeat' | 'no-repeat' | 'space' | 'round'; // + Object background repeat 
+    objectBackgroundRepeat?: 'repeat' | 'no-repeat' | 'space' | 'round'; // + Object background repeat
 
 	// Image radius and width
 	objectImageWidth: number | string;
@@ -73,7 +74,7 @@ export type Styling = {
 	rowTextPaddingX: number | string;
 	objectTextPadding: number | string;
 
-	objectTextPaddingTop: number | string; 
+	objectTextPaddingTop: number | string;
 	objectTextPaddingRight: number | string;
 	objectTextPaddingBottom: number | string;
 	objectTextPaddingLeft: number | string;
@@ -82,7 +83,7 @@ export type Styling = {
 	rowBodyMarginBottom: number | string;
 	rowBodyMarginSides: number | string;
 
-	// Style Drop Shadow Object
+	// Style Drop Shadow Object (Base)
 	objectDropShadowH: number | string;
 	objectDropShadowV: number | string;
 	objectDropShadowSpread: number | string;
@@ -122,12 +123,18 @@ export type Styling = {
 	selFilterBgImages: string[];
 	selFilterBgImageOpacity: number;
 	selFilterBgImageIsOn: boolean;
-	selFilterBgImagePosition: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-	selFilterBgImageRepeat: 'repeat' | 'no-repeat' | 'space' | 'round'; //  
+	selFilterBgImagePosition: string; //'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center' | string; // Allow more positions
+	selFilterBgImageRepeat: 'repeat' | 'no-repeat' | 'space' | 'round'; //
 	selFilterBgImageWidth: 'auto' | '100%';
 	selBorderColorIsOn: boolean;
 	selCTextColorIsOn: boolean;
 	selCTitleColorIsOn: boolean;
+    selFilterDropShadowIsOn?: boolean; // Shadow override toggle
+    selFilterDropShadowH?: number | string;
+    selFilterDropShadowV?: number | string;
+    selFilterDropShadowBlur?: number | string;
+    selFilterDropShadowSpread?: number | string; // Added spread for consistency
+    selFilterDropShadowColor?: string;
 
 	// Required Filter
 	reqFilterBlurIsOn: boolean;
@@ -149,11 +156,23 @@ export type Styling = {
 	reqFilterSepiaIsOn: boolean;
 	reqFilterSepia: number | string;
 	reqBgColorIsOn: boolean;
+	reqFilterBgImageIsOn?: boolean;
+	reqFilterBgImages?: string[];
 	reqFilterBgColor: string;
+	reqFilterBgImageRepeat?: 'repeat' | 'no-repeat' | 'space' | 'round';
+	reqFilterBgImagePosition?: string;
+	reqFilterBgImageSize?: string;
+	reqFilterBgImageOpacity?: number;
 	reqFilterVisibleIsOn: boolean;
 	reqCTextColorIsOn: boolean;
 	reqCTitleColorIsOn: boolean;
 	reqFilterCTitleColor: string;
+    reqFilterDropShadowIsOn?: boolean; // Shadow override toggle
+    reqFilterDropShadowH?: number | string;
+    reqFilterDropShadowV?: number | string;
+    reqFilterDropShadowBlur?: number | string;
+    reqFilterDropShadowSpread?: number | string; // Added spread for consistency
+    reqFilterDropShadowColor?: string;
 
 	objectDesignIsAdvanced?: boolean;
 	rowDesignIsAdvanced?: boolean;
@@ -214,6 +233,7 @@ export type Styling = {
 	objectImgObjectFillHeight?: number | string;
 };
 
+// ... (Rest of the types: RowStyling, Colors, Object, App, etc. remain the same)
 export type RowStyling = Styling & {
 	scoreText: string;
 	scoreTextSize: number | string;
@@ -515,7 +535,7 @@ export type App = {
 		imageSidePlacement?: boolean;
 		imageOnSide?: boolean;
 		iconWidth?: number | string;
-		iconHeight?: number | string;		
+		iconHeight?: number | string;
 		// initValue?: number;
 	}[]; // The pointtypes that the user have created.
 	variables: { id: string; isTrue: boolean }[]; // The variables that the user have created.

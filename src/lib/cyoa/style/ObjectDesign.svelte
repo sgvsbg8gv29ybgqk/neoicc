@@ -1,3 +1,4 @@
+<!-- src/lib/cyoa/style/ObjectDesign.svelte -->
 <!-- we can ingore this warning as this is a one time transformation that happens synchronously before the ui is rendered -->
 <!-- svelte-ignore state_referenced_locally -->
 <script lang="ts">
@@ -7,7 +8,8 @@
 	import WrappedInput from '$lib/components/wrapped/WrappedInput.svelte';
 	import WrappedSelect from '$lib/components/wrapped/WrappedSelect.svelte';
 	import WrappedStyle from '$lib/components/wrapped/WrappedStyle.svelte';
-	import WrappedImageInput from '$lib/components/wrapped/WrappedImageInput.svelte'; // + Import WrappedImageInput
+	import { Separator } from '$lib/components/ui/separator';
+	import WrappedImageInput from '$lib/components/wrapped/WrappedImageInput.svelte';
 	import { parseStyling } from '$lib/store/parsers/stylingParser';
 	import { app } from '$lib/store/store.svelte';
 	import type { Object, Row } from '$lib/store/types';
@@ -44,7 +46,12 @@
 		{ value: 'outset' },
 		{ value: 'hidden' }
 	];
-	// Неиспользуемый borderImageRepeatStyles удален
+	const backgroundRepeatOptions = [
+		{ name: 'Repeat', value: 'repeat' },
+		{ name: 'No Repeat', value: 'no-repeat' },
+		{ name: 'Space', value: 'space' },
+		{ name: 'Round', value: 'round' },
+	];
 </script>
 <WrappedStyle title="Choice Design" {open} {onclose} {embedded} class="sm:max-w-[1200px]">
 <div class="grid gap-4 py-4">
@@ -58,7 +65,7 @@ type="number"
 suffix="px"
 bind:value={styling.objectMargin}
 />
-{#if styling.objectDesignIsAdvanced} 
+{#if styling.objectDesignIsAdvanced}
 	<WrappedInput
 		id="object-text-padding-top"
 		label="Padding Top"
@@ -91,7 +98,7 @@ bind:value={styling.objectMargin}
 		bind:value={styling.objectTextPaddingLeft}
 		placeholder="0"
 	/>
-{:else} 
+{:else}
 	<WrappedInput
 		id="object-text-padding"
 		label="Padding (All Sides)"
@@ -257,7 +264,7 @@ styling.objectBorderRadiusBottomRight = v;
 </div>
 </div>
 <div class="grid grid-cols-6 gap-4">
-	<div class="flex flex-col gap-y-2 col-span-1"> 
+	<div class="flex flex-col gap-y-2 col-span-1">
 		<h6>Color of the Drop Shadow</h6>
 		<ColorPicker
 			bind:hex={() => styling.objectDropShadowColor ?? 'grey',
@@ -280,6 +287,34 @@ styling.objectBorderRadiusBottomRight = v;
 		/>
 	</div>
 	<div class="flex flex-col gap-y-2 col-span-1">
+		<div class="flex flex-row items-center gap-x-1">
+			<Checkbox id="object-bg-color-is-on" bind:checked={styling.objectBgColorIsOn}/>
+			<Label for="object-bg-color-is-on">Base Background Color is turned on</Label>
+		</div>
+		{#if styling.objectBgColorIsOn}
+			<h6>Color of the Base Background</h6>
+			<ColorPicker
+				bind:hex={() => styling.objectBgColor ?? '#FFFFFFFF',
+				(v) => (styling.objectBgColor = v)}
+				components={ChromeVariant}
+				sliderDirection="horizontal"
+				isDialog={false}
+				isAlpha
+			/>
+		{/if}
+		<Separator class="my-2"/>
+		<h6>Base Background Image</h6>
+		<WrappedImageInput id="object-background-image-file-input" label="Background Image File" bind:value={styling.objectBackgroundImage} />
+		{#if styling.objectBackgroundImage}
+			<WrappedSelect
+				id="object-background-repeat"
+				label="Background Repeat"
+				items={backgroundRepeatOptions}
+				bind:value={styling.objectBackgroundRepeat}
+				placeholder="Select Repeat" 
+			/>
+		{/if}
+		<Separator class="my-2"/>
 		<div class="flex flex-row items-center gap-x-1">
 			<Switch id="object-design-is-advanced" bind:checked={styling.objectDesignIsAdvanced} />
 			<Label for="object-design-is-advanced">Advanced Design?</Label>
