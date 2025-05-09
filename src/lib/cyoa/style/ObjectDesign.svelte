@@ -1,5 +1,3 @@
-<!-- we can ingore this warning as this is a one time transformation that happens synchronously before the ui is rendered -->
-<!-- svelte-ignore state_referenced_locally -->
 <script lang="ts">
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
@@ -7,7 +5,6 @@
 	import WrappedInput from '$lib/components/wrapped/WrappedInput.svelte';
 	import WrappedSelect from '$lib/components/wrapped/WrappedSelect.svelte';
 	import WrappedStyle from '$lib/components/wrapped/WrappedStyle.svelte';
-	import { parseStyling } from '$lib/store/parsers/stylingParser';
 	import { app } from '$lib/store/store.svelte';
 	import type { Object, Row } from '$lib/store/types';
 	import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
@@ -30,7 +27,6 @@
 		from === 'private' ? (obj?.styling ?? app.styling) : app.styling
 	) as typeof app.styling;
 	
-	parseStyling(styling);
 	const borderRadiusSuffix = $derived(styling.objectBorderRadiusIsPixels ? 'px' : '%');
 	const borderStyles = [
 		{ value: 'solid' },

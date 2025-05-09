@@ -1078,7 +1078,7 @@
 			}}
 		>
 			<!-- Template 1 - Picture on top. -->
-			{#if pi(object.template) === 1 || innerWidth < 1000 || row.choicesShareTemplate}
+			{#if innerWidth < 1000 || row.choicesShareTemplate || pi(object.template) === 1 }
 				<div class="m-0 w-full">
 					{#if row.resultShowRowTitle}
 						<div
