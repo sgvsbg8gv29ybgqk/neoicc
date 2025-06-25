@@ -1094,6 +1094,42 @@
 									type="number"
 								/>
 							{/if}
+
+							<!-- Code to control music -->
+							 <div class="flex flex-row items-center gap-x-1 border-t pt-2 mt-2 border-gray-600">
+								<Checkbox
+									id="object-plays-music-{object.id}"
+									bind:checked={() => object.playsMusic ?? false, (v) => (object.playsMusic = v)}
+								/>
+								<Label for="object-plays-music-{object.id}">
+									Plays background music when selected
+								</Label>
+							</div>
+
+							{#if object.playsMusic}
+								<div class="ml-4 flex flex-col gap-y-2">
+									<p>
+										Place the MP3 file in the <code>music/</code> folder.
+										Enter only the file name below (e.g., <code>theme.mp3</code>).
+									</p>
+									<WrappedInput
+										label="Music file name"
+										id="object-music-file-{object.id}"
+										bind:value={object.musicFile}
+										placeholder="ambient_music.mp3"
+									/>
+								</div>
+							{/if}
+
+							<div class="flex flex-row items-center gap-x-1">
+								<Checkbox
+									id="object-stops-music-{object.id}"
+									bind:checked={() => object.stopsMusic ?? false, (v) => (object.stopsMusic = v)}
+								/>
+								<Label for="object-stops-music-{object.id}">
+									Stops any playing music when selected
+								</Label>
+							</div>
 						</div>
 					</Accordion.Content>
 				</Accordion.Item>

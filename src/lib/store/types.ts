@@ -409,6 +409,14 @@ export type Object = {
 	randomWeight?: number | string;
 	isButtonObject?: boolean;
 	imageSourceTooltip?: string;
+
+    playsMusic?: boolean;       // Flag that this object includes music
+    musicFile?: string;         // File name (e.g. ‘dungeon_theme.mp3’)
+    stopsMusic?: boolean;       // Flag that this object stops any music
+
+
+
+
 };
 
 export type App = {

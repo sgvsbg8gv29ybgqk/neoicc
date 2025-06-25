@@ -1,8 +1,10 @@
 // import { toast } from 'svelte-sonner';
+import { get } from 'svelte/store'; 
 import { app } from './store.svelte';
 import type { App, Backpack, Object, PointType, Requireds, Row } from './types';
 import { pi } from './utils';
 import { backgroundImages } from '../cyoa/style/backgroundImageUtils';
+import { playMusic, stopMusic, currentTrack } from './musicPlayer';
 
 function toast(message: string) {
 	console.log(message);
@@ -572,6 +574,14 @@ export function activateObject(object: Object, row: Row | Backpack) {
 			// Is the FUNCTIONS, happens when the object is selected.
 			// ------------------------------------------------------
 
+			// Music
+			  if (object.stopsMusic) {
+                stopMusic();
+            } else if (object.playsMusic && object.musicFile) {
+                playMusic(object.musicFile);
+            }
+
+
 			// This activates cleaning if the function is activated.
 			if (object.cleanACtivatedOnSelect) {
 				cleanActivated();
@@ -793,6 +803,14 @@ export function activateObject(object: Object, row: Row | Backpack) {
 
 			// Deletes the the id from the array.
 		} else {
+
+			// --- Music logic on deactivation ---
+            const track = get(currentTrack);
+            // If this object was playing music (its file name is the same as the current track), we stop it.
+            if (object.playsMusic && object.musicFile && object.musicFile === track) {
+                stopMusic();
+            }
+
 			for (const score of object.scores) {
 				if ((checkRequireds(score) && score.isActive) || score.isActive) {
 					// Goes trough all of the scores and check which is fits.
