@@ -1,61 +1,56 @@
-// File: src/lib/store/musicPlayer.ts
+// src/lib/store/musicPlayer.ts
 
 import { writable, get } from 'svelte/store';
+// Using SvelteKit's built-in module for the base path
+import { base } from '$app/paths'; 
 
 export const currentTrack = writable<string | null>(null);
 export const isPlaying = writable<boolean>(false);
 
 let audio: HTMLAudioElement | null = null;
 
-/**
- * Ensures the global audio element is initialized once (lazy initialization).
- * Sets up default properties and event listeners.
- */
+// This function lazily creates the <audio> element if it doesn't already exist
 function ensureAudio() {
     if (!audio) {
         audio = new Audio();
         audio.loop = true;
         audio.volume = 0.5;
-
+ 
         audio.onplay = () => isPlaying.set(true);
         audio.onpause = () => isPlaying.set(false);
     }
 }
 
-/**
- * Plays a track by its file name.
- * If the same track is requested, it toggles play/pause.
- * If a new track is requested, it starts playing the new track.
- * @param {string} fileName - The name of the audio file in the /music/ directory.
- */
+// For "Start Music" cards
 export function playMusic(fileName: string) {
     ensureAudio();
     if (!audio) return;
+ 
+    const trackSrc = `${base}/music/${fileName}`;
 
-    const trackSrc = `/music/${fileName}`;
     const currentTrackName = get(currentTrack);
 
+    // If the same card is clicked
     if (currentTrackName === fileName) {
-        // Toggle play/pause for the current track
         if (audio.paused) {
             audio.play().catch(e => console.error("Audio play failed:", e));
         } else {
             audio.pause();
         }
-    } else {
-        // Play a new track
+    } 
+    // If a new music card is clicked
+    else {
+        // Set the new source and play it
         audio.src = trackSrc;
         audio.play().catch(e => console.error("Audio play failed:", e));
         currentTrack.set(fileName);
     }
 }
 
-/**
- * Toggles the pause state of the current track.
- * Does nothing if no track has been loaded yet.
- */
+// For "Pause" cards. Simply toggles the playback state
 export function togglePause() {
     ensureAudio();
+    // Do nothing if no music has been loaded yet
     if (!audio || !audio.src) return;
 
     if (audio.paused) {
@@ -65,13 +60,11 @@ export function togglePause() {
     }
 }
 
-/**
- * Pauses the current track if it is playing.
- * This is useful for UI elements that should only pause, not toggle.
- */
+
+// For deactivating a "Start Music" card. Only pauses the current track.
 export function pauseCurrentTrack() {
     ensureAudio();
-    if (audio && !audio.paused) {
+    if(audio && !audio.paused) {
         audio.pause();
     }
 }
