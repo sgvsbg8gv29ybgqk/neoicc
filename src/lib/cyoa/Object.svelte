@@ -1109,8 +1109,7 @@
 							{#if object.playsMusic}
 								<div class="ml-4 flex flex-col gap-y-2">
 									<p>
-										Place the MP3 file in the <code>music/</code> folder.
-										Enter only the file name below (e.g., <code>theme.mp3</code>).
+										Enter a filename from the <code>music/</code> folder (e.g., <code>theme.mp3</code>).
 									</p>
 									<WrappedInput
 										label="Music file name"
@@ -1127,7 +1126,7 @@
 									bind:checked={() => object.stopsMusic ?? false, (v) => (object.stopsMusic = v)}
 								/>
 								<Label for="object-stops-music-{object.id}">
-									Stops any playing music when selected
+									Pause any playing music when selected
 								</Label>
 							</div>
 						</div>
